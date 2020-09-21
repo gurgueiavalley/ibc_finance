@@ -1,2 +1,2 @@
-# ibc_finance
+# IBC_Finance
 Sistema de controle de finanças
