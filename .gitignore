@@ -1,4 +1,6 @@
 __pycache__
 
+virtual
+
 migrations
 db.sqlite3
