@@ -18,10 +18,10 @@ class Empresa(models.Model):
 class Missao(models.Model):
     nome = models.CharField(unique = True, max_length = 50)
     descricao = models.CharField(blank = True, null = True, max_length = 100)
-    meta = models.DecimalField(max_digits = 12, decimal_places = 2)
     inicio = models.DateField(default = date.today)
     fim = models.DateField()
     em_Andamento = models.BooleanField(default = True)
+    meta = models.DecimalField(max_digits = 12, decimal_places = 2)
 
     class Meta:
         db_table = 'missao'
