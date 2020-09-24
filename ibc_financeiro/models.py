@@ -43,3 +43,15 @@ class Missao(models.Model):
 
     def __str__(self):
         return self.nome
+
+class SaidaCategoria(models.Model):
+    nome = models.CharField(unique = True, max_length = 50)
+    descricao = models.CharField(blank = True, null = True, max_length = 100)
+
+    class Meta:
+        db_table = 'saida_categoria'
+        verbose_name = 'categoria de saída'
+        verbose_name_plural = 'Categorias de Saída'
+
+    def __str__(self):
+        return self.nome
