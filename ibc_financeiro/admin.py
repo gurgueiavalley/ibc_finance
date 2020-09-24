@@ -1,3 +1,4 @@
 from django.contrib import admin
+from ibc_financeiro.models import *
 
-# Register your models here.
+admin.site.register(Empresa)
