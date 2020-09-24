@@ -21,12 +21,12 @@ class EntradaMissao(models.Model):
     data = models.DateField(default = date.today)
 
     class Meta:
-        db_table = 'entradamissao'
+        db_table = 'entrada_missao'
         verbose_name = 'entrada de missão'
         verbose_name_plural = 'Entradas de Missões'
 
     def __str__(self):
-        return self.valor
+        return str(self.valor)
 
 class Missao(models.Model):
     nome = models.CharField(unique = True, max_length = 50)
