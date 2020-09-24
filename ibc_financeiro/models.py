@@ -2,6 +2,20 @@ from django.db import models
 from django.core.validators import MinLengthValidator
 from datetime import date
 
+class AdminCongregacao(models.Model):
+    nome = models.CharField(max_length = 70)
+    username = models.CharField(unique = True, max_length = 30)
+    email = models.EmailField(unique = True, max_length = 70)
+    senha = models.CharField(max_length = 25, validators = [MinLengthValidator(5)])
+
+    class Meta:
+        db_table = 'admin_congregacao'
+        verbose_name = 'administrador da congregação'
+        verbose_name_plural = 'Administradores das Congregações'
+
+    def __str__(self):
+        return self.nome + ' (' + self.username + ')' 
+
 class Empresa(models.Model):
     CNPJ = models.CharField(unique = True, max_length = 18, validators = [MinLengthValidator(14)])
     nome = models.CharField(max_length = 70)
