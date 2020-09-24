@@ -16,6 +16,19 @@ class AdminCongregacao(models.Model):
     def __str__(self):
         return self.nome + ' (' + self.username + ')' 
 
+class Contador(models.Model):
+    nome = models.CharField(max_length = 70)
+    username = models.CharField(unique = True, max_length = 30)
+    email = models.EmailField(unique = True, max_length = 70)
+    senha = models.CharField(max_length = 25, validators = [MinLengthValidator(5)])
+
+    class Meta:
+        db_table = 'contador'
+        verbose_name_plural = 'contadores'
+
+    def __str__(self):
+        return self.nome
+
 class Empresa(models.Model):
     CNPJ = models.CharField(unique = True, max_length = 18, validators = [MinLengthValidator(14)])
     nome = models.CharField(max_length = 70)
