@@ -15,6 +15,19 @@ class Empresa(models.Model):
     def __str__(self):
         return self.nome
 
+class EntradaMissao(models.Model):
+    valor = models.DecimalField(max_digits = 12, decimal_places = 2)
+    missao = models.ForeignKey('Missao', on_delete = models.CASCADE)
+    data = models.DateField(default = date.today)
+
+    class Meta:
+        db_table = 'entradamissao'
+        verbose_name = 'entrada de missão'
+        verbose_name_plural = 'Entradas de Missões'
+
+    def __str__(self):
+        return self.valor
+
 class Missao(models.Model):
     nome = models.CharField(unique = True, max_length = 50)
     descricao = models.CharField(blank = True, null = True, max_length = 100)
