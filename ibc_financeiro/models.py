@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinLengthValidator
-from datetime import date
+from datetime import date, datetime
+import os
 
 class AdminCongregacao(models.Model):
     nome = models.CharField(max_length = 70)
@@ -70,6 +71,29 @@ class Missao(models.Model):
 
     def __str__(self):
         return self.nome
+
+class Saida(models.Model):
+    nome = models.CharField(max_length = 75)
+    categoria = models.ForeignKey('SaidaCategoria', on_delete = models.CASCADE)
+    descricao = models.CharField(blank = True, null = True, max_length = 100)
+    empresa = models.ForeignKey('Empresa', on_delete = models.CASCADE)
+    data = models.DateField(default = date.today)
+    valor = models.DecimalField(max_digits = 12, decimal_places = 2)
+    comprovante = models.FileField(blank = True, null = True, upload_to = 'documentos/comprovantes')
+    nota_Fiscal = models.FileField(blank = True, null = True, upload_to = 'documentos/notas')
+    administrador = models.ForeignKey('AdminCongregacao', on_delete = models.CASCADE)
+    postado = models.DateTimeField(default = datetime.today)
+
+    class Meta:
+        db_table = 'saida'
+
+    def __str__(self):
+        return self.nome
+
+    def delete(self, *args, **kwargs):
+        os.remove(self.comprovante.path)
+        os.remove(self.nota_Fiscal.path)
+        super(Saida, self).delete(*args, **kwargs)
 
 class SaidaCategoria(models.Model):
     nome = models.CharField(unique = True, max_length = 50)
