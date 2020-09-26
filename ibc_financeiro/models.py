@@ -67,6 +67,18 @@ class EntradaMissao(models.Model):
     def __str__(self):
         return str(self.valor)
 
+class Membro(models.Model):
+    CPF = models.CharField(unique = True, max_length = 15, validators = [MinLengthValidator(11)])
+    nome = models.CharField(max_length = 75)
+    telefone = models.CharField(blank = True, null = True, max_length = 14, validators = [MinLengthValidator(8)])
+    salario = models.DecimalField(blank = True, null = True, max_digits = 12, decimal_places = 2)
+
+    class Meta:
+        db_table = 'membro'
+
+    def __str__(self):
+        return self.nome
+
 class Missao(models.Model):
     nome = models.CharField(unique = True, max_length = 50)
     descricao = models.CharField(blank = True, null = True, max_length = 100)
@@ -108,16 +120,6 @@ class Saida(models.Model):
         os.remove(self.comprovante.path)
         os.remove(self.nota_Fiscal.path)
         super(Saida, self).delete(*args, **kwargs)
-
-
-class Membro(models.Model):
-    nome = models.CharField(max_length=50)
-    cpf = models.CharField(max_length=14, unique = True)
-    salario = models.FloatField()
-    telefone = models.CharField(max_length=13)
-
-    def __str__(self):
-        return self.nome
 
 class CategoriaEntrada(models.Model):
     nome = models.CharField(max_length=50)
