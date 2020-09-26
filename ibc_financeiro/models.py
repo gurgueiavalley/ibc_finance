@@ -74,7 +74,7 @@ class Missao(models.Model):
 
 class Saida(models.Model):
     nome = models.CharField(max_length = 75)
-    categoria = models.ForeignKey('SaidaCategoria', on_delete = models.CASCADE)
+    categoria = models.ForeignKey('CategoriaSaida', on_delete = models.CASCADE)
     descricao = models.CharField(blank = True, null = True, max_length = 100)
     empresa = models.ForeignKey('Empresa', on_delete = models.CASCADE)
     data = models.DateField(default = date.today)
