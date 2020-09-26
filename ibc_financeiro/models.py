@@ -44,7 +44,7 @@ class Empresa(models.Model):
 
 class EntradaMissao(models.Model):
     valor = models.DecimalField(max_digits = 12, decimal_places = 2)
-    missao = models.ForeignKey(Missao, on_delete = models.CASCADE)
+    missao = models.ForeignKey('Missao', on_delete = models.CASCADE)
     data = models.DateField(default = date.today)
 
     class Meta:
