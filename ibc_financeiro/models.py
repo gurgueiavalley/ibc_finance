@@ -40,6 +40,18 @@ class CategoriaSaida(models.Model):
     def __str__(self):
         return self.nome
 
+class Congregacao(models.Model):
+    nome = models.CharField(unique = True, max_length = 70)
+    descricao = models.CharField(blank = True, null = True, max_length = 100)
+    
+    class Meta:
+        db_table = 'congregacao'
+        verbose_name = 'congregação'
+        verbose_name_plural = 'congregações'
+
+    def __str__(self):
+        return self.nome
+
 class Contador(models.Model):
     nome = models.CharField(max_length = 70)
     username = models.CharField(unique = True, max_length = 30)
@@ -142,13 +154,6 @@ class Saida(models.Model):
         os.remove(self.comprovante.path)
         os.remove(self.nota_Fiscal.path)
         super(Saida, self).delete(*args, **kwargs)
-
-class Congregacao(models.Model):
-    nome = models.CharField(max_length=50)
-    descricao = models.CharField(max_length=200)
-    
-    def __str__(self):
-        return self.nome
 
 class EntradaFinanceiraAvulca(models.Model):
     descricao = models.CharField(max_length=200)
