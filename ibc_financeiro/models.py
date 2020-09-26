@@ -16,6 +16,18 @@ class Administrador(models.Model):
     def __str__(self):
         return self.nome 
 
+class CategoriaSaida(models.Model):
+    nome = models.CharField(unique = True, max_length = 30)
+    descricao = models.CharField(blank = True, null = True, max_length = 100)
+
+    class Meta:
+        db_table = 'categoria_saida'
+        verbose_name = 'categoria de saída'
+        verbose_name_plural = 'Categorias de Saída'
+
+    def __str__(self):
+        return self.nome
+
 class Contador(models.Model):
     nome = models.CharField(max_length = 70)
     username = models.CharField(unique = True, max_length = 30)
@@ -96,18 +108,6 @@ class Saida(models.Model):
         os.remove(self.comprovante.path)
         os.remove(self.nota_Fiscal.path)
         super(Saida, self).delete(*args, **kwargs)
-
-class SaidaCategoria(models.Model):
-    nome = models.CharField(unique = True, max_length = 50)
-    descricao = models.CharField(blank = True, null = True, max_length = 100)
-
-    class Meta:
-        db_table = 'saida_categoria'
-        verbose_name = 'categoria de saída'
-        verbose_name_plural = 'Categorias de Saída'
-
-    def __str__(self):
-        return self.nome
 
 
 class Membro(models.Model):
