@@ -108,6 +108,16 @@ class Missao(models.Model):
     def __str__(self):
         return self.nome
 
+class Pagamento(models.Model):
+    nome = models.CharField(unique = True, max_length = 50)
+    descricao = models.CharField(blank = True, null = True, max_length = 100)
+    
+    class Meta:
+        db_table = 'pagamento'
+
+    def __str__(self):
+        return self.nome
+
 class Saida(models.Model):
     nome = models.CharField(max_length = 75)
     categoria = models.ForeignKey('CategoriaSaida', on_delete = models.CASCADE)
@@ -132,13 +142,6 @@ class Saida(models.Model):
         os.remove(self.comprovante.path)
         os.remove(self.nota_Fiscal.path)
         super(Saida, self).delete(*args, **kwargs)
-
-class FormaPagamento(models.Model):
-    nome = models.CharField(max_length=50)
-    descricao = models.CharField(max_length=200)
-    
-    def __str__(self):
-        return self.nome
 
 class Congregacao(models.Model):
     nome = models.CharField(max_length=50)
