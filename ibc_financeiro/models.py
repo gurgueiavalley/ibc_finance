@@ -81,11 +81,13 @@ class Saida(models.Model):
     valor = models.DecimalField(max_digits = 12, decimal_places = 2)
     comprovante = models.FileField(blank = True, null = True, upload_to = 'documentos/comprovantes')
     nota_Fiscal = models.FileField(blank = True, null = True, upload_to = 'documentos/notas')
-    administrador = models.ForeignKey('AdminCongregacao', on_delete = models.CASCADE)
+    administrador = models.ForeignKey('Administrador', on_delete = models.CASCADE)
     postado = models.DateTimeField(default = datetime.today)
 
     class Meta:
         db_table = 'saida'
+        verbose_name = 'saída'
+        verbose_name_plural = 'saídas'
 
     def __str__(self):
         return self.nome
