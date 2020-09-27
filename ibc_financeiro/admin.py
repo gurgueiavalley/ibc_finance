@@ -54,6 +54,15 @@ class EntradaMissaoAdmin(admin.ModelAdmin):
     list_filter = 'data', 'missao__nome', 'missao__congregacao__localidade',
     search_fields = 'valor',
 
+class MembroAdmin(admin.ModelAdmin):
+    actions = None
+    list_display = 'CPF', 'nome', 'telefone', 'salario'
+    list_display_links = 'CPF', 'nome'
+    ordering = 'nome',
+    search_fields = 'CPF', 'nome', 'telefone', 'salario'
+
+    fields = ('CPF', 'nome'), ('telefone', 'salario')
+
 class MissaoAdmin(admin.ModelAdmin):
     pass
 
@@ -85,4 +94,5 @@ admin.site.register(Empresa, EmpresaAdmin)
 admin.site.register(Entrada, EntradaAdmin)              # PERSONALIZAR
 admin.site.register(EntradaAvulsa, EntradaAvulsaAdmin)
 admin.site.register(EntradaMissao, EntradaMissaoAdmin)
+admin.site.register(Membro, MembroAdmin)
 admin.site.register(Missao, MissaoAdmin)                # PERSONALIZAR
