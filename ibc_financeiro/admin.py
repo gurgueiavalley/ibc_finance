@@ -10,7 +10,7 @@ class AdministradorAdmin(admin.ModelAdmin):
 
     fields = ('username', 'nome'), ('email', 'senha')
 
-class CategoriaEntradaAdmin(admin.ModelAdmin):
+class CategoriasAdmin(admin.ModelAdmin):
     actions = None
     list_display = 'nome', 'descricao',
     ordering = 'nome',
@@ -22,4 +22,5 @@ admin.site.unregister(Group)
 admin.site.unregister(User)
 
 admin.site.register(Administrador, AdministradorAdmin)
-admin.site.register(CategoriaEntrada, CategoriaEntradaAdmin)
+admin.site.register(CategoriaEntrada, CategoriasAdmin)
+admin.site.register(CategoriaSaida, CategoriasAdmin)
