@@ -78,6 +78,25 @@ class Empresa(models.Model):
     def __str__(self):
         return self.nome
 
+class EntradaAvulsa(models.Model):
+    valor = models.DecimalField(max_digits = 12, decimal_places = 2)
+    data = models.DateField(default = date.today)
+    congregacao = models.ForeignKey('Congregacao', on_delete = models.CASCADE)
+    descricao = models.CharField(blank = True, null = True, max_length = 100)
+    comprovante = models.FileField(blank = True, null = True, upload_to = 'documentos/comprovantes/entrada_avulsa')
+    administrador = models.ForeignKey('Administrador', on_delete = models.CASCADE)
+    
+    class Meta:
+        db_table = 'entrada_avulsa'
+        verbose_name_plural = 'Entradas avulsa'
+
+    def __str__(self):
+        return str(self.valor)
+    
+    def delete(self, *args, **kwargs):
+        os.remove(self.comprovante.path)
+        super(EntradaAvulsa, self).delete(*args, **kwargs)
+
 class EntradaMissao(models.Model):
     valor = models.DecimalField(max_digits = 12, decimal_places = 2)
     missao = models.ForeignKey('Missao', on_delete = models.CASCADE)
@@ -154,16 +173,6 @@ class Saida(models.Model):
         os.remove(self.comprovante.path)
         os.remove(self.nota_Fiscal.path)
         super(Saida, self).delete(*args, **kwargs)
-
-class EntradaFinanceiraAvulca(models.Model):
-    descricao = models.CharField(max_length=200)
-    data = models.DateTimeField(auto_now=True)
-    valor = models.FloatField()
-    congregacao = models.OneToOneField(Congregacao, on_delete=models.CASCADE)
-    admin_congregacao = models.ForeignKey(AdminCongregacao, on_delete=models.CASCADE)   
-    
-    def __str__(self):
-        return self.descricao 
 
 class EntradaFinanceira(models.Model):
     descricao = models.CharField(max_length=200)
