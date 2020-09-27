@@ -129,7 +129,7 @@ class EntradaMissao(models.Model):
         verbose_name_plural = 'Entradas de Missões'
 
     def __str__(self):
-        return str(self.valor)
+        return 'R$ ' + str(self.valor)
 
 class Membro(models.Model):
     CPF = models.CharField(unique = True, max_length = 15, validators = [MinLengthValidator(11)])
