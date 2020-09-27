@@ -3,6 +3,12 @@ from django.contrib.auth.models import Group, User
 from ibc_financeiro.models import *
 import requests
 
+class CongregacaoAdmin(admin.ModelAdmin):
+    actions = None
+    list_display = 'nome', 'localidade',
+    ordering = 'nome',
+    search_fields = 'nome',
+
 class EmpresaAdmin(admin.ModelAdmin):
     actions = None
     list_display = 'CNPJ', 'nome', 'descricao',
@@ -73,7 +79,7 @@ admin.site.unregister(User)
 admin.site.register(Administrador, UsuarioAdmin)
 admin.site.register(CategoriaEntrada, SimplesAdmin)
 admin.site.register(CategoriaSaida, SimplesAdmin)
-admin.site.register(Congregacao, SimplesAdmin)
+admin.site.register(Congregacao, CongregacaoAdmin)
 admin.site.register(Contador, UsuarioAdmin)
 admin.site.register(Empresa, EmpresaAdmin)
 admin.site.register(Entrada, EntradaAdmin)              # PERSONALIZAR
