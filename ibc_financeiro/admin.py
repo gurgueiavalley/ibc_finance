@@ -10,9 +10,16 @@ class AdministradorAdmin(admin.ModelAdmin):
 
     fields = ('username', 'nome'), ('email', 'senha')
 
+class CategoriaEntradaAdmin(admin.ModelAdmin):
+    actions = None
+    list_display = 'nome', 'descricao',
+    ordering = 'nome',
+    search_fields = 'nome',
+
 admin.site.site_header = 'IBC Financeiro'
 
 admin.site.unregister(Group)
 admin.site.unregister(User)
 
 admin.site.register(Administrador, AdministradorAdmin)
+admin.site.register(CategoriaEntrada, CategoriaEntradaAdmin)
