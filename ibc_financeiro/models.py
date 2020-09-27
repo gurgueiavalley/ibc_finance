@@ -112,7 +112,7 @@ class EntradaAvulsa(models.Model):
         verbose_name_plural = 'Entradas Avulsa'
 
     def __str__(self):
-        return str(self.valor)
+        return 'R$ ' + str(self.valor)
     
     def delete(self, *args, **kwargs):
         os.remove(self.comprovante.path)
