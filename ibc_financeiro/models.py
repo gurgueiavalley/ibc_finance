@@ -144,7 +144,7 @@ class Membro(models.Model):
         return self.nome
 
 class Missao(models.Model):
-    nome = models.CharField(unique = True, max_length = 50)
+    nome = models.CharField(max_length = 50)
     descricao = models.CharField(blank = True, null = True, max_length = 100)
     congregacao = models.ForeignKey('Congregacao', on_delete = models.CASCADE)
     inicio = models.DateField(default = date.today)
