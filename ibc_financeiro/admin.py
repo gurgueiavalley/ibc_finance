@@ -31,6 +31,9 @@ class EmpresaAdmin(admin.ModelAdmin):
 
         super(EmpresaAdmin, self).save_model(request, obj, form, change)
 
+class EntradaAdmin(admin.ModelAdmin):
+    pass
+
 class SimplesAdmin(admin.ModelAdmin):
     actions = None
     list_display = 'nome', 'descricao',
@@ -56,3 +59,4 @@ admin.site.register(CategoriaSaida, SimplesAdmin)
 admin.site.register(Congregacao, SimplesAdmin)
 admin.site.register(Contador, UsuarioAdmin)
 admin.site.register(Empresa, EmpresaAdmin)
+admin.site.register(Entrada, EntradaAdmin)              # PERSONALIZAR
