@@ -45,6 +45,9 @@ class EntradaAvulsaAdmin(admin.ModelAdmin):
 class EntradaMissaoAdmin(admin.ModelAdmin):
     pass
 
+class MissaoAdmin(admin.ModelAdmin):
+    pass
+
 class SimplesAdmin(admin.ModelAdmin):
     actions = None
     list_display = 'nome', 'descricao',
@@ -73,3 +76,4 @@ admin.site.register(Empresa, EmpresaAdmin)
 admin.site.register(Entrada, EntradaAdmin)              # PERSONALIZAR
 admin.site.register(EntradaAvulsa, EntradaAvulsaAdmin)
 admin.site.register(EntradaMissao, EntradaMissaoAdmin)  # PERSONALIZAR
+admin.site.register(Missao, MissaoAdmin)                # PERSONALIZAR
