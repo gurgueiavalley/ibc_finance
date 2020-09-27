@@ -43,7 +43,10 @@ class EntradaAvulsaAdmin(admin.ModelAdmin):
     fields = ('valor', 'descricao'), ('congregacao', 'data'), 'comprovante', 'administrador' 
 
 class EntradaMissaoAdmin(admin.ModelAdmin):
-    pass
+    actions = None
+    list_display = '__str__', 'missao', 'data'
+    list_filter = 'data', 'missao__nome', 'missao__congregacao__descricao',
+    search_fields = 'valor',
 
 class MissaoAdmin(admin.ModelAdmin):
     pass
@@ -75,5 +78,5 @@ admin.site.register(Contador, UsuarioAdmin)
 admin.site.register(Empresa, EmpresaAdmin)
 admin.site.register(Entrada, EntradaAdmin)              # PERSONALIZAR
 admin.site.register(EntradaAvulsa, EntradaAvulsaAdmin)
-admin.site.register(EntradaMissao, EntradaMissaoAdmin)  # PERSONALIZAR
+admin.site.register(EntradaMissao, EntradaMissaoAdmin)
 admin.site.register(Missao, MissaoAdmin)                # PERSONALIZAR
