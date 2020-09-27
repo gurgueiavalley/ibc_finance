@@ -78,6 +78,27 @@ class Empresa(models.Model):
     def __str__(self):
         return self.nome
 
+class Entrada(models.Model):
+    membro = models.ForeignKey('Membro', on_delete = models.CASCADE)
+    congregacao = models.ForeignKey('Congregacao', on_delete = models.CASCADE)
+    data = models.DateField(default = date.today)
+    valor = models.DecimalField(max_digits = 12, decimal_places = 2)
+    forma_de_Pagamento = models.ForeignKey('Pagamento', on_delete = models.CASCADE)
+    categoria = models.ForeignKey('CategoriaEntrada', on_delete = models.CASCADE)
+    descricao = models.CharField(blank = True, null = True, max_length = 100)
+    comprovante = models.FileField(blank = True, null = True, upload_to = 'documentos/comprovantes/entradas')
+    administrador = models.ForeignKey('Administrador', on_delete = models.CASCADE)
+    
+    class Meta:
+        db_table = 'entrada'
+
+    def __str__(self):
+        return str(self.valor)
+
+    def delete(self, *args, **kwargs):
+        os.remove(self.comprovante.path)
+        super(Entrada, self).delete(*args, **kwargs)
+
 class EntradaAvulsa(models.Model):
     valor = models.DecimalField(max_digits = 12, decimal_places = 2)
     data = models.DateField(default = date.today)
@@ -173,16 +194,3 @@ class Saida(models.Model):
         os.remove(self.comprovante.path)
         os.remove(self.nota_Fiscal.path)
         super(Saida, self).delete(*args, **kwargs)
-
-class EntradaFinanceira(models.Model):
-    descricao = models.CharField(max_length=200)
-    data = models.DateTimeField(auto_now=True)
-    valor = models.FloatField()
-    membro = models.ForeignKey(Membro, on_delete=models.CASCADE)
-    congregacao = models.ForeignKey(Congregacao, on_delete=models.CASCADE)
-    categoria_entrada = models.ForeignKey(CategoriaEntrada, on_delete=models.CASCADE)
-    adm_congregacao = models.ForeignKey(AdminCongregacao, on_delete=models.CASCADE)
-    forma_pagamento = models.ForeignKey(FormaPagamento, on_delete=models.CASCADE)
-    
-    def __str__(self):
-        return self.descricao
