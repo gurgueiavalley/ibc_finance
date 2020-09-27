@@ -64,7 +64,12 @@ class MembroAdmin(admin.ModelAdmin):
     fields = ('CPF', 'nome'), ('telefone', 'salario')
 
 class MissaoAdmin(admin.ModelAdmin):
-    pass
+    actions = None
+    list_display = 'nome', 'meta', 'em_Andamento', 'inicio', 'fim'
+    list_filter = 'em_Andamento', 'inicio', 'fim', 'congregacao__nome', 'congregacao__localidade',
+    search_fields = 'nome', 'meta'
+
+    fields = ('nome', 'descricao'), ('congregacao', 'meta'), 'em_Andamento', ('inicio', 'fim')
 
 class SimplesAdmin(admin.ModelAdmin):
     actions = None
@@ -95,4 +100,4 @@ admin.site.register(Entrada, EntradaAdmin)              # PERSONALIZAR
 admin.site.register(EntradaAvulsa, EntradaAvulsaAdmin)
 admin.site.register(EntradaMissao, EntradaMissaoAdmin)
 admin.site.register(Membro, MembroAdmin)
-admin.site.register(Missao, MissaoAdmin)                # PERSONALIZAR
+admin.site.register(Missao, MissaoAdmin)
