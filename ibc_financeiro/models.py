@@ -41,8 +41,8 @@ class CategoriaSaida(models.Model):
         return self.nome
 
 class Congregacao(models.Model):
-    nome = models.CharField(unique = True, max_length = 70)
-    descricao = models.CharField(blank = True, null = True, max_length = 100)
+    nome = models.CharField(max_length = 70)
+    localidade = models.CharField(max_length = 50)
     
     class Meta:
         db_table = 'congregacao'
