@@ -35,7 +35,12 @@ class EntradaAdmin(admin.ModelAdmin):
     pass
 
 class EntradaAvulsaAdmin(admin.ModelAdmin):
-    pass
+    actions = None
+    list_display = '__str__', 'descricao', 'congregacao', 'data', 'administrador'
+    list_filter = 'data', 'congregacao__nome', 'administrador__nome',
+    search_fields = 'valor', 'descricao',
+
+    fields = ('valor', 'descricao'), ('congregacao', 'data'), 'comprovante', 'administrador' 
 
 class SimplesAdmin(admin.ModelAdmin):
     actions = None
