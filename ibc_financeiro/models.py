@@ -109,7 +109,7 @@ class EntradaAvulsa(models.Model):
     
     class Meta:
         db_table = 'entrada_avulsa'
-        verbose_name_plural = 'Entradas avulsa'
+        verbose_name_plural = 'Entradas Avulsa'
 
     def __str__(self):
         return str(self.valor)
