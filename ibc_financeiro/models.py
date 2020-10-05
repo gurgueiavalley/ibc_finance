@@ -50,7 +50,7 @@ class Congregacao(models.Model):
         verbose_name_plural = 'congregações'
 
     def __str__(self):
-        return self.nome
+        return self.nome + ' (' + self.localidade + ')'
 
 class Contador(models.Model):
     nome = models.CharField(max_length = 70)
