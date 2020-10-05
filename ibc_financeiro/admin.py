@@ -39,11 +39,11 @@ class EmpresaAdmin(admin.ModelAdmin):
 
 class EntradaAdmin(admin.ModelAdmin):
     actions = None
-    list_display = 'valor', 'categoria', 'membro', 'forma_de_Pagamento', 'data', 'administrador'
-    list_filter = 'categoria', 'data', 'forma_de_Pagamento__nome', 'congregacao__nome', 'congregacao__localidade', 'administrador__nome'
+    list_display = 'valor', 'categoria', 'membro', 'forma_de_Entrada', 'data', 'administrador'
+    list_filter = 'categoria', 'data', 'forma_de_Entrada__nome', 'congregacao__nome', 'congregacao__localidade', 'administrador__nome'
     search_fields = 'membro__nome', 'valor'
 
-    fields = ('categoria', 'valor', 'forma_de_Pagamento'), 'descricao', ('membro', 'congregacao'), 'data', 'comprovante', 'administrador'
+    fields = ('categoria', 'valor', 'forma_de_Entrada'), 'descricao', ('membro', 'congregacao'), 'data', 'comprovante', 'administrador'
 
 class EntradaAvulsaAdmin(admin.ModelAdmin):
     actions = None
