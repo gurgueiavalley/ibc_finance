@@ -11,13 +11,13 @@ class CongregacaoAdmin(admin.ModelAdmin):
 
 class EmpresaAdmin(admin.ModelAdmin):
     actions = None
-    list_display = 'CNPJ', 'nome', 'descricao',
-    list_display_links = 'CNPJ', 'nome',
+    list_display = 'CPF_CNPJ', 'nome', 'descricao',
+    list_display_links = 'CPF_CNPJ', 'nome',
     list_filter = 'cidade',
     ordering = 'nome',
-    search_fields = 'CNPJ', 'nome',
+    search_fields = 'CPF_CNPJ', 'nome',
 
-    fields = 'CNPJ',
+    fields = 'CPF_CNPJ',
 
     def save_model(self, request, obj, form, change):
         CNPJ = obj.CNPJ.replace('.', '').replace('/', '').replace('-', '')
