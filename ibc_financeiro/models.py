@@ -135,7 +135,7 @@ class Membro(models.Model):
     CPF = models.CharField(unique = True, blank = True, null = True, max_length = 15, validators = [MinLengthValidator(11)])
     nome = models.CharField(max_length = 75)
     telefone = models.CharField(blank = True, null = True, max_length = 14, validators = [MinLengthValidator(8)])
-    salario = models.DecimalField(blank = True, null = True, max_digits = 12, decimal_places = 2)
+    profissao = models.CharField(blank = True, null = True, max_length = 45)
 
     class Meta:
         db_table = 'membro'
