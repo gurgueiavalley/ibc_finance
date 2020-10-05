@@ -93,7 +93,7 @@ class Entrada(models.Model):
         db_table = 'entrada'
 
     def __str__(self):
-        return str(self.valor)
+        return 'R$ ' + str(self.valor)
 
     def delete(self, *args, **kwargs):
         os.remove(self.comprovante.path)
