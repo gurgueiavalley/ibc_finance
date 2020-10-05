@@ -61,12 +61,12 @@ class EntradaMissaoAdmin(admin.ModelAdmin):
 
 class MembroAdmin(admin.ModelAdmin):
     actions = None
-    list_display = 'CPF', 'nome', 'telefone', 'salario'
+    list_display = 'CPF', 'nome', 'telefone', 'profissao'
     list_display_links = 'CPF', 'nome'
     ordering = 'nome',
-    search_fields = 'CPF', 'nome', 'telefone', 'salario'
+    search_fields = 'CPF', 'nome', 'telefone', 'profissao'
 
-    fields = ('CPF', 'nome'), ('telefone', 'salario')
+    fields = ('CPF', 'nome'), ('telefone', 'profissao')
 
 class MissaoAdmin(admin.ModelAdmin):
     actions = None
