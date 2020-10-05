@@ -66,11 +66,11 @@ class Contador(models.Model):
         return self.nome
 
 class Empresa(models.Model):
-    CNPJ = models.CharField(unique = True, max_length = 18, validators = [MinLengthValidator(14)])
+    CPF_CNPJ = models.CharField(unique = True, max_length = 18, validators = [MinLengthValidator(11)])
     nome = models.CharField(max_length = 70)
     descricao = models.CharField(max_length = 100, blank = True, null = True)
-    endereco = models.CharField(max_length = 80) 
-    cidade = models.CharField(max_length = 60, default = 'Corrente')
+    endereco = models.CharField(blank = True, null = True, max_length = 100)
+    cidade = models.CharField(blank = True, null = True, max_length = 60, default = 'Corrente')
 
     class Meta:
         db_table = 'empresa'
