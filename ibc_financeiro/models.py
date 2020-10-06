@@ -177,6 +177,7 @@ class Saida(models.Model):
     empresa = models.ForeignKey('Empresa', on_delete = models.CASCADE)
     data = models.DateField(default = date.today)
     valor = models.DecimalField(max_digits = 12, decimal_places = 2)
+    forma_de_Pagamento = models.ForeignKey('Pagamento', on_delete = models.CASCADE)
     comprovante = models.FileField(blank = True, null = True, validators = [FileExtensionValidator(['jpeg', 'jpg', 'pdf', 'png'])], upload_to = 'documentos/comprovantes/saidas')
     nota_Fiscal = models.FileField(blank = True, null = True, validators = [FileExtensionValidator(['jpeg', 'jpg', 'pdf', 'png'])], upload_to = 'documentos/notas_fiscais')
     administrador = models.ForeignKey('Administrador', on_delete = models.CASCADE)
