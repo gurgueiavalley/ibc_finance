@@ -21,7 +21,7 @@ class EmpresaAdmin(admin.ModelAdmin):
 
 class EntradaAdmin(admin.ModelAdmin):
     actions = None
-    list_display = 'valor', 'categoria', 'membro', 'forma_de_Entrada', 'data', 'administrador'
+    list_display = '__str__', 'categoria', 'membro', 'forma_de_Entrada', 'data', 'administrador'
     list_filter = 'categoria', 'data', 'forma_de_Entrada__nome', 'congregacao__nome', 'congregacao__localidade', 'administrador__nome'
     search_fields = 'membro__nome', 'valor'
 
