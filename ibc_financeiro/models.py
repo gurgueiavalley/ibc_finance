@@ -68,7 +68,7 @@ class Contador(models.Model):
 class Empresa(models.Model):
     CPF_CNPJ = models.CharField(unique = True, max_length = 18, validators = [MinLengthValidator(11)])
     nome = models.CharField(max_length = 70)
-    descricao = models.CharField(max_length = 100, blank = True, null = True)
+    descricao = models.CharField(blank = True, null = True, max_length = 100)
     endereco = models.CharField(blank = True, null = True, max_length = 100)
     cidade = models.CharField(blank = True, null = True, max_length = 60, default = 'Corrente')
 
