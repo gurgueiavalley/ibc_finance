@@ -38,7 +38,7 @@ class EntradaAvulsaAdmin(admin.ModelAdmin):
 class EntradaMissaoAdmin(admin.ModelAdmin):
     actions = None
     list_display = '__str__', 'missao', 'data'
-    list_filter = 'data', 'missao__nome', 'missao__congregacao__localidade',
+    list_filter = 'data', 'missao__nome', 'missao__congregacao__nome',
     search_fields = 'valor',
 
 class MembroAdmin(admin.ModelAdmin):
