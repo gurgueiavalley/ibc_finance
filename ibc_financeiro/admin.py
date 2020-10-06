@@ -56,7 +56,7 @@ class MissaoAdmin(admin.ModelAdmin):
     list_filter = 'em_Andamento', 'inicio', 'fim', 'congregacao__nome', 'congregacao__localidade',
     search_fields = 'nome', 'meta'
 
-    fields = ('nome', 'descricao'), ('congregacao', 'meta'), 'em_Andamento', ('inicio', 'fim')
+    fields = ('nome', 'descricao'), ('congregacao', 'meta'), ('inicio', 'fim', 'em_Andamento')
 
 class SaidaAdmin(admin.ModelAdmin):
     actions = None
