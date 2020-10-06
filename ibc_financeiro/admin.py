@@ -17,25 +17,7 @@ class EmpresaAdmin(admin.ModelAdmin):
     ordering = 'nome',
     search_fields = 'CPF_CNPJ', 'nome',
 
-    fields = 'CPF_CNPJ',
-
-    def save_model(self, request, obj, form, change):
-        CNPJ = obj.CNPJ.replace('.', '').replace('/', '').replace('-', '')
-        webservice = requests.get('http://receitaws.com.br/v1/cnpj/{}'.format(CNPJ))
-        dados = webservice.json()
-        
-        if dados['fantasia'] != '':
-            obj.nome = dados['fantasia']
-
-        else:
-            obj.nome = dados['nome']
-
-        obj.CNPJ = dados['cnpj']
-        obj.descricao = dados['atividade_principal'][0]['text']
-        obj.endereco = dados['logradouro']
-        obj.cidade = dados['municipio']
-
-        super(EmpresaAdmin, self).save_model(request, obj, form, change)
+    fields = ('CPF_CNPJ', 'nome'), ('endereco', 'cidade'), 'descricao'    
 
 class EntradaAdmin(admin.ModelAdmin):
     actions = None
