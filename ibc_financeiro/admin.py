@@ -20,7 +20,7 @@ class EmpresaAdmin(admin.ModelAdmin):
 
 class EntradaAdmin(admin.ModelAdmin):
     actions = None
-    list_display = '__str__', 'categoria', 'membro', 'forma_de_Entrada', 'data', 'administrador'
+    list_display = '__str__', 'categoria', 'membro', 'forma_de_Entrada', 'data'
     list_filter = 'categoria', 'data', 'forma_de_Entrada__nome', 'congregacao__nome', 'congregacao__localidade', 'administrador__nome'
     search_fields = 'membro__nome', 'valor'
 
@@ -28,7 +28,7 @@ class EntradaAdmin(admin.ModelAdmin):
 
 class EntradaAvulsaAdmin(admin.ModelAdmin):
     actions = None
-    list_display = '__str__', 'descricao', 'congregacao', 'data', 'administrador'
+    list_display = '__str__', 'descricao', 'congregacao', 'data'
     list_filter = 'data', 'congregacao__nome', 'congregacao__localidade', 'administrador__nome',
     search_fields = 'valor', 'descricao',
 
