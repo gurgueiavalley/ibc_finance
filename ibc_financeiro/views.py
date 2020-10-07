@@ -24,3 +24,5 @@ def cadMembrosExcel(request):
     return render(request, 'index.html', {})
     
 
+def index(request):
+    return render(request, 'financeiro/index.html')

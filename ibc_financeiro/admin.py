@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group, User
 from ibc_financeiro.models import *
-import requests
 
 class CongregacaoAdmin(admin.ModelAdmin):
     actions = None
@@ -11,44 +10,26 @@ class CongregacaoAdmin(admin.ModelAdmin):
 
 class EmpresaAdmin(admin.ModelAdmin):
     actions = None
-    list_display = 'CNPJ', 'nome', 'descricao',
-    list_display_links = 'CNPJ', 'nome',
+    list_display = 'CPF_CNPJ', 'nome', 'descricao',
+    list_display_links = 'CPF_CNPJ', 'nome',
     list_filter = 'cidade',
     ordering = 'nome',
-    search_fields = 'CNPJ', 'nome',
+    search_fields = 'CPF_CNPJ', 'nome',
 
-    fields = 'CNPJ',
-
-    def save_model(self, request, obj, form, change):
-        CNPJ = obj.CNPJ.replace('.', '').replace('/', '').replace('-', '')
-        webservice = requests.get('http://receitaws.com.br/v1/cnpj/{}'.format(CNPJ))
-        dados = webservice.json()
-        
-        if dados['fantasia'] != '':
-            obj.nome = dados['fantasia']
-
-        else:
-            obj.nome = dados['nome']
-
-        obj.CNPJ = dados['cnpj']
-        obj.descricao = dados['atividade_principal'][0]['text']
-        obj.endereco = dados['logradouro']
-        obj.cidade = dados['municipio']
-
-        super(EmpresaAdmin, self).save_model(request, obj, form, change)
+    fields = ('CPF_CNPJ', 'nome'), ('endereco', 'cidade'), 'descricao'    
 
 class EntradaAdmin(admin.ModelAdmin):
     actions = None
-    list_display = 'valor', 'categoria', 'membro', 'forma_de_Pagamento', 'data', 'administrador'
-    list_filter = 'categoria', 'data', 'forma_de_Pagamento__nome', 'congregacao__nome', 'congregacao__localidade', 'administrador__nome'
+    list_display = '__str__', 'categoria', 'membro', 'forma_de_Entrada', 'data'
+    list_filter = 'categoria', 'data', 'forma_de_Entrada__nome', 'congregacao__nome', 'congregacao__localidade', 'administrador__nome'
     search_fields = 'membro__nome', 'valor'
 
-    fields = ('categoria', 'valor', 'forma_de_Pagamento'), 'descricao', ('membro', 'congregacao'), 'data', 'comprovante', 'administrador'
+    fields = ('categoria', 'valor', 'forma_de_Entrada'), 'descricao', ('membro', 'congregacao'), 'data', 'comprovante', 'administrador'
 
 class EntradaAvulsaAdmin(admin.ModelAdmin):
     actions = None
-    list_display = '__str__', 'descricao', 'congregacao', 'data', 'administrador'
-    list_filter = 'data', 'congregacao__localidade', 'administrador__nome',
+    list_display = '__str__', 'descricao', 'congregacao', 'data'
+    list_filter = 'data', 'congregacao__nome', 'congregacao__localidade', 'administrador__nome',
     search_fields = 'valor', 'descricao',
 
     fields = ('valor', 'descricao'), ('congregacao', 'data'), 'comprovante', 'administrador' 
@@ -56,17 +37,17 @@ class EntradaAvulsaAdmin(admin.ModelAdmin):
 class EntradaMissaoAdmin(admin.ModelAdmin):
     actions = None
     list_display = '__str__', 'missao', 'data'
-    list_filter = 'data', 'missao__nome', 'missao__congregacao__localidade',
+    list_filter = 'data', 'missao__nome', 'missao__congregacao__nome',
     search_fields = 'valor',
 
 class MembroAdmin(admin.ModelAdmin):
     actions = None
-    list_display = 'CPF', 'nome', 'telefone', 'salario'
+    list_display = 'CPF', 'nome', 'telefone', 'profissao'
     list_display_links = 'CPF', 'nome'
     ordering = 'nome',
-    search_fields = 'CPF', 'nome', 'telefone', 'salario'
+    search_fields = 'CPF', 'nome', 'telefone', 'profissao'
 
-    fields = ('CPF', 'nome'), ('telefone', 'salario')
+    fields = ('CPF', 'nome'), ('telefone', 'profissao')
 
 class MissaoAdmin(admin.ModelAdmin):
     actions = None
@@ -74,15 +55,15 @@ class MissaoAdmin(admin.ModelAdmin):
     list_filter = 'em_Andamento', 'inicio', 'fim', 'congregacao__nome', 'congregacao__localidade',
     search_fields = 'nome', 'meta'
 
-    fields = ('nome', 'descricao'), ('congregacao', 'meta'), 'em_Andamento', ('inicio', 'fim')
+    fields = ('nome', 'descricao'), ('congregacao', 'meta'), ('inicio', 'fim', 'em_Andamento')
 
 class SaidaAdmin(admin.ModelAdmin):
     actions = None
-    list_display = 'nome', 'categoria', 'valor', 'empresa', 'data', 'administrador'
-    list_filter = 'data', 'categoria__nome', 'empresa__nome', 'administrador__nome'
+    list_display = 'nome', 'categoria', 'valor', 'forma_de_Pagamento', 'empresa', 'data'
+    list_filter = 'data', 'categoria__nome', 'forma_de_Pagamento', 'empresa__nome', 'administrador__nome'
     search_fields = 'nome', 'valor'
 
-    fields = 'categoria', ('nome', 'descricao'), 'data', ('valor', 'empresa'), ('comprovante', 'nota_Fiscal'), 'administrador'
+    fields = 'categoria', ('nome', 'descricao'), 'data', ('valor', 'forma_de_Pagamento', 'empresa'), ('comprovante', 'nota_Fiscal'), 'administrador'
 
 class SimplesAdmin(admin.ModelAdmin):
     actions = None

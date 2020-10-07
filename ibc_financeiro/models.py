@@ -50,7 +50,7 @@ class Congregacao(models.Model):
         verbose_name_plural = 'congregações'
 
     def __str__(self):
-        return self.nome
+        return self.nome + ' (' + self.localidade + ')'
 
 class Contador(models.Model):
     nome = models.CharField(max_length = 70)
@@ -66,11 +66,11 @@ class Contador(models.Model):
         return self.nome
 
 class Empresa(models.Model):
-    CNPJ = models.CharField(unique = True, max_length = 18, validators = [MinLengthValidator(14)])
+    CPF_CNPJ = models.CharField(unique = True, max_length = 18, validators = [MinLengthValidator(11)])
     nome = models.CharField(max_length = 70)
-    descricao = models.CharField(max_length = 100, blank = True, null = True)
-    endereco = models.CharField(max_length = 80) 
-    cidade = models.CharField(max_length = 60, default = 'Corrente')
+    descricao = models.CharField(blank = True, null = True, max_length = 100)
+    endereco = models.CharField(blank = True, null = True, max_length = 100)
+    cidade = models.CharField(blank = True, null = True, max_length = 60, default = 'Corrente')
 
     class Meta:
         db_table = 'empresa'
@@ -83,7 +83,7 @@ class Entrada(models.Model):
     congregacao = models.ForeignKey('Congregacao', on_delete = models.CASCADE)
     data = models.DateField(default = date.today)
     valor = models.DecimalField(max_digits = 12, decimal_places = 2)
-    forma_de_Pagamento = models.ForeignKey('Pagamento', on_delete = models.CASCADE)
+    forma_de_Entrada = models.ForeignKey('Pagamento', on_delete = models.CASCADE)
     categoria = models.ForeignKey('CategoriaEntrada', on_delete = models.CASCADE)
     descricao = models.CharField(blank = True, null = True, max_length = 100)
     comprovante = models.FileField(blank = True, null = True, validators = [FileExtensionValidator(['jpeg', 'jpg', 'pdf', 'png'])], upload_to = 'documentos/comprovantes/entradas')
@@ -93,7 +93,7 @@ class Entrada(models.Model):
         db_table = 'entrada'
 
     def __str__(self):
-        return str(self.valor)
+        return 'R$ ' + str(self.valor)
 
     def delete(self, *args, **kwargs):
         os.remove(self.comprovante.path)
@@ -135,7 +135,7 @@ class Membro(models.Model):
     CPF = models.CharField(unique = True, blank = True, null = True, max_length = 15, validators = [MinLengthValidator(11)])
     nome = models.CharField(max_length = 75)
     telefone = models.CharField(blank = True, null = True, max_length = 14, validators = [MinLengthValidator(8)])
-    salario = models.DecimalField(blank = True, null = True, max_digits = 12, decimal_places = 2)
+    profissao = models.CharField(blank = True, null = True, max_length = 45)
 
     class Meta:
         db_table = 'membro'
@@ -177,6 +177,7 @@ class Saida(models.Model):
     empresa = models.ForeignKey('Empresa', on_delete = models.CASCADE)
     data = models.DateField(default = date.today)
     valor = models.DecimalField(max_digits = 12, decimal_places = 2)
+    forma_de_Pagamento = models.ForeignKey('Pagamento', on_delete = models.CASCADE)
     comprovante = models.FileField(blank = True, null = True, validators = [FileExtensionValidator(['jpeg', 'jpg', 'pdf', 'png'])], upload_to = 'documentos/comprovantes/saidas')
     nota_Fiscal = models.FileField(blank = True, null = True, validators = [FileExtensionValidator(['jpeg', 'jpg', 'pdf', 'png'])], upload_to = 'documentos/notas_fiscais')
     administrador = models.ForeignKey('Administrador', on_delete = models.CASCADE)
