@@ -789,13 +789,9 @@
                     <h2> {% block titulo %} {% endblock %} </h2>
                 </div>
 
-                
+                {% block dinamico %} {% endblock %}
             </div>
         </section>
-
-        {% block body %}
-
-        {% endblock %}
         
         <script src= "{% static 'plugins/jquery/jquery.min.js' %}"> </script>
         <script src= "{% static 'plugins/bootstrap/js/bootstrap.js' %}"> </script>
