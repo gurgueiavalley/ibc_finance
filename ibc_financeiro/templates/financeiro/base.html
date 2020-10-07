@@ -6,7 +6,7 @@
         <meta charset= 'utf-8'>
         <meta content= 'width= device-width, initial-scale= 1, maximum-scale= 1, user-scalable= no' name = 'viewport'>
         
-        <link rel= 'icon' href = "favicon.ico" type="image/x-icon">
+        <link rel= 'icon' href= "{% static 'images/logo.png' %}" type= 'image/png'>
         <title>Welcome To | Bootstrap Based Admin Template - Material Design</title>
 
         <!-- Google Fonts -->
@@ -31,4 +31,8 @@
         <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
         <link href="css/themes/all-themes.css" rel="stylesheet" />
     </head>
+
+    {% block body %}
+
+    {% endblock %}
 </html>
