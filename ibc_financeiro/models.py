@@ -162,7 +162,6 @@ class Missao(models.Model):
 
 class Pagamento(models.Model):
     nome = models.CharField(unique = True, max_length = 50)
-    descricao = models.CharField(blank = True, null = True, max_length = 100)
     
     class Meta:
         db_table = 'pagamento'
