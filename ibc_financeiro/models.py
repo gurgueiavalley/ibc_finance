@@ -131,6 +131,16 @@ class EntradaMissao(models.Model):
     def __str__(self):
         return 'R$ ' + str(self.valor)
 
+class Excel(models.Model):
+    arquivo = models.FileField(validators = [FileExtensionValidator(['xlsx'])], upload_to = 'documentos')
+
+    class Meta:
+        db_table = 'excel'
+
+    def delete(self, *args, **kwargs):
+        os.remove(self.arquivo.path)
+        super(Excel, self).delete(*args, **kwargs)
+
 class Membro(models.Model):
     CPF = models.CharField(unique = True, blank = True, null = True, max_length = 15, validators = [MinLengthValidator(11)])
     nome = models.CharField(max_length = 75)
@@ -194,10 +204,3 @@ class Saida(models.Model):
         os.remove(self.comprovante.path)
         os.remove(self.nota_Fiscal.path)
         super(Saida, self).delete(*args, **kwargs)
-
-class Excel(models.Model):
-    arquivo = models.FileField(blank = True, null = True, validators = [FileExtensionValidator(['xlsx'])], upload_to = 'documentos')
-
-    def delete(self, *args, **kwargs):
-        os.remove(self.arquivo.path)
-        super(Excel, self).delete(*args, **kwargs)
