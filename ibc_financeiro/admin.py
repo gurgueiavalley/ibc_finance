@@ -63,6 +63,12 @@ class MissaoAdmin(admin.ModelAdmin):
 
     fields = ('nome', 'descricao'), ('congregacao', 'meta'), ('inicio', 'fim', 'em_Andamento')
 
+class PagamentoAdmin(admin.ModelAdmin):
+    actions = None
+    list_display = 'nome',
+    ordering = 'nome',
+    search_fields = 'nome',
+
 class SaidaAdmin(admin.ModelAdmin):
     actions = None
     list_display = 'nome', 'categoria', 'valor', 'forma_de_Pagamento', 'empresa', 'data'
@@ -95,5 +101,5 @@ admin.site.register(EntradaAvulsa, EntradaAvulsaAdmin)
 admin.site.register(EntradaMissao, EntradaMissaoAdmin)
 admin.site.register(Membro, MembroAdmin)
 admin.site.register(Missao, MissaoAdmin)
-admin.site.register(Pagamento, SimplesAdmin)
+admin.site.register(Pagamento, PagamentoAdmin)
 admin.site.register(Saida, SaidaAdmin)
