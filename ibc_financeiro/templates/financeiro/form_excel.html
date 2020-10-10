@@ -1,0 +1,18 @@
+{% extends 'financeiro/base.html' %}
+
+{% block titulo %}
+    DASHBOARD
+{% endblock %}
+
+{% block dinamico %}
+    <form action="{% url 'cadMembrosExcel' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for form in form %}
+            {{form}}
+        {% endfor %}
+        <br>
+        <button>Importar</button>
+    </form>    
+{% endblock %}
+
+
