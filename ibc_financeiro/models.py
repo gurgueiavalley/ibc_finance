@@ -194,3 +194,10 @@ class Saida(models.Model):
         os.remove(self.comprovante.path)
         os.remove(self.nota_Fiscal.path)
         super(Saida, self).delete(*args, **kwargs)
+
+class Excel(models.Model):
+    arquivo = models.FileField(blank = True, null = True, validators = [FileExtensionValidator(['xlsx'])], upload_to = 'documentos')
+
+    def delete(self, *args, **kwargs):
+        os.remove(self.arquivo.path)
+        super(Excel, self).delete(*args, **kwargs)
