@@ -1,4 +1,5 @@
 from django.shortcuts import render
+
 import pandas as pd
 from . models import Membro
 from decimal import Decimal
@@ -6,7 +7,8 @@ from ibc_financeiro.forms import FormExcel
 import os
 from ibc_financeiro.models import Excel
 
-# Create your views here
+def index(request):
+    return render(request, 'financeiro/index.html')
 
 def cadMembrosExcel(request):
     #Instalar o pandas
@@ -36,6 +38,3 @@ def cadMembrosExcel(request):
     else:
         form = FormExcel()
     return render(request, 'financeiro/form_excel.html', {'form': form})
-
-def index(request):
-    return render(request, 'financeiro/index.html')
