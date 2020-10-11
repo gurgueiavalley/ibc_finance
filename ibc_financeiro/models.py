@@ -137,6 +137,9 @@ class Excel(models.Model):
     class Meta:
         db_table = 'excel'
 
+    def __str__(self):
+        return 'arquivo'
+
     def delete(self, *args, **kwargs):
         os.remove(self.arquivo.path)
         super(Excel, self).delete(*args, **kwargs)
