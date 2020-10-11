@@ -136,9 +136,10 @@ class Excel(models.Model):
 
     class Meta:
         db_table = 'excel'
+        verbose_name_plural = 'Excel'
 
     def __str__(self):
-        return 'arquivo'
+        return 'Arquivo'
 
     def delete(self, *args, **kwargs):
         os.remove(self.arquivo.path)
