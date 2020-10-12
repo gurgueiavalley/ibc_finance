@@ -91,7 +91,6 @@ class UsuarioAdmin(admin.ModelAdmin):
 admin.site.site_header = 'IBC Financeiro'
 
 admin.site.unregister(Group)
-admin.site.unregister(User)
 
 admin.site.register(Administrador, UsuarioAdmin)
 admin.site.register(CategoriaEntrada, CategoriaAdmin)
