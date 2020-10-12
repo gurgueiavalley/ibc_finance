@@ -1,6 +1,11 @@
 from django.shortcuts import render
+
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
+
+from reportlab.platypus import SimpleDocTemplate
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import Table
 
 import pandas as pd
 from . models import Membro
@@ -14,7 +19,7 @@ from pathlib import Path
 def index(request):
     return render(request, 'financeiro/index.html')
 
-def relatorioSaida(request):
+def relatorioSaida1(request):
     # Criando arquivo
     PDF = canvas.Canvas('relatorioSaida.pdf')
     PDF.setTitle('Relatório de Saída')
@@ -65,6 +70,29 @@ def desenharCoordenadas(PDF):
     PDF.drawString(10, 600, 'y600')
     PDF.drawString(10, 700, 'y700')
     PDF.drawString(10, 800, 'y800')
+
+def relatorioSaida(request):
+    # Dados
+    dados = [
+        ['Nome', 'Valor'],
+        ['Monitor', 'R$800,00'],
+        ['Cadeira', 'R$320,00'],
+        ['SSD', 'R$260,00'],
+    ]
+    
+    PDF = SimpleDocTemplate(
+        'relatorioSaida.pdf',
+        pagesize = letter
+    )
+
+    tabela = Table(dados)
+
+    elementos = []
+    elementos.append(tabela)
+
+    PDF.build(elementos)
+
+    return render(request, 'financeiro/index.html')
 
 def cadMembrosExcel(request):
     #Instalar o pandas
