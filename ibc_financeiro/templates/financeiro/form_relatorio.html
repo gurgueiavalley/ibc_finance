@@ -1,0 +1,19 @@
+{% extends 'financeiro/base.html' %}
+
+{% block titulo %}
+    DASHBOARD
+{% endblock %}
+
+{% block dinamico %}
+    <form action="{% url 'relatorio' %}" method="POST">
+        {% csrf_token %}
+        Data Inicio: 
+
+        <input type='date' name='dataInicio'>
+        <br>
+        Data Fim: 
+        <input type='date' name='dataFim'>
+        <br>
+        <button>Gerar Relatorio</button>
+    </form>    
+{% endblock %}
