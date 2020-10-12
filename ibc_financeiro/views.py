@@ -20,6 +20,8 @@ from pathlib import Path
 def index(request):
     return render(request, 'financeiro/index.html')
 
+
+
 def relatorioSaida1(request):
     # Criando arquivo
     PDF = canvas.Canvas('relatorioSaida.pdf')
