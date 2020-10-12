@@ -1,13 +1,4 @@
 from django.shortcuts import render
-
-from reportlab.pdfgen import canvas
-from reportlab.lib import colors
-
-from reportlab.platypus import SimpleDocTemplate
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import Table
-from reportlab.platypus import TableStyle
-
 import pandas as pd
 from . models import Membro
 from decimal import Decimal
@@ -16,6 +7,13 @@ import os
 from ibc_financeiro.models import Entrada, Excel
 from django.conf import settings
 from pathlib import Path
+
+from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import Table
+from reportlab.platypus import TableStyle
 
 def index(request):
     return render(request, 'financeiro/index.html')
