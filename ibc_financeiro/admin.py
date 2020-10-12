@@ -46,6 +46,9 @@ class EntradaMissaoAdmin(admin.ModelAdmin):
     list_filter = 'data', 'missao__nome', 'missao__congregacao__nome',
     search_fields = 'valor',
 
+class ExcelAdmin(admin.ModelAdmin):
+    actions = None
+
 class MembroAdmin(admin.ModelAdmin):
     actions = None
     list_display = 'CPF', 'nome', 'telefone', 'profissao'
@@ -99,8 +102,8 @@ admin.site.register(Empresa, EmpresaAdmin)
 admin.site.register(Entrada, EntradaAdmin)
 admin.site.register(EntradaAvulsa, EntradaAvulsaAdmin)
 admin.site.register(EntradaMissao, EntradaMissaoAdmin)
+admin.site.register(Excel, ExcelAdmin)
 admin.site.register(Membro, MembroAdmin)
 admin.site.register(Missao, MissaoAdmin)
 admin.site.register(Pagamento, PagamentoAdmin)
 admin.site.register(Saida, SaidaAdmin)
-admin.site.register(Excel)
