@@ -20,7 +20,6 @@ from pathlib import Path
 def index(request):
     return render(request, 'financeiro/index.html')
 
-
 def cadMembrosExcel(request):
     #Instalar o pandas
     #pip install pandas
@@ -77,6 +76,7 @@ def relatorio(request):
         return render(request, 'index.html', {'nome': nome})
     else:
         return render(request, 'financeiro/form_relatorio.html', {})
+
 
 
 def relatorioSaida1(request):
