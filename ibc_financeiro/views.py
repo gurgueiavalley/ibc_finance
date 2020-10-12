@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from reportlab.pdfgen import canvas
+from reportlab.lib import colors
 
 import pandas as pd
 from . models import Membro
@@ -6,12 +8,8 @@ from decimal import Decimal
 from ibc_financeiro.forms import FormExcel
 import os
 from ibc_financeiro.models import Entrada, Excel
-from reportlab.pdfgen import canvas
 from django.conf import settings
 from pathlib import Path
-
-from reportlab.pdfgen import canvas
-from reportlab.lib import colors
 
 def index(request):
     return render(request, 'financeiro/index.html')
