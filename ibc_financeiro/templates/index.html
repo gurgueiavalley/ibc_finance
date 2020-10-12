@@ -1,11 +1,12 @@
-{% extends 'financeiro/base.html' %}
 
+{% extends 'financeiro/base.html' %}
+{% load static %}
 {% block titulo %}
     DASHBOARD
 {% endblock %}
 
 {% block dinamico %}
-    <p>
-        Dados inseridos com sucesso
-    </p>
+    {% if nome %}
+        <embed src="{% static nome %}" width="100%" height="500px">
+    {% endif %}
 {% endblock %}
