@@ -6,6 +6,7 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import Table
+from reportlab.platypus import TableStyle
 
 import pandas as pd
 from . models import Membro
@@ -86,6 +87,28 @@ def relatorioSaida(request):
     )
 
     tabela = Table(dados)
+    
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (3, 0), colors.blue),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+
+        ('FONTNAME', (0, 0), (-1, 0), 'Times-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 13),
+
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+
+        ('BOX', (0, 0), (-1, -1), 2, colors.black),
+
+        ('LINEBEFORE', (1, 1), (2, -1), 2, colors.red),
+        ('LINEABOVE', (0, 2), (-1, 2), 2, colors.green),
+
+        ('GRID', (0, 1), (-1, -1), 2, colors.black),
+    ])
+    tabela.setStyle(style)
 
     elementos = []
     elementos.append(tabela)
