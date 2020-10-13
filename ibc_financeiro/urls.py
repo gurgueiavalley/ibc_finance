@@ -5,5 +5,5 @@ urlpatterns = [
     path('', views.index, name = 'index'),
     path('cadMembrosExcel', views.cadMembrosExcel, name='cadMembrosExcel'),
     path('relatorio', views.relatorio, name='relatorio'),
-    path('relatorioSaida', views.relatorio, name = 'relatorioSaida'),
+    path('relatorioSaida', views.relatorioSaida, name = 'relatorioSaida'),
 ]
