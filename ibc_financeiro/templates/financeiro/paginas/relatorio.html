@@ -1,4 +1,5 @@
 ﻿{% extends 'financeiro/base.html' %}
+{% load static %}
 
 {% block titulo %}
     Relatório de Saída
@@ -826,4 +827,13 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block JS %}
+    <script src= "{% static 'plugins/autosize/autosize.js' %}"> </script>
+    <script src= "{% static 'plugins/momentjs/moment.js' %}"> </script>
+    <script src= "{% static 'plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"> </script>
+    <script src= "{% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"> </script>
+
+    <script src= "{% static 'js/pages/forms/basic-form-elements.js' %}"> </script>
 {% endblock %}
