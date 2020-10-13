@@ -75,7 +75,8 @@ def relatorio(request):
     else:
         return render(request, 'financeiro/form_relatorio.html', {})
 
-
+def relatorioSaida(request):
+    pass
 
 def relatorioSaida1(request):
     # Criando arquivo
@@ -129,7 +130,7 @@ def desenharCoordenadas(PDF):
     PDF.drawString(10, 700, 'y700')
     PDF.drawString(10, 800, 'y800')
 
-def relatorioSaida(request):
+def relatorioSaida2(request):
     # Dados
     dados = [
         ['Nome', 'Valor'],
