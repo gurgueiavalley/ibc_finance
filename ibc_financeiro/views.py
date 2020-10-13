@@ -76,7 +76,9 @@ def relatorio(request):
         return render(request, 'financeiro/form_relatorio.html', {})
 
 def relatorioSaida(request):
-    pass
+    return render(request, 'financeiro/paginas/relatorio.html')
+
+
 
 def relatorioSaida1(request):
     # Criando arquivo
