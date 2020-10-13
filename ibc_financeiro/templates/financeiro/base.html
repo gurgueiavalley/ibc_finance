@@ -15,7 +15,8 @@
         <link rel= 'stylesheet' href= "{% static 'plugins/bootstrap/css/bootstrap.css' %}">
         <link rel= 'stylesheet' href= "{% static 'plugins/node-waves/waves.css' %}">
         <link rel= 'stylesheet' href= "{% static 'plugins/animate-css/animate.css' %}">
-        <link rel= 'stylesheet' href= "{% static 'plugins/morrisjs/morris.css' %}">
+        
+        {% block CSS %} {% endblock %}
         
         <link rel= 'stylesheet' href= "{% static 'css/style.css' %}">
         <link rel= 'stylesheet' href= "{% static 'css/themes/all-themes.css' %}">
