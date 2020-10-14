@@ -96,7 +96,9 @@ class Entrada(models.Model):
         return 'R$ ' + str(self.valor)
 
     def delete(self, *args, **kwargs):
-        os.remove(self.comprovante.path)
+        if bool(self.comprovante):
+            os.remove(self.comprovante.path)
+        
         super(Entrada, self).delete(*args, **kwargs)
 
 class EntradaAvulsa(models.Model):
@@ -115,7 +117,9 @@ class EntradaAvulsa(models.Model):
         return 'R$ ' + str(self.valor)
     
     def delete(self, *args, **kwargs):
-        os.remove(self.comprovante.path)
+        if bool(self.comprovante):
+            os.remove(self.comprovante.path)
+        
         super(EntradaAvulsa, self).delete(*args, **kwargs)
 
 class EntradaMissao(models.Model):
@@ -142,7 +146,9 @@ class Excel(models.Model):
         return 'Arquivo'
 
     def delete(self, *args, **kwargs):
-        os.remove(self.arquivo.path)
+        if bool(self.arquivo):
+            os.remove(self.arquivo.path)
+        
         super(Excel, self).delete(*args, **kwargs)
 
 class Membro(models.Model):
@@ -205,6 +211,10 @@ class Saida(models.Model):
         return self.nome
 
     def delete(self, *args, **kwargs):
-        os.remove(self.comprovante.path)
-        os.remove(self.nota_Fiscal.path)
+        if bool(self.comprovante):
+            os.remove(self.comprovante.path)
+        
+        if bool(self.nota_Fiscal):
+            os.remove(self.nota_Fiscal.path)
+        
         super(Saida, self).delete(*args, **kwargs)
