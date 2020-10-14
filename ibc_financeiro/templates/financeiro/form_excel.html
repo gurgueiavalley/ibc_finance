@@ -7,6 +7,7 @@
 {% block dinamico %}
     <form action="{% url 'cadMembrosExcel' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
+        <label class="text">Arquivo Excel</label>
         {% for form in form %}
             {{form}}
         {% endfor %}
