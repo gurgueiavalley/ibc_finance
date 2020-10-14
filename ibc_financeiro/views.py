@@ -4,11 +4,11 @@ from . models import Membro
 from decimal import Decimal
 from ibc_financeiro.forms import FormExcel
 import os
-from ibc_financeiro.models import Entrada, Excel
+from ibc_financeiro.models import Congregacao, Entrada, EntradaAvulsa, EntradaMissao, Excel
 from reportlab.pdfgen import canvas
 from django.conf import settings
 from pathlib import Path
-
+import datetime
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate
 from reportlab.lib.pagesizes import letter
@@ -50,7 +50,9 @@ def cadMembrosExcel(request):
 def relatorio(request):
     if request.method == 'POST':
         print(request.POST)
-        valor_Final = 0
+        valor_Final_Entrada = 0
+        valor_Final_Entrada_Avulsa = 0
+        valor_Final_Entrada_Misssao = 0
         y = 0
         caminho = "ibc_financeiro/static/relatorio_entrada.pdf"
         pdf = canvas.Canvas(caminho)
@@ -58,22 +60,62 @@ def relatorio(request):
         pdf.drawImage('ibc_financeiro/static/images/logo.png', 10,780,height=50, width=60)
         pdf.setFont('Times-Bold', 24)
         pdf.drawString(200,800,"Relatório de Entradas")
+        pdf.setFont('Times-Bold', 16)
+        pdf.drawString(20, 750 - y, "Entradas")
         pdf.setFont('Helvetica', 12)
-
-        for entrada in Entrada.objects.filter(data__range=[request.POST['dataInicio'], request.POST['dataFim']]).order_by('data'):
-            y = y + 20
-            if(y > 500):
+        for entrada in Entrada.objects.filter(congregacao__nome = request.POST['congregacao'],data__range=[request.POST['dataInicio'], request.POST['dataFim']]).order_by('data'):
+            y = y + 30
+            if(y > 800):
                 y = 0
                 pdf.showPage()
-            pdf.drawString(100, 750 - y, "Data: " +  str(entrada.data))
+            pdf.drawString(40, 750 - y, "Data: " +  str(entrada.data))
+            pdf.drawString(220,750 - y,"Categoria: " + str(entrada.categoria))
             pdf.drawString(420,750 - y,"Valor: " + str(entrada.valor))
-            valor_Final = valor_Final + entrada.valor
-        pdf.drawString(420,720 - y,"Valor Total: "+str(valor_Final))
+            valor_Final_Entrada = valor_Final_Entrada + entrada.valor
+
+        pdf.setFont('Times-Bold', 16)
+        pdf.drawString(20, 720 - y, "Entradas Avulsa")
+        pdf.setFont('Helvetica', 12)
+
+        for entradaAvulsa in EntradaAvulsa.objects.filter(congregacao__nome = request.POST['congregacao'],data__range=[request.POST['dataInicio'], request.POST['dataFim']]).order_by('data'):
+            y = y + 30
+            if(y > 800):
+                y = 0
+                pdf.showPage()
+            pdf.drawString(40, 720 - y, "Data: " +  str(entradaAvulsa.data))
+            pdf.drawString(420,720 - y,"Valor: " + str(entradaAvulsa.valor))
+            valor_Final_Entrada_Avulsa = valor_Final_Entrada_Avulsa + entradaAvulsa.valor
+        
+
+        pdf.setFont('Times-Bold', 16)
+        pdf.drawString(20, 690 - y, "Entradas de Missões")
+        pdf.setFont('Helvetica', 12)
+
+        for missao in EntradaMissao.objects.filter(missao__congregacao__nome = request.POST['congregacao'],data__range=[request.POST['dataInicio'], request.POST['dataFim']]).order_by('data'):
+            y = y + 30
+            if(y > 600):
+                y = 0
+                pdf.showPage()
+                y = 0
+            pdf.drawString(40, 680 - y, "Data: " +  str(missao.data))
+            pdf.drawString(200,680 - y,"Missão: " + str(missao.missao))
+            pdf.drawString(420,680 - y,"Valor: " + str(missao.valor))
+            valor_Final_Entrada_Misssao= valor_Final_Entrada_Misssao + missao.valor
+        
+
+        valorTotal = valor_Final_Entrada + valor_Final_Entrada_Avulsa + valor_Final_Entrada_Misssao
+        pdf.setFont('Times-Bold', 14)
+        pdf.drawString(325,640 - y,"Total Entrada: "+" R$ "+str(valor_Final_Entrada))
+        pdf.drawString(325,620 - y,"Total Avulso: "+" R$ "+str(valor_Final_Entrada_Avulsa))
+        pdf.drawString(325,600 - y,"Total Missões: "+" R$ "+str(valor_Final_Entrada_Misssao))
+        pdf.drawString(325,580 - y,"Valor Total: "+" R$ "+str(valorTotal))
+        
         pdf.save()
-        nome = 'relatorio_entrada.pdf'
+        nome = "relatorio_entrada.pdf"
         return render(request, 'index.html', {'nome': nome})
     else:
-        return render(request, 'financeiro/form_relatorio.html', {})
+        congregacao = Congregacao.objects.all()
+        return render(request, 'financeiro/form_relatorio.html', {'congregacao': congregacao})
 
 def relatorioSaida(request):
     return render(request, 'financeiro/paginas/relatorio.html')
@@ -176,3 +218,4 @@ def relatorioSaida2(request):
     PDF.build(elementos)
 
     return render(request, 'financeiro/index.html')
+ 

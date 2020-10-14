@@ -1,19 +1,43 @@
 {% extends 'financeiro/base.html' %}
-
+{% load static %}
 {% block titulo %}
     DASHBOARD
 {% endblock %}
 
-{% block dinamico %}
-    <form action="{% url 'relatorio' %}" method="POST">
-        {% csrf_token %}
-        Data Inicio: 
+{% block CSS %}
+    <link rel= 'stylesheet' href= "{% static 'plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'plugins/bootstrap-datepicker/css/bootstrap-datepicker.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'plugins/waitme/waitMe.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'plugins/bootstrap-select/css/bootstrap-select.css' %}">
+{% endblock %}
 
-        <input type='date' name='dataInicio'>
+{% block dinamico %}
+    <form action="{% url 'relatorio' %}" method="POST" form="form-group">
+        {% csrf_token %}
+        <label class="text">Congregação</label> 
         <br>
-        Data Fim: 
-        <input type='date' name='dataFim'>
+        <select class="form-control" name="congregacao" required>
+            <option selected class="text" required>Selecione uma Congregação</option>
+            {% for congregacoes in congregacao %}
+                <option class="text" value{{congregacoes.nome}}> {{ congregacoes.nome }}</option>
+            {% endfor %}
+        </select>
         <br>
-        <button>Gerar Relatorio</button>
+        <br>
+        <label class="text">Data Inicio</label> 
+        <input type='date' name='dataInicio' class="form-control" required>
+        <br>
+        <label class="text">Data Fim</label> 
+        <input type='date' name='dataFim' class="form-control" required>
+        <br>
+        <button class="btn btn-primary">Gerar Relatorio</button>
     </form>    
+{% endblock %}
+{% block JS %}
+    <script src= "{% static 'plugins/autosize/autosize.js' %}"> </script>
+    <script src= "{% static 'plugins/momentjs/moment.js' %}"> </script>
+    <script src= "{% static 'plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"> </script>
+    <script src= "{% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"> </script>
+
+    <script src= "{% static 'js/pages/forms/basic-form-elements.js' %}"> </script>
 {% endblock %}

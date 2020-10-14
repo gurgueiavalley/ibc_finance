@@ -3,6 +3,7 @@ from .models import *
 
 class FormExcel(forms.Form):
     arquivo = forms.FileField()
+    arquivo.widget.attrs["class"] = "form-control"
 
 class FiltrosRelatorioSaida(forms.Form):
     inicio = forms.DateField(label = 'Data de Início')
