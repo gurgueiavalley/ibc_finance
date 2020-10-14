@@ -12,19 +12,23 @@
 {% endblock %}
 
 {% block dinamico %}
-    <form action="{% url 'relatorio' %}" method="POST">
+    <form action="{% url 'relatorio' %}" method="POST" form="form-group">
         {% csrf_token %}
-        <select class="form-control show-tick">
-            <option class="form-control show-tick">IB CENTRO</option>
+        <label class="text">Congregação</label> 
+        <br>
+        <select class="form-control" name="congregacao" required>
+            <option selected class="text" required>Selecione uma Congregação</option>
+            {% for congregacoes in congregacao %}
+                <option class="text" value{{congregacoes.nome}}> {{ congregacoes.nome }}</option>
+            {% endfor %}
         </select>
         <br>
-
-        Data Inicio: 
-
-        <input type='date' name='dataInicio' class="form-control">
         <br>
-        Data Fim: 
-        <input type='date' name='dataFim' class="form-control">
+        <label class="text">Data Inicio</label> 
+        <input type='date' name='dataInicio' class="form-control" required>
+        <br>
+        <label class="text">Data Fim</label> 
+        <input type='date' name='dataFim' class="form-control" required>
         <br>
         <button class="btn btn-primary">Gerar Relatorio</button>
     </form>    

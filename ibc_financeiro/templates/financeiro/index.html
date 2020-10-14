@@ -1,7 +1,14 @@
 ﻿{% extends 'financeiro/base.html' %}
+{% load static %}
 
-{% block titulo %}
-    DASHBOARD
+{% block title %}
+    {% block titulo %}
+        DASHBOARD
+    {% endblock %}
+{% endblock %}
+
+{% block CSS %}
+    <link rel= 'stylesheet' href= "{% static 'plugins/morrisjs/morris.css' %}">
 {% endblock %}
 
 {% block dinamico %}
@@ -307,3 +314,18 @@
         <!-- #END# Browser Usage -->
     </div>
 {% endblock %}
+
+{% block JS %}
+    <script src= "{% static 'plugins/jquery-countto/jquery.countTo.js' %}"> </script>
+    <script src= "{% static 'plugins/raphael/raphael.min.js' %}"> </script>
+    <script src= "{% static 'plugins/morrisjs/morris.js' %}"> </script>
+    <script src= "{% static 'plugins/chartjs/Chart.bundle.js' %}"> </script>
+    <script src= "{% static 'plugins/flot-charts/jquery.flot.js' %}"> </script>
+    <script src= "{% static 'plugins/flot-charts/jquery.flot.resize.js' %}"> </script>
+    <script src= "{% static 'plugins/flot-charts/jquery.flot.pie.js' %}"> </script>
+    <script src= "{% static 'plugins/flot-charts/jquery.flot.categories.js' %}"> </script>
+    <script src= "{% static 'plugins/flot-charts/jquery.flot.time.js' %}"> </script>
+    <script src= "{% static 'plugins/jquery-sparkline/jquery.sparkline.js' %}"> </script>
+    
+    <script src= "{% static 'js/pages/index.js' %}"> </script>
+{% endblock  %}
