@@ -1,13 +1,12 @@
 from django import forms
-from . import models
+from .models import *
 
 class FormExcel(forms.Form):
     arquivo = forms.FileField()
 
-class SaidaForm(forms.Form):
-    categorias = []
-
-    for category in CategoriaSaida.objects.all():
-        categorias.append(category.nome)
-
-    categoria = forms.ChoiceField(choices = [categorias], required= False)
+class FiltrosRelatorioSaida(forms.Form):
+    inicio = forms.DateField(label = 'Data de Início')
+    fim = forms.DateField(label = 'Data de Fim')
+    categoria = forms.ModelChoiceField(required = False, queryset = CategoriaSaida.objects.all(), empty_label = 'Escolha uma categoria')
+    empresa = forms.ModelChoiceField(required = False, queryset = Empresa.objects.all(), empty_label = 'Escolha uma empresa')
+    pagamento = forms.ModelChoiceField(required = False, queryset = Pagamento.objects.all(), empty_label = 'Escolha a forma de pagamento')
