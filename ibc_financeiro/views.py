@@ -51,13 +51,13 @@ def relatorio(request):
     if request.method == 'POST':
         print(request.POST)
         valor_Final_Entrada = 0
-        valor_Final_Entrada_Avulca = 0
+        valor_Final_Entrada_Avulsa = 0
         valor_Final_Entrada_Misssao = 0
         y = 0
         caminho = "ibc_financeiro/static/relatorio_entrada.pdf"
         pdf = canvas.Canvas(caminho)
         pdf.setTitle("Relatório de Entradas")
-        pdf.drawImage('ibc_financeiro/static/imagens/logo.png', 10,780,height=50, width=60)
+        pdf.drawImage('ibc_financeiro/static/images/logo.png', 10,780,height=50, width=60)
         pdf.setFont('Times-Bold', 24)
         pdf.drawString(200,800,"Relatório de Entradas")
         pdf.setFont('Times-Bold', 16)
@@ -84,7 +84,7 @@ def relatorio(request):
                 pdf.showPage()
             pdf.drawString(40, 720 - y, "Data: " +  str(entradaAvulsa.data))
             pdf.drawString(420,720 - y,"Valor: " + str(entradaAvulsa.valor))
-            valor_Final_Entrada_Avulca = valor_Final_Entrada_Avulca + entradaAvulsa.valor
+            valor_Final_Entrada_Avulsa = valor_Final_Entrada_Avulsa + entradaAvulsa.valor
         
 
         pdf.setFont('Times-Bold', 16)
@@ -103,9 +103,12 @@ def relatorio(request):
             valor_Final_Entrada_Misssao= valor_Final_Entrada_Misssao + missao.valor
         
 
-        valorTotal = valor_Final_Entrada + valor_Final_Entrada_Avulca + valor_Final_Entrada_Misssao
+        valorTotal = valor_Final_Entrada + valor_Final_Entrada_Avulsa + valor_Final_Entrada_Misssao
         pdf.setFont('Times-Bold', 14)
-        pdf.drawString(420,640 - y,"Valor Total: "+str(valorTotal))
+        pdf.drawString(325,640 - y,"Total Entrada: "+" R$ "+str(valor_Final_Entrada))
+        pdf.drawString(325,620 - y,"Total Avulso: "+" R$ "+str(valor_Final_Entrada_Avulsa))
+        pdf.drawString(325,600 - y,"Total Missões: "+" R$ "+str(valor_Final_Entrada_Misssao))
+        pdf.drawString(325,580 - y,"Valor Total: "+" R$ "+str(valorTotal))
         
         pdf.save()
         nome = "relatorio_entrada.pdf"
