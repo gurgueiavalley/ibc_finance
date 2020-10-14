@@ -71,3 +71,4 @@ def relatorio(request):
 
 def index(request):
     return render(request, 'financeiro/index.html')
+ 
