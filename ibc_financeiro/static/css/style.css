@@ -2951,20 +2951,16 @@ section.content {
     .card .bg-black .badge {
       background-color: #fff;
       color: #555; }
-    
-    .card .header{
-      color: #555;
-      position: relative;
-      cursor: pointer;
-    }
-
-    .card .header .header-dropdown{
+  .card .header {
+    color: #555;
+    padding: 20px;
+    position: relative;
+    border-bottom: 1px solid rgba(204, 204, 204, 0.35); }
+    .card .header .header-dropdown {
       position: absolute;
-      top: 11px;
+      top: 20px;
       right: 15px;
-      list-style: none;
-    }
-
+      list-style: none; }
       .card .header .header-dropdown .dropdown-menu li {
         display: block !important; }
       .card .header .header-dropdown li {

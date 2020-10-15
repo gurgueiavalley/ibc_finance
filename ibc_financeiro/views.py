@@ -1,6 +1,6 @@
 from django.shortcuts import render
 import pandas as pd
-from . models import Membro
+from . models import *
 from decimal import Decimal
 from .forms import *
 import os
@@ -117,7 +117,7 @@ def relatorio(request):
         congregacao = Congregacao.objects.all()
         return render(request, 'financeiro/form_relatorio.html', {'congregacao': congregacao})
 
-def relatorioSaida(request):
+def relatorioSaida2(request):
     return render(request, 'financeiro/paginas/relatorio.html', {'formulario' : SaidaRelatorioForm()})
 
 
@@ -174,15 +174,22 @@ def desenharCoordenadas(PDF):
     PDF.drawString(10, 700, 'y700')
     PDF.drawString(10, 800, 'y800')
 
-def relatorioSaida2(request):
+def relatorioSaida(request):
     # Dados
     dados = [
-        ['Nome', 'Valor'],
-        ['Monitor', 'R$800,00'],
-        ['Cadeira', 'R$320,00'],
-        ['SSD', 'R$260,00'],
+        ['Nome', 'Categoria', 'Data', 'Valor']
     ]
     
+    saidas = Saida.objects.all()
+
+    total = 0
+
+    for saida in saidas:
+        dados.append([saida.nome, saida.categoria, str(saida.data), 'R$ ' + str(saida.valor)])
+        total = total + saida.valor
+
+    dados.append(['', '', 'Total', 'R$ ' + str(total)])
+
     PDF = SimpleDocTemplate(
         'relatorioSaida.pdf',
         pagesize = letter
@@ -191,13 +198,13 @@ def relatorioSaida2(request):
     tabela = Table(dados)
     
     style = TableStyle([
-        ('BACKGROUND', (0, 0), (3, 0), colors.blue),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        # ('BACKGROUND', (0, 0), (3, 0), colors.blue),
+        # ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
 
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
 
         ('FONTNAME', (0, 0), (-1, 0), 'Times-Bold'),
-        ('FONTSIZE', (0, 0), (-1, 0), 13),
+        ('FONTSIZE', (0, 0), (-1, 0), 16),
 
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
 
@@ -208,7 +215,7 @@ def relatorioSaida2(request):
         ('LINEBEFORE', (1, 1), (2, -1), 2, colors.red),
         ('LINEABOVE', (0, 2), (-1, 2), 2, colors.green),
 
-        ('GRID', (0, 1), (-1, -1), 2, colors.black),
+        ('GRID', (0, 0), (-1, -1), 2, colors.black),
     ])
     tabela.setStyle(style)
 
