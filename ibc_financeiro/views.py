@@ -2,7 +2,7 @@ from django.shortcuts import render
 import pandas as pd
 from . models import Membro
 from decimal import Decimal
-from ibc_financeiro.forms import FormExcel
+from .forms import *
 import os
 from ibc_financeiro.models import Congregacao, Entrada, EntradaAvulsa, EntradaMissao, Excel
 from reportlab.pdfgen import canvas
@@ -118,7 +118,7 @@ def relatorio(request):
         return render(request, 'financeiro/form_relatorio.html', {'congregacao': congregacao})
 
 def relatorioSaida(request):
-    return render(request, 'financeiro/paginas/relatorio.html')
+    return render(request, 'financeiro/paginas/relatorio.html', {'formulario' : SaidaRelatorioForm()})
 
 
 
