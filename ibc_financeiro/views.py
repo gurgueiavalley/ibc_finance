@@ -9,6 +9,7 @@ from reportlab.pdfgen import canvas
 from django.conf import settings
 from pathlib import Path
 import datetime
+
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate
 from reportlab.lib.pagesizes import letter
@@ -117,7 +118,7 @@ def relatorio(request):
         congregacao = Congregacao.objects.all()
         return render(request, 'financeiro/form_relatorio.html', {'congregacao': congregacao})
 
-def relatorioSaida2(request):
+def relatorioSaida(request):
     return render(request, 'financeiro/paginas/relatorio.html', {'formulario' : SaidaRelatorioForm()})
 
 
@@ -174,7 +175,7 @@ def desenharCoordenadas(PDF):
     PDF.drawString(10, 700, 'y700')
     PDF.drawString(10, 800, 'y800')
 
-def relatorioSaida(request):
+def relatorioSaida2(request):
     # Dados
     dados = [
         ['Nome', 'Categoria', 'Data', 'Valor']
@@ -225,4 +226,3 @@ def relatorioSaida(request):
     PDF.build(elementos)
 
     return render(request, 'financeiro/index.html')
- 
