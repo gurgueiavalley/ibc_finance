@@ -45,14 +45,18 @@
                         </h2>
 
                         <ul class= 'header-dropdown m-r--5'>
-                            <i class= 'material-icons'> keyboard_arrow_down </i>
-                            <i id= 'setaCima' class= 'material-icons'> keyboard_arrow_up </i>
+                            <i id= 'setaBaixo' class= 'material-icons'> keyboard_arrow_down </i>
+                            <i id= 'setaCima' class= 'material-icons' style= 'display: none'> keyboard_arrow_up </i>
                         </ul>
                     </div>
                     
                     <br>
-                    {{ formulario.categoria }}
-                    
+
+                    <form method= 'POST' action= "{% url 'relatorioSaida' %}" style= 'display: none' id= 'formulario'>
+                        {% csrf_token %}
+
+                        {{ formulario.categoria }}
+                    </form>
 
                     <h2 class="card-inside-title">Different Widths</h2>
                     <div class="row clearfix">
