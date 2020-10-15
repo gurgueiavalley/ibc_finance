@@ -6,7 +6,7 @@ class FormExcel(forms.Form):
     arquivo.widget.attrs["class"] = "form-control"
 
 class SaidaRelatorioForm(forms.Form):
-    categoria = forms.ModelMultipleChoiceField(required = False,queryset = CategoriaSaida.objects.all())
+    categoria = forms.ModelMultipleChoiceField(required = False, queryset = CategoriaSaida.objects.all())
 
 
 
