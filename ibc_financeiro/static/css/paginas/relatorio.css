@@ -16,3 +16,11 @@
 .dropdown-toggle{
     padding: 7px 0px;
 }
+
+.card .header:hover .header-dropdown #adicionar{
+    color: green;
+}
+
+.card .header:hover .header-dropdown #deletar{
+    color: red;
+}
