@@ -121,6 +121,7 @@ def relatorio(request):
 def relatorioSaida(request):
     if request.method == 'POST':
         saidas = Saida.objects.all().order_by('data')
+        categorias = request.POST.getlist('categoria')
 
     return render(request, 'financeiro/paginas/relatorio.html', {'formulario' : SaidaRelatorioForm()})
 
