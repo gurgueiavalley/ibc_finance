@@ -1,0 +1,18 @@
+.header{
+    cursor: pointer;
+    border-bottom: none !important;
+    padding: 0 !important;
+}
+
+.card .header .header-dropdown{
+    top: 10px !important;
+}
+
+.card .card-inside-title{
+    margin-top: 0px !important;
+    margin-bottom: 10px !important;
+}
+
+.dropdown-toggle{
+    padding: 7px 0px;
+}

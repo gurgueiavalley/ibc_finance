@@ -119,9 +119,15 @@ def relatorio(request):
         return render(request, 'financeiro/form_relatorio.html', {'congregacao': congregacao})
 
 def relatorioSaida(request):
+    if request.method == 'POST':
+        categorias = request.POST.getlist('categoria')
+
     return render(request, 'financeiro/paginas/relatorio.html', {'formulario' : SaidaRelatorioForm()})
 
 
+
+# print(request.GET.getlist('categoria')[0])
+# Saida.objects.filter(categoria__in = [1, 2])
 
 def relatorioSaida1(request):
     # Criando arquivo
