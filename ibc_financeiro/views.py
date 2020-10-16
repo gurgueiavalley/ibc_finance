@@ -120,7 +120,7 @@ def relatorio(request):
 
 def relatorioSaida(request):
     if request.method == 'POST':
-        categorias = request.POST.getlist('categoria')
+        saidas = Saida.objects.all().order_by('data')
 
     return render(request, 'financeiro/paginas/relatorio.html', {'formulario' : SaidaRelatorioForm()})
 
@@ -230,5 +230,6 @@ def relatorioSaida2(request):
 
     return render(request, 'financeiro/index.html')
 
+# categorias = request.POST.getlist('categoria')
 # print(request.GET.getlist('categoria')[0])
 # Saida.objects.filter(categoria__in = [1, 2])
