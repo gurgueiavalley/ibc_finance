@@ -77,6 +77,7 @@ class SaidaAdmin(admin.ModelAdmin):
     list_display = 'nome', 'categoria', 'valor', 'forma_de_Pagamento', 'empresa', 'data'
     list_filter = 'data', 'categoria__nome', 'forma_de_Pagamento', 'empresa__nome', 'administrador__nome'
     search_fields = 'nome', 'valor'
+    ordering = 'data',
 
     fields = 'categoria', ('nome', 'descricao'), 'data', ('valor', 'forma_de_Pagamento', 'empresa'), ('comprovante', 'nota_Fiscal'), 'administrador'
 
