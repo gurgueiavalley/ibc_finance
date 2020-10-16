@@ -126,9 +126,6 @@ def relatorioSaida(request):
 
 
 
-# print(request.GET.getlist('categoria')[0])
-# Saida.objects.filter(categoria__in = [1, 2])
-
 def relatorioSaida1(request):
     # Criando arquivo
     PDF = canvas.Canvas('relatorioSaida.pdf')
@@ -232,3 +229,6 @@ def relatorioSaida2(request):
     PDF.build(elementos)
 
     return render(request, 'financeiro/index.html')
+
+# print(request.GET.getlist('categoria')[0])
+# Saida.objects.filter(categoria__in = [1, 2])
