@@ -123,6 +123,8 @@ def relatorioSaida(request):
         saidas = Saida.objects.all().order_by('data')
         categorias = request.POST.getlist('categoria')
 
+        saidas = saidas.filter(categoria__nome__in = categorias) if categorias != [] else saidas
+
     return render(request, 'financeiro/paginas/relatorio.html', {'formulario' : SaidaRelatorioForm()})
 
 
@@ -230,7 +232,3 @@ def relatorioSaida2(request):
     PDF.build(elementos)
 
     return render(request, 'financeiro/index.html')
-
-# categorias = request.POST.getlist('categoria')
-# print(request.GET.getlist('categoria')[0])
-# Saida.objects.filter(categoria__in = [1, 2])
