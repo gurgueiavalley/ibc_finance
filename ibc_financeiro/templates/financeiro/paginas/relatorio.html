@@ -21,7 +21,7 @@
         <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>
             <div class= 'card'>
                 <div class= 'body'>
-                    <!-- Botão dos Filtros Adicionais -->
+                    <!-- Botão dos Filtros -->
                     <div class= 'header'>
                         <h2>
                             Filtros
@@ -34,17 +34,25 @@
                         </ul>
                     </div>
                     
-                    <!-- Filtros Adicionais -->
+                    <!-- Filtros -->
                     <form method= 'POST' action= "{% url 'relatorioSaida' %}">
                         {% csrf_token %}
                         
                         <br>
                         
                         <div style= 'display: none' id= 'filtros'>
-                            <h3 class= 'card-inside-title'> {{ formulario.categoria.label }} </h3>
-                            {{ formulario.categoria }}
-                            
-                            <br> <br>
+                            <div class= 'row clearfix'>
+                                {% for campo in formulario %}
+                                    <div class= 'col-sm-6'>
+                                        <div class= 'form-group'>
+                                            <div class= 'form-line'>
+                                                <h3 class= 'card-inside-title'> {{ campo.label }} </h3>
+                                                {{ campo }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
 
                         <button class= 'btn btn-primary btn-lg waves-effect'>

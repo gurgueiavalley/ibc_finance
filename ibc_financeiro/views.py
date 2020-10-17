@@ -1,20 +1,15 @@
 from django.shortcuts import render
-import pandas as pd
-from . models import *
-from decimal import Decimal
+
+from .models import *
 from .forms import *
+
+import pandas as pd
+from decimal import Decimal
 import os
-from ibc_financeiro.models import Congregacao, Entrada, EntradaAvulsa, EntradaMissao, Excel
 from reportlab.pdfgen import canvas
 from django.conf import settings
 from pathlib import Path
 import datetime
-
-from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import Table
-from reportlab.platypus import TableStyle
 
 def index(request):
     return render(request, 'financeiro/index.html')
@@ -121,13 +116,21 @@ def relatorio(request):
 def relatorioSaida(request):
     if request.method == 'POST':
         saidas = Saida.objects.all().order_by('data')
+
         categorias = request.POST.getlist('categoria')
+        empresas = request.POST.getlist('empresa')
 
         saidas = saidas.filter(categoria__nome__in = categorias) if categorias != [] else saidas
+        saidas = saidas.filter(empresa__nome__in = empresas) if empresas != [] else saidas
 
     return render(request, 'financeiro/paginas/relatorio.html', {'formulario' : SaidaRelatorioForm()})
 
 
+
+# from reportlab.platypus import SimpleDocTemplate
+# from reportlab.platypus import Table
+# from reportlab.lib import colors
+# from reportlab.platypus import TableStyle
 
 def relatorioSaida1(request):
     # Criando arquivo

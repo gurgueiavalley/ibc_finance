@@ -24,3 +24,7 @@
 .card .header:hover .header-dropdown #deletar{
     color: red;
 }
+
+.col-sm-6{
+    margin-bottom: 0px !important;
+}
