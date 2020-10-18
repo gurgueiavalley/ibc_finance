@@ -25,6 +25,10 @@ document.querySelectorAll('.header')[4].onclick = () => {
     }
 }
 
+$(document).ready(() => {
+    $('#id_inicio').mask('00/00/0000')
+})
+
 function removeAllSelected(){
     const opcoes = document.querySelectorAll('.filter-option')
 

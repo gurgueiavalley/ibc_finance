@@ -1,7 +1,10 @@
-.header{
+.header#filter{
     cursor: pointer;
-    border-bottom: none !important;
+}
+
+.header{
     padding: 0 !important;
+    border-bottom: none !important;
 }
 
 .card .header .header-dropdown{
@@ -25,6 +28,14 @@
     color: red;
 }
 
-.col-sm-6{
+.col-sm-6, .form-group{
     margin-bottom: 0px !important;
+}
+
+.col-xs-12{
+    padding-left: 0px !important;
+}
+
+.form-control{
+    padding-bottom: 1px;
 }

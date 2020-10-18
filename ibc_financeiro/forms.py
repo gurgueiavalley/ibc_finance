@@ -6,16 +6,18 @@ class FormExcel(forms.Form):
     arquivo.widget.attrs["class"] = "form-control"
 
 class SaidaRelatorioForm(forms.Form):
-    categoria = forms.ModelMultipleChoiceField(to_field_name = 'nome', label = 'Categoria(s)', queryset = CategoriaSaida.objects.all().order_by('nome'), required = False)
-    categoria.widget.attrs['title'] = 'Nenhuma selecionada'
-    categoria.widget.attrs['class'] = 'form-control'
+    inicio = forms.DateField(label = 'De')
+    inicio.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data'}
 
-    empresa = forms.ModelMultipleChoiceField(to_field_name = 'nome', label = 'Empresa(s)', queryset = Empresa.objects.all().order_by('nome'), required = False)
-    empresa.widget.attrs['title'] = 'Nenhuma selecionada'    
-    empresa.widget.attrs['class'] = 'form-control'
+    fim = forms.DateField(label = 'Até')
+    
+    categoria = forms.ModelMultipleChoiceField(label = 'Categoria(s)', required = False, queryset = CategoriaSaida.objects.all().order_by('nome'), to_field_name = 'nome')
+    categoria.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhuma selecionada'}
 
+    empresa = forms.ModelMultipleChoiceField(label = 'Empresa(s)', required = False, queryset = Empresa.objects.all().order_by('nome'), to_field_name = 'nome')
+    empresa.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhuma selecionada'}
 
+    pagamento = forms.ModelMultipleChoiceField(label = 'Forma(s) de Pagamento', required = False, queryset = Pagamento.objects.all().order_by('nome'))
 
-# inicio = forms.DateField(label = 'Data de Início')
-# fim = forms.DateField(label = 'Data de Fim')
-# pagamento = forms.ModelChoiceField(required = False, queryset = Pagamento.objects.all(), empty_label = 'Escolha a forma de pagamento')
+    minimo = forms.DecimalField(label = 'De', required = False, max_digits = 12, decimal_places = 2, min_value = Saida.objects.all().order_by('valor')[0].valor)
+    maximo = forms.DecimalField(label = 'Até', required = False, max_digits = 12, decimal_places = 2, max_value = Saida.objects.all().order_by('-valor')[0].valor)

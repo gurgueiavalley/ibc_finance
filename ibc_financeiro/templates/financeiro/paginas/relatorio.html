@@ -12,6 +12,7 @@
     <link rel= 'stylesheet' href= "{% static 'plugins/bootstrap-datepicker/css/bootstrap-datepicker.css' %}">
     <link rel= 'stylesheet' href= "{% static 'plugins/waitme/waitMe.css' %}">
     <link rel= 'stylesheet' href= "{% static 'plugins/bootstrap-select/css/bootstrap-select.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'plugins/nouislider/nouislider.min.css' %}">
     
     <link rel= 'stylesheet' href= "{% static 'css/paginas/relatorio.css' %}">
 {% endblock %}
@@ -19,31 +20,30 @@
 {% block dinamico %}
     <div class= 'row clearfix'>
         <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>
-            <div class= 'card'>
-                <div class= 'body'>
-                    <!-- Botão dos Filtros -->
-                    <div class= 'header'>
-                        <h2>
-                            Filtros
-                            <small> Adicionar filtros para gerar um relátorio mais refinado </small>
-                        </h2>
+            <form method= 'POST' action= "{% url 'relatorioSaida' %}">
+                {% csrf_token %}
 
-                        <ul class= 'header-dropdown m-r--5'>
-                            <i id= 'adicionar' class= 'material-icons'> add_circle </i>
-                            <i id= 'deletar' class= 'material-icons' style= 'display: none'> delete </i>
-                        </ul>
-                    </div>
-                    
-                    <!-- Filtros -->
-                    <form method= 'POST' action= "{% url 'relatorioSaida' %}">
-                        {% csrf_token %}
+                <!-- Filtros -->
+                <div class= 'card'>
+                    <div class= 'body'>
+                        <div class= 'header' id= 'filter'>                  <!-- Botão -->
+                            <h2>
+                                Filtros
+                                <small> Adicionar filtros para gerar um relátorio mais refinado </small>
+                            </h2>
+
+                            <ul class= 'header-dropdown m-r--5'>
+                                <i id= 'adicionar' class= 'material-icons'> add_circle </i>
+                                <i id= 'deletar' class= 'material-icons' style= 'display: none'> delete </i>
+                            </ul>
+                        </div>
                         
-                        <br>
-                        
-                        <div style= 'display: none' id= 'filtros'>
+                        <div style= 'display: none' id= 'filtros'>          <!-- Campos -->
+                            <br>
+
                             <div class= 'row clearfix'>
-                                {% for campo in formulario %}
-                                    <div class= 'col-sm-6'>
+                                {% for campo in formulario.visible_fields|slice:'2:5' %}
+                                    <div class= 'col-sm-4'>
                                         <div class= 'form-group'>
                                             <div class= 'form-line'>
                                                 <h3 class= 'card-inside-title'> {{ campo.label }} </h3>
@@ -53,26 +53,71 @@
                                     </div>
                                 {% endfor %}
                             </div>
+
+                            <div class= 'row clearfix'>
+                                <div class= 'col-md-12'>
+                                    <p> <b> Valor </b> </p>
+
+                                    <div id= 'nouislider_range_example'> </div>
+
+                                    <div class= 'm-t-20 font-12'>
+                                        <b> {{ formulario.minimo.label }} </b> <span class= 'js-nouislider-value'> </span> <b> {{ formulario.maximo.label }} </b>
+                                    </div>
+
+                                    {% for campo in formulario.visible_fields|slice:'5:7' %}
+                                        {{ campo }}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Datas -->
+                <div class= 'card'>
+                    <div class= 'body'>
+                        <div class= 'header'>
+                            <h2>
+                                Período
+                                <small> Informe o intervalo entre as datas que deseja ver os dados no relatório </small>
+                            </h2>
+                        </div>
+                        
+                        <br>
+                        
+                        <div class= 'col-xs-12'>
+                            <div class= 'input-daterange input-group' id= 'bs_datepicker_range_container'>
+                                {% for campo in formulario.visible_fields|slice:'0:2' %}
+                                    <span class= 'input-group-addon'> {{ campo.label }} </span>
+
+                                    <div class= 'form-line'>
+                                        {{ campo }}
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
 
                         <button class= 'btn btn-primary btn-lg waves-effect'>
                             <i class= 'material-icons'> text_snippet </i>
                             <span> GERAR RELATÓRIO </span>
                         </button>
-                    </form>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 {% endblock %}
 
 {% block JS %}
+    <script src= 'https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js'> </script>
+
     <script src= "{% static 'plugins/autosize/autosize.js' %}"> </script>
     <script src= "{% static 'plugins/momentjs/moment.js' %}"> </script>
     <script src= "{% static 'plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"> </script>
     <script src= "{% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"> </script>
+    <script src= "{% static 'plugins/nouislider/nouislider.js' %}"> </script>
 
-    <script src= "{% static 'js/pages/forms/basic-form-elements.js' %}"> </script>
-
-    <script src= "{% static 'js/paginas/relatorio.js' %}"> </script>
+    <script src= "{% static 'js/paginas/relatorio/relatorio.js' %}"> </script>
+    <script src= "{% static 'js/paginas/relatorio/basic-form-elements.js' %}"> </script>
+    <script src= "{% static 'js/paginas/relatorio/advanced-form-elements.js' %}"> </script>
 {% endblock %}
