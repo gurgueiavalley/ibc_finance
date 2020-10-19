@@ -42,8 +42,8 @@
                             <br>
 
                             <div class= 'row clearfix'>
-                                {% for campo in formulario.visible_fields|slice:'2:5' %}
-                                    <div class= 'col-sm-4'>
+                                {% for campo in formulario.visible_fields|slice:'2:6' %}
+                                    <div class= 'col-sm-3'>
                                         <div class= 'form-group'>
                                             <div class= 'form-line'>
                                                 <h3 class= 'card-inside-title'> {{ campo.label }} </h3>
@@ -54,19 +54,20 @@
                                 {% endfor %}
                             </div>
 
+                            <br>
+
                             <div class= 'row clearfix'>
                                 <div class= 'col-md-12'>
-                                    <p> <b> Valor </b> </p>
+                                    <p> <b> Valores </b> </p>
 
                                     <div id= 'nouislider_range_example'> </div>
 
                                     <div class= 'm-t-20 font-12'>
-                                        <b> {{ formulario.minimo.label }} </b> <span class= 'js-nouislider-value'> </span> <b> {{ formulario.maximo.label }} </b>
+                                        {% for campo in formulario.visible_fields|slice:'6:8' %}
+                                            <b> {{ campo.label }} </b> <span class= 'js-nouislider-value'> </span>
+                                            {{ campo }}
+                                        {% endfor %}
                                     </div>
-
-                                    {% for campo in formulario.visible_fields|slice:'5:7' %}
-                                        {{ campo }}
-                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
