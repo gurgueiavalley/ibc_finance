@@ -37,7 +37,7 @@
 }
 
 .form-control{
-    padding-bottom: 1px;
+    padding-bottom: 0px !important;
 }
 
 .dropdown-menu{
@@ -46,4 +46,8 @@
 
 .noUi-connect, .noUi-horizontal .noUi-handle{
     background-color: #1f91f3 !important;
+}
+
+.col-xs-12{
+    margin-bottom: 5px !important;
 }

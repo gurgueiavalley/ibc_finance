@@ -6,10 +6,11 @@ class FormExcel(forms.Form):
     arquivo.widget.attrs["class"] = "form-control"
 
 class SaidaRelatorioForm(forms.Form):
-    inicio = forms.DateField(label = 'De')
+    inicio = forms.DateField(label = 'De:')
     inicio.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data'}
 
-    fim = forms.DateField(label = 'Até')
+    fim = forms.DateField(label = 'Até:')
+    fim.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data'}
     
     congregacao = forms.ModelMultipleChoiceField(label = 'Congregações', required = False, queryset = Congregacao.objects.all().order_by('nome'), to_field_name = 'nome')
     congregacao.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhuma selecionada'}
@@ -24,4 +25,4 @@ class SaidaRelatorioForm(forms.Form):
     empresa.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhuma selecionada'}
 
     minimo = forms.DecimalField(label = 'De:', required = False, max_digits = 12, decimal_places = 2, min_value = Saida.objects.all().order_by('valor')[0].valor)
-    maximo = forms.DecimalField(label = 'Até', required = False, max_digits = 12, decimal_places = 2, max_value = Saida.objects.all().order_by('-valor')[0].valor)
+    maximo = forms.DecimalField(label = 'Até:', required = False, max_digits = 12, decimal_places = 2, max_value = Saida.objects.all().order_by('-valor')[0].valor)
