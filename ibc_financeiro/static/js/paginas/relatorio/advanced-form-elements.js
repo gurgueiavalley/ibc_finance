@@ -1,8 +1,8 @@
 $(() => {
-    var rangeSlider = document.getElementById('nouislider_range_example');
+    const rangeSlider = document.getElementById('nouislider_range_example')
 
     noUiSlider.create(rangeSlider, {
-        start: [32500, 62500],
+        start: [25000, 100000],
         connect: true,
         range: {
             'min': 25000,
@@ -10,17 +10,36 @@ $(() => {
         }
     })
 
-    getNoUISliderValue(rangeSlider, false)
+    getNoUISliderValue(rangeSlider)
 })
 
-//Get noUISlider Value and write on
-function getNoUISliderValue(slider, percentage) {
-    slider.noUiSlider.on('update', function () {
-        var val = slider.noUiSlider.get();
-        if (percentage) {
-            val = parseInt(val);
-            val += '%';
+function getNoUISliderValue(slider){
+    slider.noUiSlider.on('update', () => {
+        const   valMin = 'R$' + format(slider.noUiSlider.get()[0]),
+                valMax = 'R$' + format(slider.noUiSlider.get()[1]);
+
+        $(slider).parent().find('span.js-nouislider-valueMin').text(valMin);
+        $(slider).parent().find('span.js-nouislider-valueMax').text(valMax);
+    })
+}
+
+function format(valor){
+    let contador = 0,
+        invertido = valor[valor.length - 1] + valor[valor.length - 2] + ',',
+        formatado = ''
+
+    for(let indice = valor.length - 4; indice >= 0; indice--){
+        if(contador++ == 3){
+            invertido += '.'
+            contador = 0
         }
-        $(slider).parent().find('span.js-nouislider-value').text(val);
-    });
+
+        invertido += valor[indice]
+    }
+    
+    for(let indice = invertido.length - 1; indice >= 0; indice--){
+        formatado += invertido[indice]
+    }
+
+    return formatado
 }

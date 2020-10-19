@@ -43,3 +43,7 @@
 .dropdown-menu{
     margin-top: 0px !important;
 }
+
+.noUi-connect, .noUi-horizontal .noUi-handle{
+    background-color: #1f91f3 !important;
+}

@@ -58,15 +58,18 @@
 
                             <div class= 'row clearfix'>
                                 <div class= 'col-md-12'>
-                                    <p> <b> Valores </b> </p>
+                                    <h3 class= 'card-inside-title'> Valores </h3>
 
                                     <div id= 'nouislider_range_example'> </div>
 
                                     <div class= 'm-t-20 font-12'>
-                                        {% for campo in formulario.visible_fields|slice:'6:8' %}
-                                            <b> {{ campo.label }} </b> <span class= 'js-nouislider-value'> </span>
-                                            {{ campo }}
-                                        {% endfor %}
+                                        <b> {{ formulario.minimo.label }} </b> <span class= 'js-nouislider-valueMin'> </span>
+                                        {{ formulario.minimo.as_hidden }}
+
+                                        |
+
+                                        <b> {{ formulario.maximo.label }} </b> <span class= 'js-nouislider-valueMax'> </span>
+                                        {{ formulario.maximo.as_hidden }}
                                     </div>
                                 </div>
                             </div>
