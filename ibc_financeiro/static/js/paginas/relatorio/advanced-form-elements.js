@@ -1,12 +1,14 @@
 $(() => {
-    const rangeSlider = document.getElementById('nouislider_range_example')
+    const   rangeSlider = document.getElementById('nouislider_range_example'),
+            minimo = parseFloat(document.querySelector('#id_minimo').min) || 0,
+            maximo = parseFloat(document.querySelector('#id_maximo').max) || 10000
 
     noUiSlider.create(rangeSlider, {
-        start: [25000, 100000],
+        start: [minimo, maximo],
         connect: true,
         range: {
-            'min': 25000,
-            'max': 100000
+            'min': minimo,
+            'max': maximo
         }
     })
 
@@ -15,11 +17,14 @@ $(() => {
 
 function getNoUISliderValue(slider){
     slider.noUiSlider.on('update', () => {
-        const   valMin = 'R$' + format(slider.noUiSlider.get()[0]),
-                valMax = 'R$' + format(slider.noUiSlider.get()[1]);
+        const   valMin = format(slider.noUiSlider.get()[0]),
+                valMax = format(slider.noUiSlider.get()[1]);
 
-        $(slider).parent().find('span.js-nouislider-valueMin').text(valMin);
-        $(slider).parent().find('span.js-nouislider-valueMax').text(valMax);
+        document.querySelector('#id_minimo').value = slider.noUiSlider.get()[0]
+        document.querySelector('#id_maximo').value = slider.noUiSlider.get()[1]
+            
+        $(slider).parent().find('span.js-nouislider-valueMin').text('R$' + valMin);
+        $(slider).parent().find('span.js-nouislider-valueMax').text('R$' + valMax);
     })
 }
 

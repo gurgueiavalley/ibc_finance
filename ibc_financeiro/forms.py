@@ -24,5 +24,5 @@ class SaidaRelatorioForm(forms.Form):
     empresa = forms.ModelMultipleChoiceField(label = 'Empresas', required = False, queryset = Empresa.objects.all().order_by('nome'), to_field_name = 'nome')
     empresa.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhuma selecionada'}
 
-    minimo = forms.DecimalField(label = 'De:', required = False, max_digits = 12, decimal_places = 2, min_value = Saida.objects.all().order_by('valor')[0].valor)
-    maximo = forms.DecimalField(label = 'Até:', required = False, max_digits = 12, decimal_places = 2, max_value = Saida.objects.all().order_by('-valor')[0].valor)
+    minimo = forms.DecimalField(label = 'De:', required = False, max_digits = 12, decimal_places = 2, min_value = Saida.objects.all().order_by('valor')[0].valor, initial = '')
+    maximo = forms.DecimalField(label = 'Até:', required = False, max_digits = 12, decimal_places = 2, max_value = Saida.objects.all().order_by('-valor')[0].valor, initial = '')

@@ -29,6 +29,11 @@ $(document).ready(() => {
     $('#id_inicio').mask('00/00/0000')
 })
 
+window.onload = () => {
+    document.querySelector('#id_minimo').value = null
+    document.querySelector('#id_maximo').value = null
+}
+
 function removeAllSelected(){
     const opcoes = document.querySelectorAll('.filter-option')
 
@@ -42,4 +47,9 @@ function removeAllSelected(){
 
         $('#' + document.querySelectorAll('select')[indice].id).val([])
     }
+
+    document.getElementById('nouislider_range_example').noUiSlider.set([document.getElementById('nouislider_range_example').noUiSlider.options.range.min, document.getElementById('nouislider_range_example').noUiSlider.options.range.max])
+
+    document.querySelector('#id_minimo').value = null
+    document.querySelector('#id_maximo').value = null
 }

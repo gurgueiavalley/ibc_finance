@@ -64,12 +64,12 @@
 
                                     <div class= 'm-t-20 font-12'>
                                         <b> {{ formulario.minimo.label }} </b> <span class= 'js-nouislider-valueMin'> </span>
-                                        {{ formulario.minimo.as_hidden }}
+                                        {{ formulario.minimo }}
 
                                         ~
 
                                         <b> {{ formulario.maximo.label }} </b> <span class= 'js-nouislider-valueMax'> </span>
-                                        {{ formulario.maximo.as_hidden }}
+                                        {{ formulario.maximo }}
                                     </div>
                                 </div>
                             </div>
@@ -120,6 +120,8 @@
     <script src= "{% static 'plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"> </script>
     <script src= "{% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"> </script>
     <script src= "{% static 'plugins/nouislider/nouislider.js' %}"> </script>
+
+    <script src= 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.pt-BR.min.js'> </script>
 
     <script src= "{% static 'js/paginas/relatorio/relatorio.js' %}"> </script>
     <script src= "{% static 'js/paginas/relatorio/basic-form-elements.js' %}"> </script>

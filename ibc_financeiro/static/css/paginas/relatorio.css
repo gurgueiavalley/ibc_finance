@@ -49,5 +49,13 @@
 }
 
 .col-xs-12{
-    margin-bottom: 5px !important;
+    margin-bottom: 0px !important;
+}
+
+#id_minimo, #id_maximo{
+    display: none;
+}
+
+.datepicker table tr td.selected{
+    background-image: linear-gradient(to bottom, #1f91f3, #1f91f3) !important;
 }
