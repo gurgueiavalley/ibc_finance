@@ -6,6 +6,7 @@ from .forms import *
 import pandas as pd
 from decimal import Decimal
 import os
+
 from reportlab.pdfgen import canvas
 from django.conf import settings
 from pathlib import Path
@@ -115,16 +116,17 @@ def relatorio(request):
 
 def relatorio(request, tipo):
     if tipo == 'saida':
-        listaSaidaFiltrada(request)
+        if request.method == 'POST':
+            listaSaida(request)
 
-    return render(request, 'financeiro/paginas/relatorios/saida.html', {'formulario' : RelatorioSaidaForm})
+        return render(request, 'financeiro/paginas/relatorios/saida.html', {'formulario' : RelatorioSaidaForm()})
 
-def listaSaidaFiltrada(request):
-    if request.method == 'POST':
-        saidas = Saida.objects.all().order_by('data')
+# Funções Auxiliares
+def listaSaida(request):
+    saidas = Saida.objects.all().order_by('data')
 
-        categorias = request.POST.getlist('categoria')
-        empresas = request.POST.getlist('empresa')
+    categorias = request.POST.getlist('categoria')
+    empresas = request.POST.getlist('empresa')
 
-        saidas = saidas.filter(categoria__nome__in = categorias) if categorias != [] else saidas
-        saidas = saidas.filter(empresa__nome__in = empresas) if empresas != [] else saidas
+    saidas = saidas.filter(categoria__nome__in = categorias) if categorias != [] else saidas
+    saidas = saidas.filter(empresa__nome__in = empresas) if empresas != [] else saidas
