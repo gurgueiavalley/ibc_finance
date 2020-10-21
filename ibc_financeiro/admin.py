@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group, User
-from ibc_financeiro.models import *
+from .models import *
 
 class CategoriaAdmin(admin.ModelAdmin):
     actions = None
@@ -89,7 +89,7 @@ class UsuarioAdmin(admin.ModelAdmin):
 
     fields = ('username', 'nome'), ('email', 'senha')
 
-admin.site.site_header = 'IBC Financeiro'
+admin.site.site_header = 'Financeiro'
 
 admin.site.unregister(Group)
 
