@@ -8,14 +8,10 @@
     {% endblock %}
 {% endblock %}
 
-{% block CSS %}
-    <link rel= 'stylesheet' href= "{% static 'plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}">
-    <link rel= 'stylesheet' href= "{% static 'plugins/bootstrap-datepicker/css/bootstrap-datepicker.css' %}">
-    <link rel= 'stylesheet' href= "{% static 'plugins/waitme/waitMe.css' %}">
-    <link rel= 'stylesheet' href= "{% static 'plugins/bootstrap-select/css/bootstrap-select.css' %}">
-    <link rel= 'stylesheet' href= "{% static 'plugins/nouislider/nouislider.min.css' %}">
-    
-    <link rel= 'stylesheet' href= "{% static 'css/paginas/relatorios/saida.css' %}">
+{% block CSS %}    
+    <link rel= 'stylesheet' href= "{% static 'css/paginas/relatorio/saida/bootstrap-select.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'css/paginas/relatorio/saida/bootstrap-datepicker.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'css/paginas/relatorio/saida/saida.css' %}">
 {% endblock %}
 
 {% block dinamico %}
@@ -27,15 +23,15 @@
                 <!-- Filtros -->
                 <div class= 'card'>
                     <div class= 'body'>
-                        <div class= 'header' id= 'filter'>                  <!-- Botão -->
+                        <div class= 'header' id= 'botao'>                  <!-- Botão -->
                             <h2>
                                 Filtros
                                 <small> Adicionar filtros para gerar um relátorio mais refinado </small>
                             </h2>
 
                             <ul class= 'header-dropdown m-r--5'>
-                                <i id= 'adicionar' class= 'material-icons'> add_circle </i>
-                                <i id= 'deletar' class= 'material-icons' style= 'display: none'> delete </i>
+                                <i class= 'material-icons'> add_circle </i>
+                                <i class= 'material-icons' style= 'display: none'> delete </i>
                             </ul>
                         </div>
                         
@@ -61,15 +57,13 @@
                                 <div class= 'col-md-12'>
                                     <h3 class= 'card-inside-title'> Valores </h3>
 
-                                    <div id= 'nouislider_range_example'> </div>
+                                    <div id= 'nouislider_range'> </div>
 
                                     <div class= 'm-t-20 font-12'>
-                                        <b> {{ formulario.minimo.label }} </b> <span class= 'js-nouislider-valueMin'> </span>
+                                        <b> {{ formulario.minimo.label }} </b> <span id= 'minimo'> </span>
                                         {{ formulario.minimo }}
 
-                                        ~
-
-                                        <b> {{ formulario.maximo.label }} </b> <span class= 'js-nouislider-valueMax'> </span>
+                                        <b> {{ formulario.maximo.label }} </b> <span id= 'maximo'> </span>
                                         {{ formulario.maximo }}
                                     </div>
                                 </div>
@@ -114,17 +108,10 @@
 {% endblock %}
 
 {% block JS %}
-    <script src= 'https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js'> </script>
+    {% comment %} <script src= 'https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js'> </script> {% endcomment %}
 
-    <script src= "{% static 'plugins/autosize/autosize.js' %}"> </script>
-    <script src= "{% static 'plugins/momentjs/moment.js' %}"> </script>
-    <script src= "{% static 'plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"> </script>
-    <script src= "{% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"> </script>
-    <script src= "{% static 'plugins/nouislider/nouislider.js' %}"> </script>
-
-    <script src= 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.pt-BR.min.js'> </script>
-
-    <script src= "{% static 'js/paginas/relatorios/saida.js' %}"> </script>
-    <script src= "{% static 'js/paginas/relatorios/basic-form-elements.js' %}"> </script>
-    <script src= "{% static 'js/paginas/relatorios/advanced-form-elements.js' %}"> </script>
+    <script src= "{% static 'js/paginas/relatorio/saida/nouislider.js' %}"> </script>
+    <script src= "{% static 'js/paginas/relatorio/saida/datepicker/bootstrap-datepicker.js' %}"> </script>
+    <script src= "{% static 'js/paginas/relatorio/saida/datepicker/bootstrap-datepicker.pt-BR.min.js' %}"> </script>
+    <script src= "{% static 'js/paginas/relatorio/saida/saida.js' %}"> </script>
 {% endblock %}
