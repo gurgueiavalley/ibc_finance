@@ -2,7 +2,7 @@
     cursor: pointer;
 }
 
-.header, .col-xs-12{
+.card .header, .col-xs-12{
     padding: 0 !important;
     border-bottom: none !important;
 }

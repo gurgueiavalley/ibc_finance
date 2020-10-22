@@ -121,12 +121,6 @@ def relatorio(request, tipo):
 
         return render(request, 'financeiro/paginas/relatorios/saida.html', {'formulario' : RelatorioSaidaForm()})
 
-# Funções Auxiliares
+# Métodos Auxiliares
 def listaSaida(request):
-    saidas = Saida.objects.all().order_by('data')
-
-    categorias = request.POST.getlist('categoria')
-    empresas = request.POST.getlist('empresa')
-
-    saidas = saidas.filter(categoria__nome__in = categorias) if categorias != [] else saidas
-    saidas = saidas.filter(empresa__nome__in = empresas) if empresas != [] else saidas
+    pass

@@ -23,8 +23,8 @@ $(() => {
 
 document.querySelector('#botao').onclick = () => {
     const   descricao   = document.querySelector('.header small'),
-            adicionar   = document.querySelector('.header-dropdown i'),
-            deletar     = document.querySelectorAll('.header-dropdown i')[1],
+            adicionar   = document.querySelector('#adicionar'),
+            deletar     = document.querySelector('#deletar'),
             filtros     = document.querySelector('#filtros')
 
     if(filtros.style.display == 'none'){
