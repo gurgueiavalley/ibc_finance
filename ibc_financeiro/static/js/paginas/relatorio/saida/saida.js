@@ -51,8 +51,8 @@ window.onload = () => {
     $('#id_minimo').val(null)
     $('#id_maximo').val(null)
     
-    // $('#id_inicio').mask('00/00/0000')
-    // $('#id_fim').mask('00/00/0000')
+    $('#id_inicio').mask('00/00/0000')
+    $('#id_fim').mask('00/00/0000')
 }
 
 // Métodos Auxiliares
