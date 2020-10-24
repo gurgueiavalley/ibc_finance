@@ -6,31 +6,11 @@ from .forms import *
 import pandas as pd
 from decimal import Decimal
 import os
-<<<<<<< HEAD
-<<<<<<< HEAD
-from ibc_financeiro.models import Congregacao, Entrada, EntradaAvulsa, EntradaMissao, Excel
-=======
-
->>>>>>> parent of b46f6e1... Método auxiliar para pegar filtros e retornar uma lista de dados para relatório de saída
-from reportlab.pdfgen import canvas
-from django.conf import settings
-from pathlib import Path
-import datetime
-<<<<<<< HEAD
-from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import Table
-from reportlab.platypus import TableStyle
-=======
->>>>>>> parent of b46f6e1... Método auxiliar para pegar filtros e retornar uma lista de dados para relatório de saída
-=======
 from datetime import datetime
 
 from reportlab.pdfgen import canvas
 from django.conf import settings
 from pathlib import Path
->>>>>>> 7c977c19574bf153e4f1b9542921496181fbcac7
 
 def index(request):
     return render(request, 'financeiro/index.html')
@@ -134,28 +114,12 @@ def relatorio(request):
         congregacao = Congregacao.objects.all()
         return render(request, 'financeiro/form_relatorio.html', {'congregacao': congregacao})
 
-<<<<<<< HEAD
-def relatorioSaida(request):
-    return render(request, 'financeiro/paginas/relatorio.html')
-
-
-
-def relatorioSaida1(request):
-    # Criando arquivo
-    PDF = canvas.Canvas('relatorioSaida.pdf')
-    PDF.setTitle('Relatório de Saída')
-
-<<<<<<< HEAD
-    # Desenhando coordenadas
-    desenharCoordenadas(PDF)
-=======
 def relatorio(request, tipo):
     if tipo == 'saida':
         if request.method == 'POST':
             print(listaSaida(request))
         
         return render(request, 'financeiro/paginas/relatorios/saida.html', {'formulario' : RelatorioSaidaForm()})
->>>>>>> 7c977c19574bf153e4f1b9542921496181fbcac7
 
 # Métodos Auxiliares
 def convertDate(date):
@@ -178,73 +142,4 @@ def listaSaida(request):
     saidas = saidas.filter(empresa__nome__in = empresas) if empresas != [] else saidas
     saidas = saidas.filter(valor__in = valores) if valores != ['', ''] else saidas
 
-<<<<<<< HEAD
-def desenharCoordenadas(PDF):
-    PDF.drawString(100, 810, 'x100')
-    PDF.drawString(200, 810, 'x200')
-    PDF.drawString(300, 810, 'x300')
-    PDF.drawString(400, 810, 'x400')
-    PDF.drawString(500, 810, 'x500')
-
-    PDF.drawString(10, 100, 'y100')
-    PDF.drawString(10, 200, 'y200')
-    PDF.drawString(10, 300, 'y300')
-    PDF.drawString(10, 400, 'y400')
-    PDF.drawString(10, 500, 'y500')
-    PDF.drawString(10, 600, 'y600')
-    PDF.drawString(10, 700, 'y700')
-    PDF.drawString(10, 800, 'y800')
-
-def relatorioSaida2(request):
-    # Dados
-    dados = [
-        ['Nome', 'Valor'],
-        ['Monitor', 'R$800,00'],
-        ['Cadeira', 'R$320,00'],
-        ['SSD', 'R$260,00'],
-    ]
-    
-    PDF = SimpleDocTemplate(
-        'relatorioSaida.pdf',
-        pagesize = letter
-    )
-
-    tabela = Table(dados)
-    
-    style = TableStyle([
-        ('BACKGROUND', (0, 0), (3, 0), colors.blue),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-
-        ('FONTNAME', (0, 0), (-1, 0), 'Times-Bold'),
-        ('FONTSIZE', (0, 0), (-1, 0), 13),
-
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-
-        ('BOX', (0, 0), (-1, -1), 2, colors.black),
-
-        ('LINEBEFORE', (1, 1), (2, -1), 2, colors.red),
-        ('LINEABOVE', (0, 2), (-1, 2), 2, colors.green),
-
-        ('GRID', (0, 1), (-1, -1), 2, colors.black),
-    ])
-    tabela.setStyle(style)
-
-    elementos = []
-    elementos.append(tabela)
-
-    PDF.build(elementos)
-
-    return render(request, 'financeiro/index.html')
- 
-=======
-# Métodos Auxiliares
-def listaSaida(request):
-    pass
->>>>>>> parent of b46f6e1... Método auxiliar para pegar filtros e retornar uma lista de dados para relatório de saída
-=======
     return saidas 
->>>>>>> 7c977c19574bf153e4f1b9542921496181fbcac7

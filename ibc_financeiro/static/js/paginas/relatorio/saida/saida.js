@@ -1,7 +1,7 @@
 $(() => {
     const   faixa = document.querySelector('#nouislider_range'),
-            minimo = parseFloat(document.querySelector('#id_minimo').min),
-            maximo = parseFloat(document.querySelector('#id_maximo').max)
+            minimo = 0, 
+            maximo = 10000
 
     noUiSlider.create(faixa, {
         start: [minimo, maximo],
