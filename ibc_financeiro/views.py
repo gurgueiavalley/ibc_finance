@@ -1,9 +1,12 @@
 from django.shortcuts import render
+
+from .models import *
+from .forms import *
+
 import pandas as pd
-from . models import Membro
 from decimal import Decimal
-from ibc_financeiro.forms import FormExcel
 import os
+<<<<<<< HEAD
 <<<<<<< HEAD
 from ibc_financeiro.models import Congregacao, Entrada, EntradaAvulsa, EntradaMissao, Excel
 =======
@@ -21,6 +24,13 @@ from reportlab.platypus import Table
 from reportlab.platypus import TableStyle
 =======
 >>>>>>> parent of b46f6e1... Método auxiliar para pegar filtros e retornar uma lista de dados para relatório de saída
+=======
+from datetime import datetime
+
+from reportlab.pdfgen import canvas
+from django.conf import settings
+from pathlib import Path
+>>>>>>> 7c977c19574bf153e4f1b9542921496181fbcac7
 
 def index(request):
     return render(request, 'financeiro/index.html')
@@ -64,7 +74,7 @@ def relatorio(request):
         caminho = "ibc_financeiro/static/relatorio_entrada.pdf"
         pdf = canvas.Canvas(caminho)
         pdf.setTitle("Relatório de Entradas")
-        pdf.drawImage('ibc_financeiro/static/images/logo.png', 10,780,height=50, width=60)
+        pdf.drawImage('ibc_financeiro/static/imagens/logo.png', 10,780,height=50, width=60)
         pdf.setFont('Times-Bold', 24)
         pdf.drawString(200,800,"Relatório de Entradas")
         pdf.setFont('Times-Bold', 16)
@@ -124,6 +134,7 @@ def relatorio(request):
         congregacao = Congregacao.objects.all()
         return render(request, 'financeiro/form_relatorio.html', {'congregacao': congregacao})
 
+<<<<<<< HEAD
 def relatorioSaida(request):
     return render(request, 'financeiro/paginas/relatorio.html')
 
@@ -137,35 +148,37 @@ def relatorioSaida1(request):
 <<<<<<< HEAD
     # Desenhando coordenadas
     desenharCoordenadas(PDF)
+=======
+def relatorio(request, tipo):
+    if tipo == 'saida':
+        if request.method == 'POST':
+            print(listaSaida(request))
+        
+        return render(request, 'financeiro/paginas/relatorios/saida.html', {'formulario' : RelatorioSaidaForm()})
+>>>>>>> 7c977c19574bf153e4f1b9542921496181fbcac7
 
-    # Título
-    PDF.setFont('Times-Bold', 16)
-    PDF.drawCentredString(300, 770, 'Relatório de Saída')
-    
-    # Subtítulo
-    PDF.setFillColorRGB(0, 0, 255)
-    PDF.setFont('Times-Roman', 12)
-    PDF.drawCentredString(290, 720, 'Relatório de Saída 2')
+# Métodos Auxiliares
+def convertDate(date):
+    return datetime.strptime(date, '%d/%m/%Y').date()
 
-    # Linha
-    PDF.line(30, 710, 550, 710)
+def listaSaida(request):
+    datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
 
-    # Texto
-    texto = PDF.beginText(40, 680)
-    texto.setFont('Courier', 12)
-    texto.setFillColor(colors.orange)
-    texto.textLine('Primeira linha')
-    texto.textLine('Segunda linha')
-    PDF.drawText(texto)
+    congregacoes = request.POST.getlist('congregacao')
+    categorias = request.POST.getlist('categoria')
+    pagamentos = request.POST.getlist('pagamento')
+    empresas = request.POST.getlist('empresa')
+    valores = [request.POST['minimo'], request.POST['maximo']]
 
-    # Imagem
-    PDF.drawInlineImage('ibc_financeiro/static/images/logo.png', 130, 400, height = 40, width = 40)
+    saidas = Saida.objects.filter(data__range = datas).order_by('data')
 
-    # Salvando
-    PDF.save()
-    
-    return render(request, 'financeiro/index.html')
+    saidas = saidas.filter(congregacao__nome__in = congregacoes) if congregacoes != [] else saidas
+    saidas = saidas.filter(categoria__nome__in = categorias) if categorias != [] else saidas
+    saidas = saidas.filter(forma_de_Pagamento__nome__in = pagamentos) if pagamentos != [] else saidas
+    saidas = saidas.filter(empresa__nome__in = empresas) if empresas != [] else saidas
+    saidas = saidas.filter(valor__in = valores) if valores != ['', ''] else saidas
 
+<<<<<<< HEAD
 def desenharCoordenadas(PDF):
     PDF.drawString(100, 810, 'x100')
     PDF.drawString(200, 810, 'x200')
@@ -232,3 +245,6 @@ def relatorioSaida2(request):
 def listaSaida(request):
     pass
 >>>>>>> parent of b46f6e1... Método auxiliar para pegar filtros e retornar uma lista de dados para relatório de saída
+=======
+    return saidas 
+>>>>>>> 7c977c19574bf153e4f1b9542921496181fbcac7
