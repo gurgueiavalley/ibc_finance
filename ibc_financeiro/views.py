@@ -4,16 +4,23 @@ from . models import Membro
 from decimal import Decimal
 from ibc_financeiro.forms import FormExcel
 import os
+<<<<<<< HEAD
 from ibc_financeiro.models import Congregacao, Entrada, EntradaAvulsa, EntradaMissao, Excel
+=======
+
+>>>>>>> parent of b46f6e1... Método auxiliar para pegar filtros e retornar uma lista de dados para relatório de saída
 from reportlab.pdfgen import canvas
 from django.conf import settings
 from pathlib import Path
 import datetime
+<<<<<<< HEAD
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import Table
 from reportlab.platypus import TableStyle
+=======
+>>>>>>> parent of b46f6e1... Método auxiliar para pegar filtros e retornar uma lista de dados para relatório de saída
 
 def index(request):
     return render(request, 'financeiro/index.html')
@@ -127,6 +134,7 @@ def relatorioSaida1(request):
     PDF = canvas.Canvas('relatorioSaida.pdf')
     PDF.setTitle('Relatório de Saída')
 
+<<<<<<< HEAD
     # Desenhando coordenadas
     desenharCoordenadas(PDF)
 
@@ -219,3 +227,8 @@ def relatorioSaida2(request):
 
     return render(request, 'financeiro/index.html')
  
+=======
+# Métodos Auxiliares
+def listaSaida(request):
+    pass
+>>>>>>> parent of b46f6e1... Método auxiliar para pegar filtros e retornar uma lista de dados para relatório de saída

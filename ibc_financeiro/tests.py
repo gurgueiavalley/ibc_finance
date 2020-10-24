@@ -108,3 +108,11 @@ from django.test import TestCase
     # PDF.build(elementos)
 
     # return render(request, 'financeiro/index.html')
+
+# saidas = Saida.objects.all().order_by('data')
+
+# categorias = request.POST.getlist('categoria')
+# empresas = request.POST.getlist('empresa')
+
+# saidas = saidas.filter(categoria__nome__in = categorias) if categorias != [] else saidas
+# saidas = saidas.filter(empresa__nome__in = empresas) if empresas != [] else saidask0
