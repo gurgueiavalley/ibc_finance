@@ -1,19 +1,4 @@
 $(() => {
-    const   faixa = document.querySelector('#nouislider_range'),
-            minimo = parseFloat(document.querySelector('#id_minimo').min),
-            maximo = parseFloat(document.querySelector('#id_maximo').max)
-
-    noUiSlider.create(faixa, {
-        start: [minimo, maximo],
-        connect: true,
-        range: {
-            'min': minimo,
-            'max': maximo
-        }
-    })
-
-    updateValues(faixa.noUiSlider)
-
     $('#bs_datepicker_range_container').datepicker({
         autoclose: false,
         container: '#bs_datepicker_range_container',
@@ -47,20 +32,14 @@ document.querySelector('#botao').onclick = () => {
     }
 }
 
-window.onload = () => {
-    $('#id_minimo').val(null)
-    $('#id_maximo').val(null)
-    
+window.onload = () => {    
     $('#id_inicio').mask('00/00/0000')
     $('#id_fim').mask('00/00/0000')
 }
 
 // Métodos Auxiliares
 function clearFilters(){
-    const   opcoes = document.querySelectorAll('.filter-option'),
-            valores = document.querySelector('#nouislider_range').noUiSlider,
-            tamanhos = valores.options.range
-            
+    const opcoes = document.querySelectorAll('.filter-option')
 
     for(let indice = 0; indice < opcoes.length; indice++){
         $('#' + document.querySelectorAll('select')[indice].id).val([])
@@ -72,42 +51,4 @@ function clearFilters(){
         
         opcoes[indice].innerText = 'Nenhuma selecionada'
     }
-
-    document.querySelector('#id_minimo').value = null
-    document.querySelector('#id_maximo').value = null
-    
-    valores.set([tamanhos.min, tamanhos.max])
-}
-
-function moneyFormat(valor){
-    let contador = 0,
-        invertido = valor[valor.length - 1] + valor[valor.length - 2] + ',',
-        formatado = ''
-
-    for(let indice = valor.length - 4; indice >= 0; indice--){
-        if(contador++ == 3){
-            invertido += '.'
-            contador = 0
-        }
-
-        invertido += valor[indice]
-    }
-    
-    for(let indice = invertido.length - 1; indice >= 0; indice--)
-        formatado += invertido[indice]
-
-    return 'R$' + formatado
-}
-
-function updateValues(funcoes){
-    funcoes.on('update', () => {
-        const   minimo = funcoes.get()[0],
-                maximo = funcoes.get()[1]
-
-        $('#id_minimo').val(minimo)
-        $('#id_maximo').val(maximo)
-            
-        $('#minimo').text(moneyFormat(minimo))
-        $('#maximo').text(moneyFormat(maximo))
-    })
 }

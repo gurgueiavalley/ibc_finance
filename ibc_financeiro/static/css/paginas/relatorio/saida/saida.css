@@ -41,14 +41,6 @@
     margin-top: 0px !important;
 }
 
-.noUi-handle, .noUi-connect{
-    background-color: #1f91f3 !important;
-}
-
-#id_minimo, #id_maximo{
-    display: none;
-}
-
 .datepicker td.selected{
     background-image: linear-gradient(to bottom, #1f91f3, #1f91f3) !important;
 }

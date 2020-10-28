@@ -117,7 +117,7 @@ def relatorio(request):
 def relatorio(request, tipo):
     if tipo == 'saida':
         if request.method == 'POST':
-            print(listaSaida(request))
+            listaSaida(request)
         
         return render(request, 'financeiro/paginas/relatorios/saida.html', {'formulario' : RelatorioSaidaForm()})
 
@@ -127,19 +127,15 @@ def convertDate(date):
 
 def listaSaida(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
-
     congregacoes = request.POST.getlist('congregacao')
     categorias = request.POST.getlist('categoria')
     pagamentos = request.POST.getlist('pagamento')
     empresas = request.POST.getlist('empresa')
-    valores = [request.POST['minimo'], request.POST['maximo']]
 
     saidas = Saida.objects.filter(data__range = datas).order_by('data')
-
     saidas = saidas.filter(congregacao__nome__in = congregacoes) if congregacoes != [] else saidas
     saidas = saidas.filter(categoria__nome__in = categorias) if categorias != [] else saidas
     saidas = saidas.filter(forma_de_Pagamento__nome__in = pagamentos) if pagamentos != [] else saidas
     saidas = saidas.filter(empresa__nome__in = empresas) if empresas != [] else saidas
-    saidas = saidas.filter(valor__in = valores) if valores != ['', ''] else saidas
 
     return saidas 

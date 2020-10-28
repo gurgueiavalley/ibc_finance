@@ -50,24 +50,6 @@
                                     </div>
                                 {% endfor %}
                             </div>
-
-                            <br>
-
-                            <div class= 'row clearfix'>
-                                <div class= 'col-md-12'>
-                                    <h3 class= 'card-inside-title'> Valores </h3>
-
-                                    <div id= 'nouislider_range'> </div>
-
-                                    <div class= 'm-t-20 font-12'>
-                                        <b> {{ formulario.minimo.label }} </b> <span id= 'minimo'> </span>
-                                        {{ formulario.minimo }}
-
-                                        <b> {{ formulario.maximo.label }} </b> <span id= 'maximo'> </span>
-                                        {{ formulario.maximo }}
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -108,7 +90,6 @@
 {% endblock %}
 
 {% block JS %}
-    <script src= "{% static 'js/paginas/relatorio/saida/nouislider.min.js' %}"> </script>
     <script src= "{% static 'js/paginas/relatorio/saida/datepicker/bootstrap-datepicker.min.js' %}"> </script>
     <script src= "{% static 'js/paginas/relatorio/saida/datepicker/bootstrap-datepicker.pt-BR.min.js' %}"> </script>
     <script src= "{% static 'js/paginas/relatorio/saida/jquery.mask.min.js' %}"> </script>
