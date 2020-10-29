@@ -5,6 +5,25 @@ class FormExcel(forms.Form):
     arquivo = forms.FileField()
     arquivo.widget.attrs["class"] = "form-control"
 
+class RelatorioEntradaForm(forms.Form):
+    inicio = forms.DateField(label = 'De:')
+    inicio.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data'}
+
+    fim = forms.DateField(label = 'Até:')
+    fim.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data'}
+
+    congregacao = forms.ModelMultipleChoiceField(label = 'Congregações', required = False, queryset = Congregacao.objects.all().order_by('nome'), to_field_name = 'nome')
+    congregacao.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhuma selecionada'}
+
+    categoria = forms.ModelMultipleChoiceField(label = 'Categorias', required = False, queryset = CategoriaEntrada.objects.all().order_by('nome'), to_field_name = 'nome')
+    categoria.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhuma selecionada'}
+
+    forma = forms.ModelMultipleChoiceField(label = 'Formas de Entrada', required = False, queryset = Pagamento.objects.all().order_by('nome'), to_field_name = 'nome')
+    forma.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhuma selecionada'}
+
+    membro = forms.ModelMultipleChoiceField(label = 'Membros', required = False, queryset = Membro.objects.all().order_by('nome'), to_field_name = 'nome')
+    membro.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhum selecionado'}
+
 class RelatorioSaidaForm(forms.Form):
     inicio = forms.DateField(label = 'De:')
     inicio.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data'}

@@ -7,10 +7,10 @@ import pandas as pd
 from decimal import Decimal
 import os
 from datetime import datetime
-
 from reportlab.pdfgen import canvas
 from django.conf import settings
 from pathlib import Path
+from itertools import chain
 
 def index(request):
     return render(request, 'financeiro/index.html')
@@ -115,15 +115,39 @@ def relatorio(request):
         return render(request, 'financeiro/form_relatorio.html', {'congregacao': congregacao})
 
 def relatorio(request, tipo):
-    if tipo == 'saida':
+    if tipo == 'entrada':
+        if request.method == 'POST':
+            listaEntrada(request)
+
+        return render(request, 'financeiro/paginas/relatorio.html', {'title' : 'entrada', 'formulario' : RelatorioEntradaForm()})
+
+    elif tipo == 'saída':
         if request.method == 'POST':
             listaSaida(request)
         
-        return render(request, 'financeiro/paginas/relatorios/saida.html', {'formulario' : RelatorioSaidaForm()})
+        return render(request, 'financeiro/paginas/relatorio.html', {'title' : 'saída', 'formulario' : RelatorioSaidaForm()})
 
 # Métodos Auxiliares
 def convertDate(date):
     return datetime.strptime(date, '%d/%m/%Y').date()
+
+def listaEntrada(request):
+    datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
+    congregacoes = request.POST.getlist('congregacao')
+    categorias = request.POST.getlist('categoria')
+    formas = request.POST.getlist('forma')
+    membros = request.POST.getlist('membro')
+
+    entradas = Entrada.objects.filter(data__range = datas).order_by('data')
+    entradas = entradas.filter(congregacao__nome__in = congregacoes) if congregacoes != [] else entradas
+    entradas = entradas.filter(categoria__nome__in = categorias) if categorias != [] else entradas
+    entradas = entradas.filter(forma_de_Entrada__nome__in = formas) if formas != [] else entradas
+    entradas = entradas.filter(membro__nome__in = membros) if membros != [] else entradas
+
+    avulsas = EntradaAvulsa.objects.filter(data__range = datas).order_by('data')
+    avulsas = avulsas.filter(congregacao__nome__in = congregacoes) if congregacoes != [] else avulsas
+
+    return list(chain(entradas, avulsas))
 
 def listaSaida(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
