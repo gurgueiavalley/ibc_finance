@@ -7,10 +7,10 @@ import pandas as pd
 from decimal import Decimal
 import os
 from datetime import datetime
-
 from reportlab.pdfgen import canvas
 from django.conf import settings
 from pathlib import Path
+from itertools import chain
 
 
 def index(request):
@@ -162,40 +162,52 @@ def gerarRelatorio(request, dados, tipo):
         
 
 def relatorio(request, tipo):
-    if tipo == 'saida':
+    if tipo == 'entrada':
+        if request.method == 'POST':
+            print(listaEntrada(request))
+
+        return render(request, 'financeiro/paginas/relatorio.html', {'title' : 'entrada', 'formulario' : RelatorioEntradaForm()})
+
+    elif tipo == 'saida':
         if request.method == 'POST':
             gerarRelatorio(request, listaSaida(request), tipo)
             nome = "relatorio_saida.pdf"
             return render(request, 'index.html', {'nome': nome})
-        return render(request, 'financeiro/paginas/relatorios/saida.html', {'formulario' : RelatorioSaidaForm()})
+        return render(request, 'financeiro/paginas/relatorio.html', {'title' : 'saida', 'formulario' : RelatorioSaidaForm()})
 
 # Métodos Auxiliares
 def convertDate(date):
     return datetime.strptime(date, '%d/%m/%Y').date()
 
+def listaEntrada(request):
+    datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
+    congregacoes = request.POST.getlist('congregacao')
+    categorias = request.POST.getlist('categoria')
+    formas = request.POST.getlist('forma')
+    membros = request.POST.getlist('membro')
+
+    entradas = Entrada.objects.filter(data__range = datas).order_by('data')
+    entradas = entradas.filter(congregacao__nome__in = congregacoes) if congregacoes != [] else entradas
+    entradas = entradas.filter(categoria__nome__in = categorias) if categorias != [] else entradas
+    entradas = entradas.filter(forma_de_Entrada__nome__in = formas) if formas != [] else entradas
+    entradas = entradas.filter(membro__nome__in = membros) if membros != [] else entradas
+
+    avulsas = EntradaAvulsa.objects.filter(data__range = datas).order_by('data')
+    avulsas = avulsas.filter(congregacao__nome__in = congregacoes) if congregacoes != [] else avulsas
+
+    return list(chain(entradas, avulsas))
+
 def listaSaida(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
-
     congregacoes = request.POST.getlist('congregacao')
     categorias = request.POST.getlist('categoria')
     pagamentos = request.POST.getlist('pagamento')
     empresas = request.POST.getlist('empresa')
-    valores = [request.POST['minimo'], request.POST['maximo']]
 
     saidas = Saida.objects.filter(data__range = datas).order_by('data')
-
     saidas = saidas.filter(congregacao__nome__in = congregacoes) if congregacoes != [] else saidas
     saidas = saidas.filter(categoria__nome__in = categorias) if categorias != [] else saidas
     saidas = saidas.filter(forma_de_Pagamento__nome__in = pagamentos) if pagamentos != [] else saidas
     saidas = saidas.filter(empresa__nome__in = empresas) if empresas != [] else saidas
-    saidas = saidas.filter(valor__in = valores) if valores != ['', ''] else saidas
-    
+
     return saidas
-
-
-''' saidasfinal = saidas.filter(congregacao__nome__in = congregacoes, categoria__nome__in = categorias, forma_de_Pagamento__nome__in = pagamentos, empresa__nome__in = empresas)
-    for s in saidasfinal:
-        print(s.valor)
-    '''
-
-    
