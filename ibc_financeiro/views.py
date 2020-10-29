@@ -12,7 +12,6 @@ from django.conf import settings
 from pathlib import Path
 from itertools import chain
 
-
 def index(request):
     return render(request, 'financeiro/index.html')
 
@@ -160,20 +159,26 @@ def gerarRelatorio(request, dados, tipo):
                 pdf.showPage()
         pdf.save() 
         
-
 def relatorio(request, tipo):
     if tipo == 'entrada':
         if request.method == 'POST':
-            print(listaEntrada(request))
+            listaEntrada(request)
 
-        return render(request, 'financeiro/paginas/relatorio.html', {'title' : 'entrada', 'formulario' : RelatorioEntradaForm()})
+        return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioEntradaForm()})
 
-    elif tipo == 'saida':
+    elif tipo == 'saída':
         if request.method == 'POST':
             gerarRelatorio(request, listaSaida(request), tipo)
-            nome = "relatorio_saida.pdf"
-            return render(request, 'index.html', {'nome': nome})
-        return render(request, 'financeiro/paginas/relatorio.html', {'title' : 'saida', 'formulario' : RelatorioSaidaForm()})
+
+            return render(request, 'index.html', {'nome': 'relatorio_saida.pdf'})
+
+        return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioSaidaForm()})
+
+    elif tipo == 'geral':
+        if request.method == 'POST':
+            listaGeral(request)
+        
+        return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioGeralForm()})
 
 # Métodos Auxiliares
 def convertDate(date):
@@ -182,7 +187,7 @@ def convertDate(date):
 def listaEntrada(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
     congregacoes = request.POST.getlist('congregacao')
-    categorias = request.POST.getlist('categoria')
+    categorias = request.POST.getlist('categoria_entrada')
     formas = request.POST.getlist('forma')
     membros = request.POST.getlist('membro')
 
@@ -200,7 +205,7 @@ def listaEntrada(request):
 def listaSaida(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
     congregacoes = request.POST.getlist('congregacao')
-    categorias = request.POST.getlist('categoria')
+    categorias = request.POST.getlist('categoria_saida')
     pagamentos = request.POST.getlist('pagamento')
     empresas = request.POST.getlist('empresa')
 
@@ -211,3 +216,9 @@ def listaSaida(request):
     saidas = saidas.filter(empresa__nome__in = empresas) if empresas != [] else saidas
 
     return saidas
+
+def listaGeral(request):
+    entradas = listaEntrada(request)
+    saidas = listaSaida(request)
+
+    return list(chain(entradas, saidas))

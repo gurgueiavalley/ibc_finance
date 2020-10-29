@@ -50,6 +50,21 @@
                                     </div>
                                 {% endfor %}
                             </div>
+
+                            {% if title == 'geral' %}
+                                <div class= 'row clearfix'>
+                                    {% for campo in formulario.visible_fields|slice:'6:8' %}
+                                        <div class= 'col-sm-6'>
+                                            <div class= 'form-group'>
+                                                <div class= 'form-line'>
+                                                    <h3 class= 'card-inside-title'> {{ campo.label }} </h3>
+                                                    {{ campo }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
