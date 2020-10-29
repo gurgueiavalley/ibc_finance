@@ -12,6 +12,7 @@ from reportlab.pdfgen import canvas
 from django.conf import settings
 from pathlib import Path
 
+
 def index(request):
     return render(request, 'financeiro/index.html')
 
@@ -114,11 +115,58 @@ def relatorio(request):
         congregacao = Congregacao.objects.all()
         return render(request, 'financeiro/form_relatorio.html', {'congregacao': congregacao})
 
+def gerarRelatorio(request, dados, tipo):
+    if tipo == 'saida':
+        data = str(date.today())
+        valorTotal = 0
+        y = 0
+        caminho = "ibc_financeiro/static/relatorio_saida.pdf"
+        pdf = canvas.Canvas(caminho)
+        pdf.setTitle("Relatório de Saidas")
+        pdf.drawImage('ibc_financeiro/static/imagens/logo.png', 10,758,height=50, width=60)
+        pdf.setFont('Times-Bold', 12)
+        pdf.drawString(200,800,"IGREJA BATISTA DE CORRENTE")
+        pdf.drawString(182,785,"Departamento de Administração e Finanças")
+        pdf.drawString(240,770,"Relatório Financeiro")
+        pdf.drawString(278,755,"Saidas")
+        pdf.line(275, 752 - y, 315, 752 - y)
+        pdf.drawString(430,740,"Data: " + data)
+
+        pdf.drawString(20, 700 - y, "Data ")
+        pdf.drawString(100, 700 - y, "Congregação ")
+        pdf.drawString(330,700 - y,"Categoria ")
+        pdf.drawString(490,700 - y,"Valor ")
+        pdf.setFont('Helvetica', 10)
+        for saida in dados:
+            y = y + 30
+            if(y > 800):
+                y = 0
+                pdf.showPage()
+            pdf.line(585, 718 - y, 10, 718 - y)
+            pdf.drawString(20, 700 - y, str(saida.data))
+            pdf.drawString(100, 700 - y, str(saida.congregacao))
+            pdf.drawString(330,700 - y, str(saida.categoria))
+            pdf.drawString(490,700 - y, str(saida.valor))
+        
+            valorTotal = valorTotal + saida.valor
+        pdf.line(585, 690 - y, 10, 690 - y)
+        pdf.setFont('Times-Bold', 12)
+        pdf.drawString(400,650 - y,"Valor Total: "+" R$ "+str(valorTotal))
+        pdf.showPage()
+        for saida in dados:
+            if str(saida.comprovante) != "":
+                arquivo = "ibc_financeiro/"+str(saida.comprovante)
+                pdf.drawImage(arquivo, 150, 250, width= 250, height= 400)
+                pdf.showPage()
+        pdf.save() 
+        
+
 def relatorio(request, tipo):
     if tipo == 'saida':
         if request.method == 'POST':
-            print(listaSaida(request))
-        
+            gerarRelatorio(request, listaSaida(request), tipo)
+            nome = "relatorio_saida.pdf"
+            return render(request, 'index.html', {'nome': nome})
         return render(request, 'financeiro/paginas/relatorios/saida.html', {'formulario' : RelatorioSaidaForm()})
 
 # Métodos Auxiliares
@@ -141,5 +189,13 @@ def listaSaida(request):
     saidas = saidas.filter(forma_de_Pagamento__nome__in = pagamentos) if pagamentos != [] else saidas
     saidas = saidas.filter(empresa__nome__in = empresas) if empresas != [] else saidas
     saidas = saidas.filter(valor__in = valores) if valores != ['', ''] else saidas
+    
+    return saidas
 
-    return saidas 
+
+''' saidasfinal = saidas.filter(congregacao__nome__in = congregacoes, categoria__nome__in = categorias, forma_de_Pagamento__nome__in = pagamentos, empresa__nome__in = empresas)
+    for s in saidasfinal:
+        print(s.valor)
+    '''
+
+    
