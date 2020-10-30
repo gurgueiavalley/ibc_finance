@@ -174,6 +174,12 @@ def relatorio(request, tipo):
 
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioSaidaForm()})
 
+    elif tipo == 'missão':
+        if request.method == 'POST':
+            listaMissao(request)
+
+        return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioMissaoForm()})
+
     elif tipo == 'geral':
         if request.method == 'POST':
             listaGeral(request)
@@ -201,6 +207,21 @@ def listaEntrada(request):
     avulsas = avulsas.filter(congregacao__nome__in = congregacoes) if congregacoes != [] else avulsas
 
     return list(chain(entradas, avulsas))
+
+def listaMissao(request):
+    datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
+    congregacoes = request.POST.getlist('congregacao')
+    missoes = request.POST.getlist('missao')
+    andamento = True if 'andamento' in request.POST else False
+
+    print(andamento)
+
+    entradas = EntradaMissao.objects.filter(data__range = datas).order_by('data')
+    entradas = entradas if congregacoes == [] else entradas.filter(missao__congregacao__nome__in = congregacoes)
+    entradas = entradas if missoes == [] else entradas.filter(missao__nome__in = missoes)
+    entradas = entradas if andamento == False else entradas.filter(missao__em_Andamento = andamento)
+
+    return entradas
 
 def listaSaida(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]

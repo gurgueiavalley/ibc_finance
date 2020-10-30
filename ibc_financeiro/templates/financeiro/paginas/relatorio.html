@@ -39,16 +39,46 @@
                             <br>
 
                             <div class= 'row clearfix'>
-                                {% for campo in formulario.visible_fields|slice:'2:6' %}
-                                    <div class= 'col-sm-3'>
-                                        <div class= 'form-group'>
-                                            <div class= 'form-line'>
-                                                <h3 class= 'card-inside-title'> {{ campo.label }} </h3>
-                                                {{ campo }}
+                                {% if title != 'missão' %}
+                                    {% for campo in formulario.visible_fields|slice:'2:6'%}
+                                        <div  {% if title == 'missão' %} class= 'col-sm-4' {% else %} class= 'col-sm-3' {% endif %}>
+
+                                            <div class= 'form-group'>
+                                                <div class= 'form-line'>
+                                                    <h3 class= 'card-inside-title'> {{ campo.label }} </h3>
+                                                    {{ campo }}
+                                                </div>
                                             </div>
                                         </div>
+                                    {% endfor %}
+
+                                {% else %}
+                                    {% for campo in formulario.visible_fields|slice:'2:4'%}
+                                        <div class= 'col-sm-4'>
+                                            <div class= 'form-group'>
+                                                <div class= 'form-line'>
+                                                    <h3 class= 'card-inside-title'> {{ campo.label }} </h3>
+                                                    {{ campo }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+
+                                {% if formulario.andamento %}
+                                    <div class= 'col-sm-4'>
+                                        <div class= 'form-group'>
+                                                <h3 class= 'card-inside-title'> {{ formulario.andamento.label }} </h3>
+                                                
+                                                <div class="demo-switch">
+                                                    <div class="switch">
+                                                        <label> NÃO {{ formulario.andamento }} <span class="lever switch-col-blue"> </span> SIM </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
                                     </div>
-                                {% endfor %}
+                                {% endif %}
                             </div>
 
                             {% if title == 'geral' %}

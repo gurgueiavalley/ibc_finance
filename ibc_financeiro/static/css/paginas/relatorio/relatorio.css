@@ -44,3 +44,7 @@
 .datepicker td.selected{
     background-image: linear-gradient(to bottom, #1f91f3, #1f91f3) !important;
 }
+
+.demo-switch{
+    padding-top: 6.5px;
+}
