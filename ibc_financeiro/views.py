@@ -115,7 +115,7 @@ def relatorio(request):
         return render(request, 'financeiro/form_relatorio.html', {'congregacao': congregacao})
 
 def gerarRelatorio(request, dados, tipo):
-    if tipo == 'saida':
+    if tipo == 'saída':
         data = str(date.today())
         valorTotal = 0
         y = 0
@@ -151,6 +151,9 @@ def gerarRelatorio(request, dados, tipo):
         pdf.line(585, 690 - y, 10, 690 - y)
         pdf.setFont('Times-Bold', 12)
         pdf.drawString(400,650 - y,"Valor Total: "+" R$ "+str(valorTotal))
+
+        # progressoMissao(pdf, 2000, 145, 600 - y)
+
         pdf.showPage()
         for saida in dados:
             if str(saida.comprovante) != "":
@@ -243,3 +246,37 @@ def listaGeral(request):
     saidas = listaSaida(request)
 
     return list(chain(entradas, saidas))
+
+def progressoMissao(pdf, meta, total, y):
+    pdf.drawString(100, y, 'Meta: R$ ' + '{:.2f}'.format(meta))
+
+    pdf.line(100, y - 5, 500, y - 5)
+
+    pdf.line(100, y - 5, 100, y - 25)
+
+    porcentagem = int((total * 100) / meta)
+    final = int((400 * porcentagem) / 100)
+
+    
+    pdf.setStrokeColorRGB(0,1,0.3)
+
+    comeco = 101
+
+    for x in range(101, final + 99):
+        pdf.line(x, y - 5.5, x, y - 24.5)
+        pdf.line(x + 0.5, y - 5.5, x, y - 24.5)
+        comeco = x
+
+    pdf.setStrokeColorRGB(1, 0, 0)   
+
+    for x in range(comeco + 1, 500):
+        pdf.line(x, y - 5.5, x, y - 24.5)
+        pdf.line(x + 0.5, y - 5.5, x, y - 24.5)
+        
+    pdf.setStrokeColorRGB(0,0,0)
+    
+    pdf.line(500, y - 5, 500, y - 25) 
+    pdf.line(100, y - 25, 500, y - 25)
+
+    pdf.drawString(100, y - 38, 'Alcançado: R$ ' + '{:.2f}'.format(total))
+    pdf.drawString(383, y - 38, 'Restante: R$ ' + '{:.2f}'.format(meta - total))
