@@ -39,7 +39,8 @@ window.onload = () => {
 
 // Métodos Auxiliares
 function clearFilters(){
-    const opcoes = document.querySelectorAll('.filter-option')
+    const   opcoes = document.querySelectorAll('.filter-option'),
+            andamento = document.querySelector('#id_andamento')
 
     for(let indice = 0; indice < opcoes.length; indice++){
         $('#' + document.querySelectorAll('select')[indice].id).val([])
@@ -51,4 +52,7 @@ function clearFilters(){
         
         opcoes[indice].innerText = 'Nenhuma selecionada'
     }
+
+    if(andamento)
+        andamento.checked = false 
 }
