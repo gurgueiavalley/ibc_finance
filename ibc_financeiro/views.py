@@ -168,7 +168,10 @@ def gerarRelatorio(request, dados, tipo):
             pdf.line(585, 718 - y, 10, 718 - y)
             pdf.drawString(20, 700 - y, str(entrada.data))
             pdf.drawString(100, 700 - y, str(entrada.congregacao))
-            pdf.drawString(330,700 - y, str(entrada.categoria))
+            if hasattr(entrada, 'categoria'):
+                pdf.drawString(330,700 - y, str(entrada.categoria))
+            else:
+                pdf.drawString(330,700 - y, "Avulso")
             pdf.drawString(490,700 - y, str(entrada.valor))
         
             valorTotal = valorTotal + entrada.valor
