@@ -72,6 +72,9 @@ def relatorio(request, tipo):
         
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioGeralForm()})
 
+def saida(request, action):
+    return render(request, 'financeiro/paginas/saida/adicionar.html')
+
 # Métodos Auxiliares
 def cabecalhoRelatorio(pdf, data, y):           # Insere o cabeçalho dos relatórios
     pdf.drawImage('ibc_financeiro/static/imagens/logo.png', 10,758,height=50, width=60)
