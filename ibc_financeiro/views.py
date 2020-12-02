@@ -12,6 +12,8 @@ from django.conf import settings
 from pathlib import Path
 from itertools import chain
 
+import webbrowser
+
 def index(request):
     return render(request, 'financeiro/index.html')
 
@@ -115,7 +117,7 @@ def relatorio(request):
         return render(request, 'financeiro/form_relatorio.html', {'congregacao': congregacao})
 
 def gerarRelatorio(request, dados, tipo):
-    data = str(date.today())
+    data = str(date.today().strftime('%d/%m/%Y'))
     valorTotal = 0
     y = 0
     
@@ -124,18 +126,23 @@ def gerarRelatorio(request, dados, tipo):
         pdf = canvas.Canvas(caminho)
         pdf.setTitle("Relatório de Saidas")
         pdf.drawImage('ibc_financeiro/static/imagens/logo.png', 10,758,height=50, width=60)
-        cabecalhoRelatorio(pdf, data, y)
+        cabecalhoRelatorio(pdf, data)
+        pdf.drawString(20, 700, "Data ")
+        pdf.drawString(100, 700, "Congregação ")
+        pdf.drawString(330,700,"Categoria ")
+        pdf.drawString(490,700,"Valor ")
         pdf.drawString(278,755,"Saídas")
-        pdf.line(275, 752 - y, 315, 752 - y)
+        pdf.line(275, 752, 315, 752)
         pdf.setFont('Helvetica', 10)
         #Listando todas as saidas
         for saida in dados:
             y = y + 30
-            if(y > 800):
+            if(y > 580):
                 y = 0
                 pdf.showPage()
+            pdf.setFont('Helvetica', 10)
             pdf.line(585, 718 - y, 10, 718 - y)
-            pdf.drawString(20, 700 - y, str(saida.data))
+            pdf.drawString(20, 700 - y, str(saida.data.strftime('%d/%m/%Y')))
             pdf.drawString(100, 700 - y, str(saida.congregacao))
             pdf.drawString(330,700 - y, str(saida.categoria))
             pdf.drawString(490,700 - y, str(saida.valor))
@@ -148,30 +155,37 @@ def gerarRelatorio(request, dados, tipo):
         #Adicionando os comprovantes
         for saida in dados:
             if str(saida.comprovante) != "":
+                if saida.descricao != None:    
+                    pdf.drawString(20, 780, str(saida.descricao))
                 arquivo = "ibc_financeiro/"+str(saida.comprovante)
-                pdf.drawImage(arquivo, 150, 250, width= 250, height= 400)
+                pdf.drawImage(arquivo, 200, 250, width= 200, height= 400)
                 pdf.showPage()
         pdf.save()
     elif tipo == 'entrada':
         caminho = "ibc_financeiro/static/relatorio_entrada.pdf"
         pdf = canvas.Canvas(caminho)
         pdf.setTitle("Relatório de Entradas")
-        cabecalhoRelatorio(pdf, data, y)
+        cabecalhoRelatorio(pdf, data)
+        pdf.drawString(20, 700, "Data ")
+        pdf.drawString(100, 700, "Congregação ")
+        pdf.drawString(330,700,"Categoria ")
+        pdf.drawString(490,700,"Valor ")
         pdf.drawString(278,755,"Entradas")
-        pdf.line(275, 752 - y, 330, 752 - y)
+        pdf.line(275, 752, 330, 752)
         pdf.setFont('Helvetica', 10)
         for entrada in dados:
             y = y + 30
-            if(y > 800):
+            if(y > 580):
                 y = 0
                 pdf.showPage()
+            pdf.setFont('Helvetica', 10)
             pdf.line(585, 718 - y, 10, 718 - y)
-            pdf.drawString(20, 700 - y, str(entrada.data))
+            pdf.drawString(20, 700 - y, str(entrada.data.strftime('%d/%m/%Y')))
             pdf.drawString(100, 700 - y, str(entrada.congregacao))
             if hasattr(entrada, 'categoria'):
                 pdf.drawString(330,700 - y, str(entrada.categoria))
             else:
-                pdf.drawString(330,700 - y, "Avulso")
+                pdf.drawString(330,700 - y, "Avulsa")
             pdf.drawString(490,700 - y, str(entrada.valor))
         
             valorTotal = valorTotal + entrada.valor
@@ -182,11 +196,93 @@ def gerarRelatorio(request, dados, tipo):
         pdf.showPage()
         for entrada in dados:
             if str(entrada.comprovante) != "":
+                if entrada.descricao != None:    
+                    pdf.drawString(20, 780, str(entrada.descricao))
                 arquivo = "ibc_financeiro/"+str(entrada.comprovante)
-                pdf.drawImage(arquivo, 150, 250, width= 250, height= 400)
+                pdf.drawImage(arquivo, 200, 250, width= 200, height= 400)
                 pdf.showPage()
         pdf.save()
         
+def gerarRelatorioGeral(request, entradas, saidas, missoes):
+    data = str(date.today().strftime('%d/%m/%Y'))
+    valorEntradas = 0
+    valorEntradasAvulsa = 0
+    valorMissao = 0
+    valorTotalEntradas = 0
+    valorTotalSaidas = 0
+    y = 0
+    pagina = False
+    caminho = "ibc_financeiro/static/relatorio_geral.pdf"
+    pdf = canvas.Canvas(caminho)
+    pdf.setTitle("Relatório Geral")
+    cabecalhoRelatorio(pdf, data)
+    pdf.drawString(260,755,"Recebimentos")
+    pdf.line(257, 752, 335, 752)
+    pdf.setFont('Helvetica', 10)
+
+    pdf.drawString(50, 700, 'Dizimos:............................................................................................ R$ ')
+    pdf.drawString(365, 702, str(valorEntradas))
+    pdf.line(363, 700, 550, 700)
+    pdf.drawString(50, 680, 'Ofertas Avulsas:............................................................................... R$ ')
+    pdf.drawString(365, 682 , str(valorEntradasAvulsa))
+    pdf.line(363, 680, 550, 680)
+    pdf.drawString(50, 660, 'Missões:........................................................................................... R$  ') 
+    pdf.drawString(365, 662, str(valorMissao))
+    pdf.line(363, 660, 550, 660)
+    pdf.setFont('Times-Bold', 12)
+    pdf.drawString(50, 642, 'Total de Entradas:................................................................. R$  ')
+    pdf.drawString(365, 642, str(valorTotalEntradas))
+    pdf.line(363, 640, 550, 640)
+    pdf.drawString(260, 600, 'Pagamentos')
+    pdf.line(257, 598, 325, 598)
+    pdf.setFont('Helvetica', 10)
+    for saida in range(1,len(saidas)+1): 
+        y = y + 30
+        valorTotalSaidas = valorTotalSaidas + saidas[saida - 1].valor
+        if y > 500:
+            y = 0
+            pdf.showPage()
+        if saida - 1 > 15:
+            pagina = True
+            pdf.setFont('Helvetica', 10)       
+            pdf.drawString(50, 750 - y, str(saida)+' º - '+str(saidas[saida - 1]))
+            pdf.line(70, 748 - y, 343, 748 -y)
+            pdf.drawString(345, 748 - y, ' R$')
+            pdf.drawString(365, 750 - y, str(saidas[saida - 1].valor))
+            pdf.line(363, 748 - y, 550, 748 - y)
+        else:
+            pdf.setFont('Helvetica', 10)       
+            pdf.drawString(50, 580 - y, str(saida)+' º - '+str(saidas[saida - 1]))
+            pdf.line(70, 578 - y, 343, 578 -y)
+            pdf.drawString(345, 578 - y, ' R$')
+            pdf.drawString(365, 580 - y, str(saidas[saida - 1].valor))
+            pdf.line(363, 578 - y, 550, 578 - y)
+    if pagina == True:
+        pdf.setFont('Times-Bold', 12)
+        pdf.drawString(50, 720 - y, 'Total de Saída:........................................................................ R$  ')
+        pdf.drawString(365, 720 - y, str(valorTotalSaidas))
+        pdf.line(363, 718 - y, 550, 718 - y)
+    else:
+        pdf.setFont('Times-Bold', 12)
+        pdf.drawString(50, 555 - y, 'Total de Saída:........................................................................ R$  ')
+        pdf.drawString(365, 557 - y, str(valorTotalSaidas))
+        pdf.line(363, 555 - y, 550, 555 - y)
+    pdf.drawString(20, 120, 'Conferido por: ')
+    pdf.line(0, 100, 200, 100)
+    pdf.line(210, 100, 400, 100)
+    pdf.line(410, 100, 600, 100)
+    pdf.showPage()
+    
+    #Adicionando os comprovantes
+    for saida in saidas:
+        if saida.comprovante != "":
+            pdf.drawString(20, 780, str(saida.nome))
+            arquivo = "ibc_financeiro/"+str(saida.comprovante)
+            pdf.drawImage(arquivo, 150, 250, width= 250, height= 400)
+            pdf.showPage()
+    pdf.save()
+
+
 def relatorio(request, tipo):
     if tipo == 'entrada':
         if request.method == 'POST':
@@ -211,24 +307,18 @@ def relatorio(request, tipo):
 
     elif tipo == 'geral':
         if request.method == 'POST':
-            listaGeral(request)
-        
+            gerarRelatorioGeral(request, listaEntrada(request), listaSaida(request), listaMissao(request))
+            return render(request, 'index.html', {'nome': 'relatorio_geral.pdf'})
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioGeralForm()})
 
-
 #Cabeçalhos Relatórios
-def cabecalhoRelatorio(pdf, data, y):
+def cabecalhoRelatorio(pdf, data):
     pdf.drawImage('ibc_financeiro/static/imagens/logo.png', 10,758,height=50, width=60)
     pdf.setFont('Times-Bold', 12)
     pdf.drawString(200,800,"IGREJA BATISTA DE CORRENTE")
     pdf.drawString(182,785,"Departamento de Administração e Finanças")
     pdf.drawString(240,770,"Relatório Financeiro")
     pdf.drawString(430,740,"Data: " + data)
-    pdf.drawString(20, 700 - y, "Data ")
-    pdf.drawString(100, 700 - y, "Congregação ")
-    pdf.drawString(330,700 - y,"Categoria ")
-    pdf.drawString(490,700 - y,"Valor ")
-
 
 # Métodos Auxiliares
 def convertDate(date):
