@@ -24,6 +24,21 @@ class RelatorioEntradaForm(forms.Form):
     membro = forms.ModelMultipleChoiceField(label = 'Membros', required = False, queryset = Membro.objects.all().order_by('nome'), to_field_name = 'nome')
     membro.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhum selecionado'}
 
+class RelatorioMissaoForm(forms.Form):
+    inicio = forms.DateField(label = 'De:')
+    inicio.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data'}
+
+    fim = forms.DateField(label = 'Até:')
+    fim.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data'}
+
+    congregacao = forms.ModelMultipleChoiceField(label = 'Congregações', required = False, queryset = Congregacao.objects.all().order_by('nome'), to_field_name = 'nome')
+    congregacao.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhuma selecionada'}
+
+    missao = forms.ModelMultipleChoiceField(label = 'Missões', required = False, queryset = Missao.objects.all().order_by('nome'), to_field_name = 'nome')
+    missao.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhuma selecionada'}
+
+    andamento = forms.BooleanField(label = 'Em Andamento', required = False)
+
 class RelatorioSaidaForm(forms.Form):
     inicio = forms.DateField(label = 'De:')
     inicio.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data'}
@@ -42,21 +57,6 @@ class RelatorioSaidaForm(forms.Form):
 
     empresa = forms.ModelMultipleChoiceField(label = 'Empresas', required = False, queryset = Empresa.objects.all().order_by('nome'), to_field_name = 'nome')
     empresa.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhuma selecionada'}
-
-class RelatorioMissaoForm(forms.Form):
-    inicio = forms.DateField(label = 'De:')
-    inicio.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data'}
-
-    fim = forms.DateField(label = 'Até:')
-    fim.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data'}
-
-    congregacao = forms.ModelMultipleChoiceField(label = 'Congregações', required = False, queryset = Congregacao.objects.all().order_by('nome'), to_field_name = 'nome')
-    congregacao.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhuma selecionada'}
-
-    missao = forms.ModelMultipleChoiceField(label = 'Missões', required = False, queryset = Missao.objects.all().order_by('nome'), to_field_name = 'nome')
-    missao.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhuma selecionada'}
-
-    andamento = forms.BooleanField(label = 'Em Andamento', required = False)
 
 class RelatorioGeralForm(forms.Form):
     inicio = forms.DateField(label = 'De:')

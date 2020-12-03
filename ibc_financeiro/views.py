@@ -10,7 +10,7 @@ from datetime import datetime
 from reportlab.pdfgen import canvas
 from django.conf import settings
 from pathlib import Path
-from itertools import chain
+from itertools import chain                     # Juntar duas listas de queryset de classes diferentes
 
 import webbrowser
 
@@ -46,75 +46,20 @@ def cadMembrosExcel(request):
         form = FormExcel()
     return render(request, 'financeiro/form_excel.html', {'form': form})
 
-def relatorio(request):
-    if request.method == 'POST':
-        print(request.POST)
-        valor_Final_Entrada = 0
-        valor_Final_Entrada_Avulsa = 0
-        valor_Final_Entrada_Misssao = 0
-        y = 0
-        caminho = "ibc_financeiro/static/relatorio_entrada.pdf"
-        pdf = canvas.Canvas(caminho)
-        pdf.setTitle("Relatório de Entradas")
-        pdf.drawImage('ibc_financeiro/static/imagens/logo.png', 10,780,height=50, width=60)
-        pdf.setFont('Times-Bold', 24)
-        pdf.drawString(200,800,"Relatório de Entradas")
-        pdf.setFont('Times-Bold', 16)
-        pdf.drawString(20, 750 - y, "Entradas")
-        pdf.setFont('Helvetica', 12)
-        for entrada in Entrada.objects.filter(congregacao__nome = request.POST['congregacao'],data__range=[request.POST['dataInicio'], request.POST['dataFim']]).order_by('data'):
-            y = y + 30
-            if(y > 800):
-                y = 0
-                pdf.showPage()
-            pdf.drawString(40, 750 - y, "Data: " +  str(entrada.data))
-            pdf.drawString(220,750 - y,"Categoria: " + str(entrada.categoria))
-            pdf.drawString(420,750 - y,"Valor: " + str(entrada.valor))
-            valor_Final_Entrada = valor_Final_Entrada + entrada.valor
+def saida(request, action):
+    return render(request, 'financeiro/paginas/saida/adicionar.html')
 
-        pdf.setFont('Times-Bold', 16)
-        pdf.drawString(20, 720 - y, "Entradas Avulsa")
-        pdf.setFont('Helvetica', 12)
+# Métodos Auxiliares
+def cabecalhoRelatorio(pdf, data):              # Insere Cabeçalhos Relatórios
+    pdf.drawImage('ibc_financeiro/static/imagens/logo.png', 10,758,height=50, width=60)
+    pdf.setFont('Times-Bold', 12)
+    pdf.drawString(200,800,"IGREJA BATISTA DE CORRENTE")
+    pdf.drawString(182,785,"Departamento de Administração e Finanças")
+    pdf.drawString(240,770,"Relatório Financeiro")
+    pdf.drawString(430,740,"Data: " + data)
 
-        for entradaAvulsa in EntradaAvulsa.objects.filter(congregacao__nome = request.POST['congregacao'],data__range=[request.POST['dataInicio'], request.POST['dataFim']]).order_by('data'):
-            y = y + 30
-            if(y > 800):
-                y = 0
-                pdf.showPage()
-            pdf.drawString(40, 720 - y, "Data: " +  str(entradaAvulsa.data))
-            pdf.drawString(420,720 - y,"Valor: " + str(entradaAvulsa.valor))
-            valor_Final_Entrada_Avulsa = valor_Final_Entrada_Avulsa + entradaAvulsa.valor
-        
-
-        pdf.setFont('Times-Bold', 16)
-        pdf.drawString(20, 690 - y, "Entradas de Missões")
-        pdf.setFont('Helvetica', 12)
-
-        for missao in EntradaMissao.objects.filter(missao__congregacao__nome = request.POST['congregacao'],data__range=[request.POST['dataInicio'], request.POST['dataFim']]).order_by('data'):
-            y = y + 30
-            if(y > 600):
-                y = 0
-                pdf.showPage()
-                y = 0
-            pdf.drawString(40, 680 - y, "Data: " +  str(missao.data))
-            pdf.drawString(200,680 - y,"Missão: " + str(missao.missao))
-            pdf.drawString(420,680 - y,"Valor: " + str(missao.valor))
-            valor_Final_Entrada_Misssao= valor_Final_Entrada_Misssao + missao.valor
-        
-
-        valorTotal = valor_Final_Entrada + valor_Final_Entrada_Avulsa + valor_Final_Entrada_Misssao
-        pdf.setFont('Times-Bold', 14)
-        pdf.drawString(325,640 - y,"Total Entrada: "+" R$ "+str(valor_Final_Entrada))
-        pdf.drawString(325,620 - y,"Total Avulso: "+" R$ "+str(valor_Final_Entrada_Avulsa))
-        pdf.drawString(325,600 - y,"Total Missões: "+" R$ "+str(valor_Final_Entrada_Misssao))
-        pdf.drawString(325,580 - y,"Valor Total: "+" R$ "+str(valorTotal))
-        
-        pdf.save()
-        nome = "relatorio_entrada.pdf"
-        return render(request, 'index.html', {'nome': nome})
-    else:
-        congregacao = Congregacao.objects.all()
-        return render(request, 'financeiro/form_relatorio.html', {'congregacao': congregacao})
+def convertDate(date):                          # Converte formato da data
+    return datetime.strptime(date, '%d/%m/%Y').date()
 
 def gerarRelatorio(request, dados, tipo):
     data = str(date.today().strftime('%d/%m/%Y'))
@@ -239,9 +184,13 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     for saida in range(1,len(saidas)+1): 
         y = y + 30
         valorTotalSaidas = valorTotalSaidas + saidas[saida - 1].valor
-        if y > 500:
-            y = 0
-            pdf.showPage()
+        if pagina == False:
+            if y > 500:
+                y = 0
+                pdf.showPage()
+        if y > 600:
+                y = 0
+                pdf.showPage()
         if saida - 1 > 15:
             pagina = True
             pdf.setFont('Helvetica', 10)       
@@ -267,10 +216,10 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
         pdf.drawString(50, 555 - y, 'Total de Saída:........................................................................ R$  ')
         pdf.drawString(365, 557 - y, str(valorTotalSaidas))
         pdf.line(363, 555 - y, 550, 555 - y)
-    pdf.drawString(20, 120, 'Conferido por: ')
-    pdf.line(0, 100, 200, 100)
-    pdf.line(210, 100, 400, 100)
-    pdf.line(410, 100, 600, 100)
+    pdf.drawString(20, 80, 'Conferido por: ')
+    pdf.line(0, 60, 200, 60)
+    pdf.line(210, 60, 400, 60)
+    pdf.line(410, 60, 600, 60)
     pdf.showPage()
     
     #Adicionando os comprovantes
@@ -281,7 +230,6 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
             pdf.drawImage(arquivo, 150, 250, width= 250, height= 400)
             pdf.showPage()
     pdf.save()
-
 
 def relatorio(request, tipo):
     if tipo == 'entrada':
@@ -311,19 +259,6 @@ def relatorio(request, tipo):
             return render(request, 'index.html', {'nome': 'relatorio_geral.pdf'})
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioGeralForm()})
 
-#Cabeçalhos Relatórios
-def cabecalhoRelatorio(pdf, data):
-    pdf.drawImage('ibc_financeiro/static/imagens/logo.png', 10,758,height=50, width=60)
-    pdf.setFont('Times-Bold', 12)
-    pdf.drawString(200,800,"IGREJA BATISTA DE CORRENTE")
-    pdf.drawString(182,785,"Departamento de Administração e Finanças")
-    pdf.drawString(240,770,"Relatório Financeiro")
-    pdf.drawString(430,740,"Data: " + data)
-
-# Métodos Auxiliares
-def convertDate(date):
-    return datetime.strptime(date, '%d/%m/%Y').date()
-
 def listaEntrada(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
     congregacoes = request.POST.getlist('congregacao')
@@ -341,6 +276,12 @@ def listaEntrada(request):
     avulsas = avulsas.filter(congregacao__nome__in = congregacoes) if congregacoes != [] else avulsas
 
     return list(chain(entradas, avulsas))
+
+def listaGeral(request):
+    entradas = listaEntrada(request)
+    saidas = listaSaida(request)
+
+    return list(chain(entradas, saidas))
 
 def listaMissao(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
@@ -371,12 +312,6 @@ def listaSaida(request):
     saidas = saidas.filter(empresa__nome__in = empresas) if empresas != [] else saidas
 
     return saidas
-
-def listaGeral(request):
-    entradas = listaEntrada(request)
-    saidas = listaSaida(request)
-
-    return list(chain(entradas, saidas))
 
 def progressoMissao(pdf, meta, total, y):
     pdf.drawString(100, y, 'Meta: R$ ' + '{:.2f}'.format(meta))
