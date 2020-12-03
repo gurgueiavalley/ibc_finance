@@ -48,3 +48,12 @@
 .demo-switch{
     padding-top: 6.5px;
 }
+
+.datas{
+    height: 145px !important;
+    margin-bottom: 20px !important;
+}
+
+.btn-primary{
+    margin-bottom: 25px;
+}

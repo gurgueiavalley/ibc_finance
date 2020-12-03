@@ -47,7 +47,7 @@ def cadMembrosExcel(request):
     return render(request, 'financeiro/form_excel.html', {'form': form})
 
 def saida(request, action):
-    return render(request, 'financeiro/paginas/saida/adicionar.html')
+    return render(request, 'financeiro/paginas/saida/adicionar.html', {'formulario' : SaidaForm()})
 
 # Métodos Auxiliares
 def cabecalhoRelatorio(pdf, data):              # Insere Cabeçalhos Relatórios

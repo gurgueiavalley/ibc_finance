@@ -1,0 +1,69 @@
+b{
+    color: red;
+}
+
+.btn:not(.btn-link):not(.btn-circle) span{
+    margin-left: 0 !important;
+}
+
+section .form-control .btn:not(.btn-link):not(.btn-circle){
+    padding-left: 0;
+    position: unset !important;
+}
+
+.card .body{
+    padding-bottom: 0 !important;
+}
+
+.card .body .col-md-6, .col-md-3{
+    margin-bottom: 0 !important;
+}
+
+.form-control{
+    position: unset !important;
+    padding-top: 2px !important;
+    padding-bottom: 0px;
+}
+
+.input-group{
+    margin-top: 5px;
+}
+
+.header{
+    padding-bottom: 15px !important;
+}
+
+.col-md-3 .form-control{
+    max-width: 200px;
+}
+
+.dtp div.dtp-date, .dtp div.dtp-time, .dtp table.dtp-picker-days tr td a.selected{
+    background-color: #2196F3 !important;
+}
+
+.dtp > .dtp-content > .dtp-date-view > header.dtp-header{
+    background-color: #4fa3e7 !important;
+}
+
+.dropzone .dz-preview.dz-image-preview{
+    background: transparent;
+}
+
+.dropzone{
+    height: 262px;
+}
+
+.btn-success{
+    margin-top: -15px;
+    margin-bottom: 20px;
+}
+
+@media(max-width: 991px){
+    .col-md-3 .form-control{
+        max-width: unset;
+    }
+
+    .dropzone{
+        margin-bottom: 20px;
+    }
+}

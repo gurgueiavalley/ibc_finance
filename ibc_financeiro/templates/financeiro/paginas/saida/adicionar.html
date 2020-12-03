@@ -9,164 +9,195 @@
 {% endblock %}
 
 {% block CSS %}
+    <link rel= 'stylesheet' href= 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.min.css'>
+    
     <link rel= 'stylesheet' href= "{% static 'plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}">
     <link rel= 'stylesheet' href= "{% static 'plugins/bootstrap-datepicker/css/bootstrap-datepicker.css' %}">
     <link rel= 'stylesheet' href= "{% static 'plugins/waitme/waitMe.css' %}">
     <link rel= 'stylesheet' href= "{% static 'plugins/bootstrap-select/css/bootstrap-select.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'plugins/dropzone/dropzone.css' %}">
+
+    <link rel= 'stylesheet' href= "{% static 'css/paginas/saida/saida.css' %}">
 {% endblock %}
 
 {% block dinamico %}
-    <div class= 'row clearfix'>
-        <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>
-            <div class= 'card'>
-                <div class="header">
-                    <h2>
-                        Dados
-                        <small> Insira todos os dados relacionados a saída. Os dados com * são obrigatórios </small>
-                    </h2>
-                </div>
+    <form method= 'POST' action= "{% url 'saida' 'adicionar' %}" enctype= 'multipart/form-data'>
+        <div class= 'row clearfix'>
+            <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>
                 
-                <div class="body">
-                    <div class="demo-masked-input">
-                        <div class="row clearfix">
-                            <div class="col-md-3">
-                                <b>Date</b>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="material-icons">date_range</i>
-                                    </span>
-                                    <div class="form-line">
-                                        <input type="text" class="form-control date" placeholder="Ex: 30/07/2016">
+                    {% csrf_token %}
+
+                    <div class= 'card'>
+                        <div class= 'header'>
+                            <h2>
+                                Dados
+                                <small> Insira os dados para adicionar uma nova saída. Os dados com <b> * </b> são obrigatórios </small>
+                            </h2>
+                        </div>
+                        
+                        <div class= 'body'>
+                            <div class= 'row clearfix'>
+                                <div class= 'col-md-3'>             <!-- Congregação -->
+                                    <strong> {{ formulario.congregacao.label }} <b> * </b> </strong>
+
+                                    <div class= 'input-group'>
+                                        <span class= 'input-group-addon'>
+                                            <i class= 'material-icons'> location_city </i>
+                                        </span>
+
+                                        <div class= 'form-line'>
+                                            {{ formulario.congregacao }}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <b>Time (24 hour)</b>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="material-icons">access_time</i>
-                                    </span>
-                                    <div class="form-line">
-                                        <input type="text" class="form-control time24" placeholder="Ex: 23:59">
+
+                                <div class= 'col-md-3'>             <!-- Categoria -->
+                                    <strong> {{ formulario.categoria.label }} <b> * </b> </strong>
+
+                                    <div class= 'input-group'>
+                                        <span class= 'input-group-addon'>
+                                            <i class= 'material-icons'> category </i>
+                                        </span>
+
+                                        <div class= 'form-line'>
+                                            {{ formulario.categoria }}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <b>Time (12 hour)</b>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="material-icons">access_time</i>
-                                    </span>
-                                    <div class="form-line">
-                                        <input type="text" class="form-control time12" placeholder="Ex: 11:59 pm">
+
+                                <div class= 'col-md-3'>             <!-- Pagamento -->
+                                    <strong> {{ formulario.pagamento.label }} <b> * </b> </strong>
+
+                                    <div class= 'input-group'>
+                                        <span class= 'input-group-addon'>
+                                            <i class= 'material-icons'> credit_card </i>
+                                        </span>
+
+                                        <div class= 'form-line'>
+                                            {{ formulario.pagamento }}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <b>Date Time</b>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="material-icons">date_range</i>
-                                    </span>
-                                    <div class="form-line">
-                                        <input type="text" class="form-control datetime" placeholder="Ex: 30/07/2016 23:59">
+
+                                <div class= 'col-md-3'>             <!-- Empresa -->
+                                    <strong> {{ formulario.empresa.label }} <b> * </b> </strong>
+
+                                    <div class= 'input-group'>
+                                        <span class= 'input-group-addon'>
+                                            <i class= 'material-icons'> store </i>
+                                        </span>
+
+                                        <div class= 'form-line'>
+                                            {{ formulario.empresa }}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <b>Mobile Phone Number</b>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="material-icons">phone_iphone</i>
-                                    </span>
-                                    <div class="form-line">
-                                        <input type="text" class="form-control mobile-phone-number" placeholder="Ex: +00 (000) 000-00-00">
+
+                                <div class= 'col-md-6'>             <!-- Nome -->
+                                    <strong> {{ formulario.nome.label }} <b> * </b> </strong>
+
+                                    <div class= 'input-group'>
+                                        <span class= 'input-group-addon'>
+                                            <i class= 'material-icons'> shopping_bag </i>
+                                        </span>
+
+                                        <div class= 'form-line'>
+                                            {{ formulario.nome }}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <b>Phone Number</b>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="material-icons">phone</i>
-                                    </span>
-                                    <div class="form-line">
-                                        <input type="text" class="form-control mobile-phone-number" placeholder="Ex: +00 (000) 000-00-00">
+
+                                <div class= 'col-md-6'>             <!-- Descrição -->
+                                    <strong> {{ formulario.descricao.label }}  </strong>
+
+                                    <div class= 'input-group'>
+                                        <span class= 'input-group-addon'>
+                                            <i class= 'material-icons'> short_text </i>
+                                        </span>
+
+                                        <div class= 'form-line'>
+                                            {{ formulario.descricao }}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <b>Money (Dollar)</b>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="material-icons">attach_money</i>
-                                    </span>
-                                    <div class="form-line">
-                                        <input type="text" class="form-control money-dollar" placeholder="Ex: 99,99 $">
+
+                                <div class= 'col-md-6'>             <!-- Valor -->
+                                    <strong> {{ formulario.valor.label }} <b> * </b> </strong>
+
+                                    <div class= 'input-group'>
+                                        <span class= 'input-group-addon'>
+                                            <i class= 'material-icons'> monetization_on </i>
+                                        </span>
+
+                                        <div class= 'form-line'>
+                                            {{ formulario.valor }}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <b>Money (Euro)</b>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="material-icons">euro_symbol</i>
-                                    </span>
-                                    <div class="form-line">
-                                        <input type="text" class="form-control money-euro" placeholder="Ex: 99,99 €">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <b>IP Address</b>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="material-icons">computer</i>
-                                    </span>
-                                    <div class="form-line">
-                                        <input type="text" class="form-control ip" placeholder="Ex: 255.255.255.255">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <b>Credit Card</b>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="material-icons">credit_card</i>
-                                    </span>
-                                    <div class="form-line">
-                                        <input type="text" class="form-control credit-card" placeholder="Ex: 0000 0000 0000 0000">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <b>Email Address</b>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="material-icons">email</i>
-                                    </span>
-                                    <div class="form-line">
-                                        <input type="text" class="form-control email" placeholder="Ex: example@example.com">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <b>Serial Key</b>
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="material-icons">vpn_key</i>
-                                    </span>
-                                    <div class="form-line">
-                                        <input type="text" class="form-control key" placeholder="Ex: XXX0-XXXX-XX00-0XXX">
+
+                                <div class= 'col-md-6'>             <!-- Data -->
+                                    <strong> {{ formulario.data.label }} <b> * </b> </strong>
+
+                                    <div class= 'input-group'>
+                                        <span class= 'input-group-addon'>
+                                            <i class= 'material-icons'> event </i>
+                                        </span>
+
+                                        <div class= 'form-line'>
+                                            {{ formulario.data }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>             
+                </form>
+            </div>
+        </div>
+
+        <div class= 'row clearfix'>
+            <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>
+                <div class= 'card'>
+                    <div class= 'header'>
+                        <h2>
+                            Documentos
+                            <small> Insira os documentos que comprove a compra e o pagamento. Você pode inserir depois, caso ainda não tenha </small>
+                        </h2>
                     </div>
+
+                    <div class= 'body'>
+                        <div class= 'row clearfix'>
+                            {% for campo in formulario.visible_fields|slice:'8:10'  %}
+                                <div class= 'col-md-6'>
+                                    <div action= '/' class= 'dropzone'>
+                                        <div class= 'dz-message'>
+                                            <div class= 'drag-icon-cph'>
+                                                <i class= 'material-icons'> note_add </i>
+                                            </div>
+
+                                            <h3> {{ campo.label }} </h3>
+                                            <em> Arraste nesta área ou clique e procure o arquivo </em>
+                                        </div>
+
+                                        <div class= 'fallback'>
+                                            {{ campo }}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <br>
                 </div>
             </div>
         </div>
-    </div>
+
+        <button class= 'btn btn-success btn-lg waves-effect'>
+            <i class= 'material-icons'> add </i>
+            <span> ADICIONAR SAÍDA </span>
+        </button>
+    </form>
 {% endblock %}
 
 {% block JS %}
@@ -174,6 +205,9 @@
     <script src= "{% static 'plugins/momentjs/moment.js' %}"> </script>
     <script src= "{% static 'plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"> </script>
     <script src= "{% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"> </script>
+    <script src= "{% static 'plugins/dropzone/dropzone.js' %}"> </script>
 
-    <script src= "{% static 'js/pages/forms/basic-form-elements.js' %}"> </script>
+    <script src= 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/pt-br.min.js'> </script>
+
+    <script src= "{% static 'js/paginas/saida/saida.js' %}"> </script>
 {% endblock %}
