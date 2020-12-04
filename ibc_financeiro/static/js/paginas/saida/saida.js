@@ -7,3 +7,12 @@ $(() => {
         time: false
     })
 })
+
+$('.btn-success').click(() => {
+    const formulario = document.querySelector('#formulario')
+
+    if(formulario.checkValidity())
+        formulario.submit()
+
+    formulario.reportValidity()
+})
