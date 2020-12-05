@@ -45,25 +45,25 @@ section .form-control .btn:not(.btn-link):not(.btn-circle){
     background-color: #4fa3e7 !important;
 }
 
-.dropzone .dz-preview.dz-image-preview{
-    background: transparent;
-}
-
-.dropzone{
-    height: 262px;
-}
-
 .btn-success{
     margin-top: -15px;
     margin-bottom: 20px;
 }
 
+.file{
+    margin-top: 3px;
+}
+
+.body{
+    padding-top: 15px !important;
+}
+
+.oculto{
+    display: none;
+}
+
 @media(max-width: 991px){
     .col-md-3 .form-control{
         max-width: unset;
-    }
-
-    .dropzone{
-        margin-bottom: 20px;
     }
 }

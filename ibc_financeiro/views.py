@@ -12,6 +12,7 @@ from django.conf import settings
 from pathlib import Path
 from itertools import chain                     # Juntar duas listas de queryset de classes diferentes
 
+# Métodos Renderizados
 def index(request):
     return render(request, 'financeiro/index.html')
 
@@ -72,7 +73,30 @@ def relatorio(request, tipo):
         
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioGeralForm()})
 
-def saida(request, action):
+def saida(request, acao):
+    if(request.method == 'POST'):
+        formulario = SaidaForm(request.POST, request.FILES)
+
+        if formulario.is_valid():
+            saida = Saida()
+            saida.congregacao = Congregacao.objects.get(id = request.POST['congregacao'])
+            saida.categoria = CategoriaSaida.objects.get(id = request.POST['categoria'])
+            saida.forma_de_Pagamento = Pagamento.objects.get(id = request.POST['pagamento'])
+            saida.empresa = Empresa.objects.get(id = request.POST['empresa'])
+            saida.nome = request.POST['nome']
+            saida.descricao = request.POST['descricao']
+            saida.valor = request.POST['valor']
+            saida.data = convertDate(request.POST['data'])
+
+            if('comprovante' in request.FILES):
+                saida.comprovante = request.FILES['comprovante']
+
+            if('nota_fiscal' in request.FILES):
+                saida.nota_Fiscal = request.FILES['nota_fiscal']
+            
+            saida.administrador = Administrador.objects.get(id = 1)
+            saida.save()
+            
     return render(request, 'financeiro/paginas/saida/adicionar.html', {'formulario' : SaidaForm()})
 
 # Métodos Auxiliares

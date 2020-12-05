@@ -1,6 +1,6 @@
 $(() => {
     $('.datepicker').bootstrapMaterialDatePicker({
-        format: 'dddd, DD/MM/YYYY',
+        format: 'DD/MM/YYYY',
         lang: 'pt-BR',
         cancelText: 'Cancelar',
         okText: 'Confirmar',
@@ -8,11 +8,4 @@ $(() => {
     })
 })
 
-$('.btn-success').click(() => {
-    const formulario = document.querySelector('#formulario')
-
-    if(formulario.checkValidity())
-        formulario.submit()
-
-    formulario.reportValidity()
-})
+document.querySelectorAll('b')[11].classList.add('oculto')

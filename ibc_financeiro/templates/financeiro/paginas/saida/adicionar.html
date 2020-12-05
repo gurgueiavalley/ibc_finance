@@ -22,139 +22,57 @@
 
 {% block dinamico %}
     <form method= 'POST' action= "{% url 'saida' 'adicionar' %}" enctype= 'multipart/form-data' id= 'formulario'>
+        {% csrf_token %}
+        
         <div class= 'row clearfix'>
-            <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>
-                
-                    {% csrf_token %}
+            <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>   
+                <div class= 'card'>
+                    <div class= 'header'>
+                        <h2>
+                            Dados
+                            <small> Insira os dados para adicionar uma nova saída. Os dados com <b> * </b> são obrigatórios </small>
+                        </h2>
+                    </div>
+                    
+                    <div class= 'body'>
+                        <div class= 'row clearfix'>
+                            {% for campo in formulario.visible_fields|slice:'0:4' %}
+                                <div class= 'col-md-3'>
+                                    <strong> {{ campo.label }} <b> * </b> </strong>
 
-                    <div class= 'card'>
-                        <div class= 'header'>
-                            <h2>
-                                Dados
-                                <small> Insira os dados para adicionar uma nova saída. Os dados com <b> * </b> são obrigatórios </small>
-                            </h2>
+                                    <div class= 'input-group'>
+                                        <span class= 'input-group-addon'>
+                                            <i class= 'material-icons'> {{ campo.help_text }} </i>
+                                        </span>
+
+                                        <div class= 'form-line'>
+                                            {{ campo }}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                            {% for campo in formulario.visible_fields|slice:'4:8' %}
+                                <div class= 'col-md-6'>
+                                    <strong> {{ campo.label }} <b> * </b> </strong>
+
+                                    <div class= 'input-group'>
+                                        <span class= 'input-group-addon'>
+                                            <i class= 'material-icons'> {{ campo.help_text }} </i>
+                                        </span>
+
+                                        <div class= 'form-line'>
+                                            {{ campo }}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
                         </div>
-                        
-                        <div class= 'body'>
-                            <div class= 'row clearfix'>
-                                <div class= 'col-md-3'>             <!-- Congregação -->
-                                    <strong> {{ formulario.congregacao.label }} <b> * </b> </strong>
-
-                                    <div class= 'input-group'>
-                                        <span class= 'input-group-addon'>
-                                            <i class= 'material-icons'> location_city </i>
-                                        </span>
-
-                                        <div class= 'form-line'>
-                                            {{ formulario.congregacao }}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class= 'col-md-3'>             <!-- Categoria -->
-                                    <strong> {{ formulario.categoria.label }} <b> * </b> </strong>
-
-                                    <div class= 'input-group'>
-                                        <span class= 'input-group-addon'>
-                                            <i class= 'material-icons'> category </i>
-                                        </span>
-
-                                        <div class= 'form-line'>
-                                            {{ formulario.categoria }}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class= 'col-md-3'>             <!-- Pagamento -->
-                                    <strong> {{ formulario.pagamento.label }} <b> * </b> </strong>
-
-                                    <div class= 'input-group'>
-                                        <span class= 'input-group-addon'>
-                                            <i class= 'material-icons'> credit_card </i>
-                                        </span>
-
-                                        <div class= 'form-line'>
-                                            {{ formulario.pagamento }}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class= 'col-md-3'>             <!-- Empresa -->
-                                    <strong> {{ formulario.empresa.label }} <b> * </b> </strong>
-
-                                    <div class= 'input-group'>
-                                        <span class= 'input-group-addon'>
-                                            <i class= 'material-icons'> store </i>
-                                        </span>
-
-                                        <div class= 'form-line'>
-                                            {{ formulario.empresa }}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class= 'col-md-6'>             <!-- Nome -->
-                                    <strong> {{ formulario.nome.label }} <b> * </b> </strong>
-
-                                    <div class= 'input-group'>
-                                        <span class= 'input-group-addon'>
-                                            <i class= 'material-icons'> shopping_bag </i>
-                                        </span>
-
-                                        <div class= 'form-line'>
-                                            {{ formulario.nome }}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class= 'col-md-6'>             <!-- Descrição -->
-                                    <strong> {{ formulario.descricao.label }}  </strong>
-
-                                    <div class= 'input-group'>
-                                        <span class= 'input-group-addon'>
-                                            <i class= 'material-icons'> short_text </i>
-                                        </span>
-
-                                        <div class= 'form-line'>
-                                            {{ formulario.descricao }}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class= 'col-md-6'>             <!-- Valor -->
-                                    <strong> {{ formulario.valor.label }} <b> * </b> </strong>
-
-                                    <div class= 'input-group'>
-                                        <span class= 'input-group-addon'>
-                                            <i class= 'material-icons'> monetization_on </i>
-                                        </span>
-
-                                        <div class= 'form-line'>
-                                            {{ formulario.valor }}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class= 'col-md-6'>             <!-- Data -->
-                                    <strong> {{ formulario.data.label }} <b> * </b> </strong>
-
-                                    <div class= 'input-group'>
-                                        <span class= 'input-group-addon'>
-                                            <i class= 'material-icons'> event </i>
-                                        </span>
-
-                                        <div class= 'form-line'>
-                                            {{ formulario.data }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>             
-                </form>
+                    </div>
+                </div>
             </div>
-        </div>
-
+        </div>    
+        
         <div class= 'row clearfix'>
             <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>
                 <div class= 'card'>
@@ -167,19 +85,16 @@
 
                     <div class= 'body'>
                         <div class= 'row clearfix'>
-                            {% for campo in formulario.visible_fields|slice:'8:10'  %}
+                            {% for campo in formulario.visible_fields|slice:'8:10' %}
                                 <div class= 'col-md-6'>
-                                    <div action= '/' class= 'dropzone'>
-                                        <div class= 'dz-message'>
-                                            <div class= 'drag-icon-cph'>
-                                                <i class= 'material-icons'> note_add </i>
-                                            </div>
+                                    <strong> {{ campo.label }} </strong>
 
-                                            <h3> {{ campo.label }} </h3>
-                                            <em> Arraste nesta área ou clique e procure o arquivo </em>
-                                        </div>
+                                    <div class= 'input-group'>
+                                        <span class= 'input-group-addon'>
+                                            <i class= 'material-icons'> {{ campo.help_text }} </i>
+                                        </span>
 
-                                        <div class= 'fallback'>
+                                        <div class= 'file'> 
                                             {{ campo }}
                                         </div>
                                     </div>
@@ -187,8 +102,6 @@
                             {% endfor %}
                         </div>
                     </div>
-                    
-                    <br>
                 </div>
             </div>
         </div>
@@ -205,7 +118,6 @@
     <script src= "{% static 'plugins/momentjs/moment.js' %}"> </script>
     <script src= "{% static 'plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"> </script>
     <script src= "{% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"> </script>
-    <script src= "{% static 'plugins/dropzone/dropzone.js' %}"> </script>
 
     <script src= 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/pt-br.min.js'> </script>
 

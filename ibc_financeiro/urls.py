@@ -5,5 +5,5 @@ urlpatterns = [
     path('', index, name = 'index'),
     path('cadMembrosExcel', cadMembrosExcel, name='cadMembrosExcel'),
     path('relatorio/<tipo>', relatorio, name = 'relatorio'),                # Relatórios
-    path('saida/<action>', saida, name = 'saida'),                          # Saídas
+    path('saida/<acao>', saida, name = 'saida'),                            # Saídas
 ]

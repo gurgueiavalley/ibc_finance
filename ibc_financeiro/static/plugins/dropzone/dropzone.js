@@ -75,15 +75,6 @@
 
     Dropzone.prototype.Emitter = Emitter;
 
-
-    /*
-    This is a list of all available events you can register on a dropzone object.
-    
-    You can register an event handler like this:
-    
-        dropzone.on("dragEnter", function() { });
-     */
-
     Dropzone.prototype.events = ["drop", "dragstart", "dragend", "dragenter", "dragover", "dragleave", "addedfile", "addedfiles", "removedfile", "thumbnail", "error", "errormultiple", "processing", "processingmultiple", "uploadprogress", "totaluploadprogress", "sending", "sendingmultiple", "success", "successmultiple", "canceled", "canceledmultiple", "complete", "completemultiple", "reset", "maxfilesexceeded", "maxfilesreached", "queuecomplete"];
 
     Dropzone.prototype.defaultOptions = {
@@ -1357,9 +1348,9 @@
       return this.submitRequest(xhr, formData, files);
     };
 
-    Dropzone.prototype.submitRequest = function(xhr, formData, files) {
-      return xhr.send(formData);
-    };
+	Dropzone.prototype.submitRequest = function(xhr, formData, files){
+		return xhr.send(formData);
+	}
 
     Dropzone.prototype._finished = function(files, responseText, e) {
       var file, _i, _len;
