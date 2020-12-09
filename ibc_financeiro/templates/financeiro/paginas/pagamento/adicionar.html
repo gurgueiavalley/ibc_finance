@@ -1,0 +1,118 @@
+﻿{% extends 'financeiro/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    {% block titulo %}
+        Adicionar uma Forma de Pagamento
+    {% endblock %}
+{% endblock %}
+
+{% block CSS %}
+    <link rel= 'stylesheet' href= 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.min.css'>
+    
+    <link rel= 'stylesheet' href= "{% static 'plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'plugins/bootstrap-datepicker/css/bootstrap-datepicker.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'plugins/waitme/waitMe.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'plugins/bootstrap-select/css/bootstrap-select.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'plugins/dropzone/dropzone.css' %}">
+
+    <link rel= 'stylesheet' href= "{% static 'css/paginas/saida/saida.css' %}">
+
+    <style>
+        .navbar, #leftsidebar{
+            display: none;
+        }
+
+        .content{
+            margin: 20px !important;
+        }
+    </style>
+{% endblock %}
+
+{% block dinamico %}
+    <form method= 'POST' action= "{% url 'pagamento' 'adicionar' %}" id= 'formulario'>
+        {% csrf_token %}
+        
+        <div class= 'row clearfix'>
+            <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>   
+                <div class= 'card'>
+                    <div class= 'header'>
+                        <h2>
+                            Dados
+                            <small> Insira os dados para adicionar uma nova forma de pagamento. Os dados com <b> * </b> são obrigatórios </small>
+                        </h2>
+                    </div>
+                    
+                    <div class= 'body'>
+                        <div class= 'row clearfix'>
+                            <div class= 'col-md-12'>
+                                <strong> {{ formulario.nome.label }} <b> * </b> </strong>
+
+                                <div class= 'input-group'>
+                                    <span class= 'input-group-addon'>
+                                        <i class= 'material-icons'> {{ formulario.nome.help_text }} </i>
+                                    </span>
+
+                                    <div class= 'form-line'>
+                                        {{ formulario.nome }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class= 'btn btn-success btn-lg waves-effect'>
+            <i class= 'material-icons'> add </i>
+            <span> ADICIONAR </span>
+        </button>
+    </form>
+{% endblock %}
+
+{% block JS %}
+    <script src= "{% static 'plugins/autosize/autosize.js' %}"> </script>
+    <script src= "{% static 'plugins/momentjs/moment.js' %}"> </script>
+    <script src= "{% static 'plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"> </script>
+    <script src= "{% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"> </script>
+
+    <script src= 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/pt-br.min.js'> </script>
+
+    {% comment %} <script src= "{% static 'js/paginas/saida/saida.js' %}"> </script> {% endcomment %}
+
+    <script>
+        if({{ pagina }} == 1){
+            {% if id %}
+                $(window.opener.document).find('#id_pagamento').append($('<option>', {
+                    value: {{ id }},
+                    text: '{{ nome }}'
+                }))
+                
+                const span = document.createElement('span')
+                span.classList.add('text')
+                span.innerText = '{{ nome }}'
+
+                const a = document.createElement('a')
+                a.appendChild(span)
+
+                const li = document.createElement('li')
+                li.setAttribute('data-original-index', String($(window.opener.document).find('#id_pagamento').parent().find('ul')[0].children.length))
+                li.appendChild(a)
+
+                $(window.opener.document).find('#id_pagamento').parent().find('ul')[0].appendChild(li)
+
+                $(window.opener.document).find('#id_pagamento').parent().find('button').find('span')[0].innerText = '{{ nome }}'
+
+                $(window.opener.document).find('#id_pagamento').parent().find('div ul li').last().find('span').click(() => {
+                    $('#id_pagamento').parent().find('div ul li').last().addClass('selected')
+                })
+
+                $(window.opener.document).find('#id_pagamento').parent().find('div ul li').last().find('span').click()
+                
+                window.close()
+            {% endif %}
+        }
+    </script>
+{% endblock %} 

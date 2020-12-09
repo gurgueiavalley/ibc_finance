@@ -15,6 +15,7 @@ from reportlab.platypus import Table
 
 import webbrowser
 
+# Métodos Renderizados
 def index(request):
     return render(request, 'financeiro/index.html')
 
@@ -47,7 +48,143 @@ def cadMembrosExcel(request):
         form = FormExcel()
     return render(request, 'financeiro/form_excel.html', {'form': form})
 
-def saida(request, action):
+def categoria(request, acao):
+    pagina = 0
+
+    if request.method == 'POST':
+        formulario = CategoriaSaidaForm(request.POST)
+
+        if formulario.is_valid():
+            categoria = CategoriaSaida()
+            categoria.nome = request.POST['nome']
+            
+            if 'categoria' in request.POST:
+                categoria.descricao = request.POST['descricao']
+            
+            categoria.save()
+
+            pagina = 1
+            
+        return render(request, 'financeiro/paginas/categoria/adicionar.html', {'formulario' : CategoriaSaidaForm(), 'pagina' : pagina, 'id' : categoria.id, 'nome' : categoria.nome})
+
+    return render(request, 'financeiro/paginas/categoria/adicionar.html', {'formulario' : CategoriaSaidaForm(), 'pagina' : pagina})
+
+def congregacao(request, acao):
+    pagina = 0
+
+    congregacao = Congregacao()
+
+    if request.method == 'POST':
+        formulario = CongregacaoForm(request.POST)
+
+        if formulario.is_valid():
+            congregacao.nome = request.POST['nome']
+            congregacao.localidade = request.POST['localidade']
+            congregacao.save()
+
+            pagina = 1
+
+            return render(request, 'financeiro/paginas/congregacao/adicionar.html', {'formulario' : CongregacaoForm(), 'pagina' : pagina, 'id' : congregacao.id, 'nome' : request.POST['nome']})
+
+    return render(request, 'financeiro/paginas/congregacao/adicionar.html', {'formulario' : CongregacaoForm(), 'pagina' : pagina})
+
+def empresa(request, acao):
+    pagina = 0
+
+    if request.method == 'POST':
+        formulario = EmpresaForm(request.POST)
+
+        if formulario.is_valid():
+            empresa = Empresa()
+            empresa.CPF_CNPJ = request.POST['CPF_CNPJ']
+            empresa.nome = request.POST['nome']
+            
+            if 'descricao' in request.POST:
+                empresa.descricao = request.POST['descricao']
+            
+            if 'endereco' in request.POST:
+                empresa.endereco = request.POST['endereco']
+
+            if 'cidade' in request.POST:
+                empresa.cidade = request.POST['cidade']
+
+            empresa.save()
+
+            pagina = 1
+            
+        return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : EmpresaForm(), 'pagina' : pagina, 'id' : empresa.id, 'nome' : empresa.nome})
+
+    return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : EmpresaForm(), 'pagina' : pagina})
+
+def pagamento(request, acao):
+    pagina = 0
+
+    if request.method == 'POST':
+        formulario = PagamentoForm(request.POST)
+
+        if formulario.is_valid():
+            pagamento = Pagamento()
+            pagamento.nome = request.POST['nome']
+            pagamento.save()
+
+            pagina = 1
+            
+        return render(request, 'financeiro/paginas/pagamento/adicionar.html', {'formulario' : PagamentoForm(), 'pagina' : pagina, 'id' : pagamento.id, 'nome' : pagamento.nome})
+
+    return render(request, 'financeiro/paginas/pagamento/adicionar.html', {'formulario' : PagamentoForm(), 'pagina' : pagina})
+
+def relatorio(request, tipo):
+    if tipo == 'entrada':
+        if request.method == 'POST':
+            gerarRelatorio(request, listaEntrada(request), tipo)
+            return render(request, 'index.html', {'nome': 'relatorio_entrada.pdf'})
+
+        return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioEntradaForm()})
+
+    elif tipo == 'saída':
+        if request.method == 'POST':
+            gerarRelatorio(request, listaSaida(request), tipo)
+
+            return render(request, 'index.html', {'nome': 'relatorio_saida.pdf'})
+
+        return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioSaidaForm()})
+
+    elif tipo == 'missão':
+        if request.method == 'POST':
+            listaMissao(request)
+
+        return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioMissaoForm()})
+
+    elif tipo == 'geral':
+        if request.method == 'POST':
+            listaGeral(request)
+        
+        return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioGeralForm()})
+
+def saida(request, acao):
+    if(request.method == 'POST'):
+        formulario = SaidaForm(request.POST, request.FILES)
+
+        if formulario.is_valid():
+            saida = Saida()
+            saida.congregacao = Congregacao.objects.get(id = request.POST['congregacao'])
+            saida.categoria = CategoriaSaida.objects.get(id = request.POST['categoria'])
+            saida.forma_de_Pagamento = Pagamento.objects.get(id = request.POST['pagamento'])
+            saida.empresa = Empresa.objects.get(id = request.POST['empresa'])
+            saida.nome = request.POST['nome']
+            saida.descricao = request.POST['descricao']
+            saida.valor = request.POST['valor']
+            saida.data = convertDate(request.POST['data'])
+
+            if('comprovante' in request.FILES):
+                saida.comprovante = request.FILES['comprovante']
+
+            if('nota_fiscal' in request.FILES):
+                saida.nota_Fiscal = request.FILES['nota_fiscal']
+            
+            saida.administrador = Administrador.objects.get(id = 1)
+            saida.save()
+            
     return render(request, 'financeiro/paginas/saida/adicionar.html', {'formulario' : SaidaForm()})
 
 # Métodos Auxiliares
@@ -151,31 +288,20 @@ def gerarRelatorio(request, dados, tipo):
         
 def gerarRelatorioGeral(request, entradas, saidas, missoes):
     data = str(date.today().strftime('%d/%m/%Y'))
-
-    categorias = []
-    for entrada in entradas:
-        if hasattr(entrada, 'categoria'):
-            if categorias != []:
-                for categoria in categorias:
-                    if categoria['nome'] != entrada.categoria.nome:
-                        categorias.append({
-                            'nome': entrada.categoria.nome,
-                            'total': entrada.valor
-                        })
-                    else:
-                        categoria['total'] += entrada.valor
-            else:
-                categorias.append({
-                    'nome': entrada.categoria.nome,
-                    'total': entrada.valor
-                })         
-
-    print(categorias)
     valorEntradas = 0
     valorEntradasAvulsa = 0
     valorMissao = 0
     valorTotalEntradas = 0
     valorTotalSaidas = 0
+
+    for entrada in entradas:
+        if hasattr(entrada, 'categoria'):
+            valorEntradas += entrada.valor
+        else:
+            valorEntradasAvulsa += entrada.valor
+    for missao in missoes:
+        valorMissao += missao.valor
+    valorTotalEntradas += valorEntradas + valorEntradasAvulsa + valorMissao
     y = 0
     pagina = False
     caminho = "ibc_financeiro/static/relatorio_geral.pdf"
@@ -186,7 +312,7 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     pdf.line(257, 752, 335, 752)
     pdf.setFont('Helvetica', 10)
 
-    pdf.drawString(50, 700, 'Dizimos:............................................................................................ R$ ')
+    pdf.drawString(50, 700, 'Dizimos, Ofertas, Campanhas:........................................................ R$ ')
     pdf.drawString(365, 702, str(valorEntradas))
     pdf.line(363, 700, 550, 700)
     pdf.drawString(50, 680, 'Ofertas Avulsas:............................................................................... R$ ')
@@ -196,7 +322,7 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     pdf.drawString(365, 662, str(valorMissao))
     pdf.line(363, 660, 550, 660)
     pdf.setFont('Times-Bold', 12)
-    pdf.drawString(50, 642, 'Total de Entradas:................................................................. R$  ')
+    pdf.drawString(245, 642, 'Total de Entradas: R$  ')
     pdf.drawString(365, 642, str(valorTotalEntradas))
     pdf.line(363, 640, 550, 640)
     pdf.drawString(260, 600, 'Pagamentos')
@@ -230,14 +356,18 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
             pdf.line(363, 578 - y, 550, 578 - y)
     if pagina == True:
         pdf.setFont('Times-Bold', 12)
-        pdf.drawString(50, 720 - y, 'Total de Saída:........................................................................ R$  ')
+        pdf.drawString(265, 720 - y, 'Total de Saída: R$  ')
         pdf.drawString(365, 720 - y, str(valorTotalSaidas))
         pdf.line(363, 718 - y, 550, 718 - y)
+        pdf.drawString(276, 700 - y, 'A Depositar: R$  ')
+        pdf.line(363, 698 - y, 550, 698 - y)
     else:
         pdf.setFont('Times-Bold', 12)
-        pdf.drawString(50, 555 - y, 'Total de Saída:........................................................................ R$  ')
+        pdf.drawString(265, 555 - y, 'Total de Saída: R$  ')
         pdf.drawString(365, 557 - y, str(valorTotalSaidas))
         pdf.line(363, 555 - y, 550, 555 - y)
+        pdf.drawString(276, 560 - y, 'A Depositar: R$  ')
+        pdf.line(363, 658 - y, 550, 658 - y)
     pdf.drawString(20, 80, 'Conferido por: ')
     pdf.line(0, 60, 200, 60)
     pdf.line(210, 60, 400, 60)
@@ -251,12 +381,31 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     pdf.setFont('Helvetica', 10)
     pdf.drawString(230, 720, 'CONTROLE DE DÍZIMOS')
     pdf.drawString(238, 700, 'Semana de '+str(data))
+
+    pdf.setFont('Helvetica-Bold', 10)
+    pdf.drawString(180, 650, 'RELAÇÃO NOMINAL')
+    pdf.rect(20, 645, height=20, width=400)
+    pdf.drawString(435, 650, 'VALOR')
+    pdf.rect(420, 645, height=20, width=152)
+    y = 0
     for entrada in entradas:
         if hasattr(entrada, 'categoria'):
             if entrada.categoria.nome == 'Dizimo':
+                if y > 500:
+                    y = 0
+                    pdf.showPage()
+                y += 20
                 pdf.setFont('Helvetica', 10)
-                pdf.drawString(100, 680, str(entrada.membro.nome) + '    '+str(entrada.valor))
-            
+                pdf.drawString(35, 650 - y, str(entrada.membro.nome))
+                pdf.rect(20, 645 - y, height=20, width=400)
+                pdf.drawString(435, 650 - y, 'R$  '+str(entrada.valor))
+                pdf.rect(420, 645 - y, height=20, width=152)
+    y += 20
+    pdf.setFont('Helvetica-Bold', 10)
+    pdf.drawString(370, 650 - y, 'TOTAL')
+    pdf.rect(20, 645 - y, height=20, width=400)
+    pdf.drawString(435, 650 - y, 'R$  '+str(entrada.valor))
+    pdf.rect(420, 645 - y, height=20, width=152)
     pdf.showPage()
     #Adicionando os comprovantes
     for saida in saidas:
