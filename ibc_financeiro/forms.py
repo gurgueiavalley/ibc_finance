@@ -1,6 +1,13 @@
 from django import forms
 from .models import *
 
+class CategoriaEntradaForm(forms.Form):
+    nome = forms.CharField(label = 'Nome', help_text = 'category', max_length = 30)
+    nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome da categoria', 'autocomplete' : 'off', 'maxlength' : '30'}
+
+    descricao = forms.CharField(label = 'Descrição', help_text = 'short_text', max_length = 100, required = False)
+    descricao.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Descrição breve da categoria', 'autocomplete' : 'off', 'maxlength' : '100'}
+
 class CategoriaSaidaForm(forms.Form):
     nome = forms.CharField(label = 'Nome', help_text = 'category', max_length = 30)
     nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome da categoria', 'autocomplete' : 'off', 'maxlength' : '30'}
@@ -31,9 +38,63 @@ class EmpresaForm(forms.Form):
     cidade = forms.CharField(label = 'Cidade', help_text = 'location_city', max_length = 60, required = False)
     cidade.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome da cidade', 'autocomplete' : 'off', 'maxlength' : 60}
 
+class EntradaForm(forms.Form):
+    congregacao = forms.ModelChoiceField(label = 'Congregação', help_text = 'location_city', queryset = Congregacao.objects.all().order_by('nome'), empty_label = 'Nenhuma selecionada')
+    congregacao.widget.attrs = {'class' : 'form-control'}
+
+    categoria = forms.ModelChoiceField(label = 'Categoria', help_text = 'category', queryset = CategoriaEntrada.objects.all().order_by('nome'), empty_label = 'Nenhuma selecionada')
+    categoria.widget.attrs = {'class' : 'form-control'}
+
+    pagamento = forms.ModelChoiceField(label = 'Forma de Entrada', help_text = 'credit_card', queryset = Pagamento.objects.all().order_by('nome'), empty_label = 'Nenhuma selecionada')
+    pagamento.widget.attrs = {'class' : 'form-control'}
+
+    membro = forms.ModelChoiceField(label = 'Membro', help_text = 'person', queryset = Membro.objects.all().order_by('nome'), empty_label = 'Nenhum selecionado', required = False)
+    membro.widget.attrs = {'class' : 'form-control'}
+
+    descricao = forms.CharField(label = 'Descrição', help_text = 'short_text', max_length = 100, required = False)
+    descricao.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Detalhe ou descrição breve da entrada', 'autocomplete' : 'off', 'maxlenght' : '100'}
+
+    valor = forms.DecimalField(label = 'Valor (R$)', help_text = 'monetization_on', max_digits = 12, decimal_places = 2)
+    valor.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Valor da entrada', 'min' : '0', 'step' : '0.01'}
+
+    data = forms.DateField(label = 'Data', help_text = 'event')
+    data.widget.attrs = {'class' : 'form-control datepicker', 'placeholder' : 'Data que foi recebido a entrada'}
+
+    comprovante = forms.FileField(label = 'Comprovante', help_text = 'receipt', required = False)
+    comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png, .pdf'}
+
+class EntradaAvulsaForm(forms.Form):
+    congregacao = forms.ModelChoiceField(label = 'Congregação', help_text = 'location_city', queryset = Congregacao.objects.all().order_by('nome'), empty_label = 'Nenhuma selecionada')
+    congregacao.widget.attrs = {'class' : 'form-control'}
+
+    descricao = forms.CharField(label = 'Descrição', help_text = 'short_text', max_length = 100, required = False)
+    descricao.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Detalhe ou descrição breve da entrada', 'autocomplete' : 'off', 'maxlenght' : '100'}
+
+    valor = forms.DecimalField(label = 'Valor (R$)', help_text = 'monetization_on', max_digits = 12, decimal_places = 2)
+    valor.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Valor da entrada', 'min' : '0', 'step' : '0.01'}
+
+    data = forms.DateField(label = 'Data', help_text = 'event')
+    data.widget.attrs = {'class' : 'form-control datepicker', 'placeholder' : 'Data que foi recebido a entrada'}
+
+    comprovante = forms.FileField(label = 'Comprovante', help_text = 'receipt', required = False)
+    comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png, .pdf'}
+    
 class FormExcel(forms.Form):
     arquivo = forms.FileField()
     arquivo.widget.attrs["class"] = "form-control"
+
+class MembroForm(forms.Form):
+    CPF = forms.CharField(label = 'CPF', help_text = 'fingerprint', max_length = 15)
+    CPF.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Número do CPF', 'autocomplete' : 'off', 'maxlength' : '15'}
+
+    nome = forms.CharField(label = 'Nome', help_text = 'perm_identity', max_length = 75)
+    nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome do membro', 'autocomplete' : 'off', 'maxlength' : '75'}
+
+    telefone = forms.CharField(label = 'Telefone', help_text = 'smartphone', max_length = 14, required = False)
+    telefone.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Número do telefone', 'autocomplete' : 'off', 'maxlength' : '14'}
+
+    profissao = forms.CharField(label = 'Profissão', help_text = 'work', max_length = 45, required = False)
+    profissao.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Profissão do membro', 'autocomplete' : 'off', 'maxlength' : '45'}
 
 class PagamentoForm(forms.Form):
     nome = forms.CharField(label = 'Nome', help_text = 'credit_card', max_length = 50)
