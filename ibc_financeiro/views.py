@@ -45,6 +45,91 @@ def cadMembrosExcel(request):
         form = FormExcel()
     return render(request, 'financeiro/form_excel.html', {'form': form})
 
+def categoria(request, acao):
+    pagina = 0
+
+    if request.method == 'POST':
+        formulario = CategoriaSaidaForm(request.POST)
+
+        if formulario.is_valid():
+            categoria = CategoriaSaida()
+            categoria.nome = request.POST['nome']
+            
+            if 'categoria' in request.POST:
+                categoria.descricao = request.POST['descricao']
+            
+            categoria.save()
+
+            pagina = 1
+            
+        return render(request, 'financeiro/paginas/categoria/adicionar.html', {'formulario' : CategoriaSaidaForm(), 'pagina' : pagina, 'id' : categoria.id, 'nome' : categoria.nome})
+
+    return render(request, 'financeiro/paginas/categoria/adicionar.html', {'formulario' : CategoriaSaidaForm(), 'pagina' : pagina})
+
+def congregacao(request, acao):
+    pagina = 0
+
+    congregacao = Congregacao()
+
+    if request.method == 'POST':
+        formulario = CongregacaoForm(request.POST)
+
+        if formulario.is_valid():
+            congregacao.nome = request.POST['nome']
+            congregacao.localidade = request.POST['localidade']
+            congregacao.save()
+
+            pagina = 1
+
+            return render(request, 'financeiro/paginas/congregacao/adicionar.html', {'formulario' : CongregacaoForm(), 'pagina' : pagina, 'id' : congregacao.id, 'nome' : request.POST['nome']})
+
+    return render(request, 'financeiro/paginas/congregacao/adicionar.html', {'formulario' : CongregacaoForm(), 'pagina' : pagina})
+
+def empresa(request, acao):
+    pagina = 0
+
+    if request.method == 'POST':
+        formulario = EmpresaForm(request.POST)
+
+        if formulario.is_valid():
+            empresa = Empresa()
+            empresa.CPF_CNPJ = request.POST['CPF_CNPJ']
+            empresa.nome = request.POST['nome']
+            
+            if 'descricao' in request.POST:
+                empresa.descricao = request.POST['descricao']
+            
+            if 'endereco' in request.POST:
+                empresa.endereco = request.POST['endereco']
+
+            if 'cidade' in request.POST:
+                empresa.cidade = request.POST['cidade']
+
+            empresa.save()
+
+            pagina = 1
+            
+        return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : EmpresaForm(), 'pagina' : pagina, 'id' : empresa.id, 'nome' : empresa.nome})
+
+    return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : EmpresaForm(), 'pagina' : pagina})
+
+def pagamento(request, acao):
+    pagina = 0
+
+    if request.method == 'POST':
+        formulario = PagamentoForm(request.POST)
+
+        if formulario.is_valid():
+            pagamento = Pagamento()
+            pagamento.nome = request.POST['nome']
+            pagamento.save()
+
+            pagina = 1
+            
+        return render(request, 'financeiro/paginas/pagamento/adicionar.html', {'formulario' : PagamentoForm(), 'pagina' : pagina, 'id' : pagamento.id, 'nome' : pagamento.nome})
+
+    return render(request, 'financeiro/paginas/pagamento/adicionar.html', {'formulario' : PagamentoForm(), 'pagina' : pagina})
+
 def relatorio(request, tipo):
     if tipo == 'entrada':
         if request.method == 'POST':

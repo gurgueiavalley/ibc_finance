@@ -1,9 +1,43 @@
 from django import forms
 from .models import *
 
+class CategoriaSaidaForm(forms.Form):
+    nome = forms.CharField(label = 'Nome', help_text = 'category', max_length = 30)
+    nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome da categoria', 'autocomplete' : 'off', 'maxlength' : '30'}
+
+    descricao = forms.CharField(label = 'Descrição', help_text = 'short_text', max_length = 100, required = False)
+    descricao.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Descrição breve da categoria', 'autocomplete' : 'off', 'maxlength' : '100'}
+
+class CongregacaoForm(forms.Form):
+    nome = forms.CharField(label = 'Nome', help_text = 'location_city', max_length = 70)
+    nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome da congregação', 'autocomplete' : 'off', 'maxlength' : '70'}
+
+    localidade = forms.CharField(label = 'Localidade', help_text = 'location_on', max_length = 50)
+    localidade.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Localidade ou bairro', 'autocomplete' : 'off', 'maxlength' : '50'}
+
+class EmpresaForm(forms.Form):
+    CPF_CNPJ = forms.CharField(label = 'CPF/CNPJ', help_text = 'fingerprint', max_length = 18)
+    CPF_CNPJ.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Número do CPF/CNPJ do fornecedor', 'autocomplete' : 'off', 'maxlength' : '18'}
+
+    nome = forms.CharField(label = 'Nome', help_text = 'perm_identity', max_length = 70)
+    nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome do fornecedor', 'autocomplete' : 'off', 'maxlength' : '70'}
+
+    descricao = forms.CharField(label = 'Descrição', help_text = 'short_text', max_length = 100, required = False)
+    descricao.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Descrição breve dos produtos/serviços do fornecedor', 'autocomplete' : 'off', 'maxlength' : '100'}
+
+    endereco = forms.CharField(label = 'Endereço', help_text = 'location_on', max_length = 100, required = False)
+    endereco.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome da rua, número e/ou bairro', 'autocomplete' : 'off', 'maxlength' : '100'}
+
+    cidade = forms.CharField(label = 'Cidade', help_text = 'location_city', max_length = 60, required = False)
+    cidade.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome da cidade', 'autocomplete' : 'off', 'maxlength' : 60}
+
 class FormExcel(forms.Form):
     arquivo = forms.FileField()
     arquivo.widget.attrs["class"] = "form-control"
+
+class PagamentoForm(forms.Form):
+    nome = forms.CharField(label = 'Nome', help_text = 'credit_card', max_length = 50)
+    nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome da forma de pagamento', 'autocomplete' : 'off', 'maxlength' : '50'}
 
 class RelatorioEntradaForm(forms.Form):
     inicio = forms.DateField(label = 'De:')
@@ -93,7 +127,7 @@ class SaidaForm(forms.Form):
     pagamento = forms.ModelChoiceField(label = 'Forma de Pagamento', help_text = 'credit_card', queryset = Pagamento.objects.all().order_by('nome'), empty_label = 'Nenhuma selecionada')
     pagamento.widget.attrs = {'class' : 'form-control'}
 
-    empresa = forms.ModelChoiceField(label = 'Empresa/Trabalhador', help_text = 'store', queryset = Empresa.objects.all().order_by('nome'), empty_label = 'Nenhum selecionado')
+    empresa = forms.ModelChoiceField(label = 'Fornecedor', help_text = 'store', queryset = Empresa.objects.all().order_by('nome'), empty_label = 'Nenhum selecionado')
     empresa.widget.attrs = {'class' : 'form-control'}
 
     nome = forms.CharField(label = 'Nome', help_text = 'shopping_bag', max_length = 75)
@@ -102,8 +136,8 @@ class SaidaForm(forms.Form):
     descricao = forms.CharField(label = 'Descrição', help_text = 'short_text', required = False, max_length = 100)
     descricao.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Descrição breve do produto ou serviço', 'autocomplete' : 'off'}
 
-    valor = forms.DecimalField(label = 'Valor (R$)', help_text = 'monetization_on', min_value = 0, max_digits = 12, decimal_places = 2)
-    valor.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Valor do produto ou serviço'}
+    valor = forms.DecimalField(label = 'Valor (R$)', help_text = 'monetization_on', max_digits = 12, decimal_places = 2)
+    valor.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Valor do produto ou serviço', 'min' : '0', 'step' : '0.01'}
 
     data = forms.DateField(label = 'Data', help_text = 'event')
     data.widget.attrs = {'class' : 'form-control datepicker', 'placeholder' : 'Data que foi realizado o pagamento', 'format' : '%d/%m/%Y'}

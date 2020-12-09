@@ -62,6 +62,21 @@ section .form-control .btn:not(.btn-link):not(.btn-circle){
     display: none;
 }
 
+.titulo{
+    margin-bottom: 5px !important;
+    padding-left: 0 !important;
+}
+
+.adicionar{
+    font-size: 14px;
+    color: green;
+    cursor: pointer;
+}
+
+.bootstrap-select.btn-group .dropdown-toggle .caret{
+    right: 0;
+}
+
 @media(max-width: 991px){
     .col-md-3 .form-control{
         max-width: unset;
