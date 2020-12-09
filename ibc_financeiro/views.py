@@ -11,6 +11,7 @@ from reportlab.pdfgen import canvas
 from django.conf import settings
 from pathlib import Path
 from itertools import chain                     # Juntar duas listas de queryset de classes diferentes
+from reportlab.platypus import Table
 
 import webbrowser
 
@@ -150,6 +151,26 @@ def gerarRelatorio(request, dados, tipo):
         
 def gerarRelatorioGeral(request, entradas, saidas, missoes):
     data = str(date.today().strftime('%d/%m/%Y'))
+
+    categorias = []
+    for entrada in entradas:
+        if hasattr(entrada, 'categoria'):
+            if categorias != []:
+                for categoria in categorias:
+                    if categoria['nome'] != entrada.categoria.nome:
+                        categorias.append({
+                            'nome': entrada.categoria.nome,
+                            'total': entrada.valor
+                        })
+                    else:
+                        categoria['total'] += entrada.valor
+            else:
+                categorias.append({
+                    'nome': entrada.categoria.nome,
+                    'total': entrada.valor
+                })         
+
+    print(categorias)
     valorEntradas = 0
     valorEntradasAvulsa = 0
     valorMissao = 0
@@ -181,6 +202,7 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     pdf.drawString(260, 600, 'Pagamentos')
     pdf.line(257, 598, 325, 598)
     pdf.setFont('Helvetica', 10)
+    #Adicionando Saidas
     for saida in range(1,len(saidas)+1): 
         y = y + 30
         valorTotalSaidas = valorTotalSaidas + saidas[saida - 1].valor
@@ -221,7 +243,21 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     pdf.line(210, 60, 400, 60)
     pdf.line(410, 60, 600, 60)
     pdf.showPage()
-    
+
+    #Adicionando Pagina de Dizimos 
+    pdf.setFont('Times-Bold', 14)
+    pdf.drawString(180, 750, 'IGREJA BATISTA DE CORRENTE')
+    pdf.rect(20, 745, height=20, width=553)
+    pdf.setFont('Helvetica', 10)
+    pdf.drawString(230, 720, 'CONTROLE DE DÍZIMOS')
+    pdf.drawString(238, 700, 'Semana de '+str(data))
+    for entrada in entradas:
+        if hasattr(entrada, 'categoria'):
+            if entrada.categoria.nome == 'Dizimo':
+                pdf.setFont('Helvetica', 10)
+                pdf.drawString(100, 680, str(entrada.membro.nome) + '    '+str(entrada.valor))
+            
+    pdf.showPage()
     #Adicionando os comprovantes
     for saida in saidas:
         if saida.comprovante != "":
