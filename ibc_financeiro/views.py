@@ -13,8 +13,28 @@ from pathlib import Path
 from itertools import chain                     # Juntar duas listas de queryset de classes diferentes
 
 # Métodos Renderizados
-def index(request):
-    return render(request, 'financeiro/index.html')
+def avulso(request, acao):
+    if request.method == 'POST':
+        formulario = EntradaAvulsaForm(request.POST)
+
+        if formulario.is_valid():
+            entrada = EntradaAvulsa()
+            entrada.congregacao = Congregacao.objects.get(id = request.POST['congregacao'])
+            entrada.data = convertDate(request.POST['data'])
+
+            if 'descricao' in request.POST:
+                entrada.descricao = request.POST['descricao']
+
+            entrada.valor = request.POST['valor']
+
+            if 'comprovante' in request.FILES:
+                entrada.comprovante = request.FILES['comprovante']
+
+            entrada.administrador = Administrador.objects.get(id = 1)
+
+            entrada.save()
+
+    return render(request, 'financeiro/paginas/avulso/adicionar.html', {'formulario' : EntradaAvulsaForm()})
 
 def cadMembrosExcel(request):
     #Instalar o pandas
@@ -55,7 +75,7 @@ def categoria(request, acao):
             categoria = CategoriaSaida()
             categoria.nome = request.POST['nome']
             
-            if 'categoria' in request.POST:
+            if 'descricao' in request.POST:
                 categoria.descricao = request.POST['descricao']
             
             categoria.save()
@@ -65,6 +85,27 @@ def categoria(request, acao):
         return render(request, 'financeiro/paginas/categoria/adicionar.html', {'formulario' : CategoriaSaidaForm(), 'pagina' : pagina, 'id' : categoria.id, 'nome' : categoria.nome})
 
     return render(request, 'financeiro/paginas/categoria/adicionar.html', {'formulario' : CategoriaSaidaForm(), 'pagina' : pagina})
+
+def catEntrada(request, acao):
+    pagina = 0
+
+    if request.method == 'POST':
+        formulario = CategoriaEntradaForm(request.POST)
+
+        if formulario.is_valid():
+            categoria = CategoriaEntrada()
+            categoria.nome = request.POST['nome']
+            
+            if 'descricao' in request.POST:
+                categoria.descricao = request.POST['descricao']
+            
+            categoria.save()
+
+            pagina = 1
+            
+        return render(request, 'financeiro/paginas/catentrada/adicionar.html', {'formulario' : CategoriaEntradaForm(), 'pagina' : pagina, 'id' : categoria.id, 'nome' : categoria.nome})
+
+    return render(request, 'financeiro/paginas/catentrada/adicionar.html', {'formulario' : CategoriaEntradaForm(), 'pagina' : pagina})
 
 def congregacao(request, acao):
     pagina = 0
@@ -112,6 +153,60 @@ def empresa(request, acao):
         return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : EmpresaForm(), 'pagina' : pagina, 'id' : empresa.id, 'nome' : empresa.nome})
 
     return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : EmpresaForm(), 'pagina' : pagina})
+
+def entrada(request, acao):
+    if request.method == 'POST':
+        formulario = EntradaForm(request.POST)
+
+        if formulario.is_valid():
+            entrada = Entrada()
+            entrada.congregacao = Congregacao.objects.get(id = request.POST['congregacao'])
+            entrada.categoria = CategoriaEntrada.objects.get(id = request.POST['categoria'])
+            entrada.forma_de_Entrada = Pagamento.objects.get(id = request.POST['pagamento'])
+            entrada.membro = Membro.objects.get(id = request.POST['membro'])
+
+            if 'descricao' in request.POST:
+                entrada.descricao = request.POST['descricao']
+
+            entrada.valor = request.POST['valor']
+            entrada.data = convertDate(request.POST['data'])
+
+            if 'comprovante' in request.FILES:
+                entrada.comprovante = request.FILES['comprovante']
+
+            entrada.administrador = Administrador.objects.get(id = 1)
+
+            entrada.save()
+
+    return render(request, 'financeiro/paginas/entrada/adicionar.html', {'formulario' : EntradaForm()})
+
+def index(request):
+    return render(request, 'financeiro/index.html')
+
+def membro(request, acao):
+    pagina = 0
+
+    if request.method == 'POST':
+        formulario = MembroForm(request.POST)
+
+        if formulario.is_valid():
+            membro = Membro()
+            membro.CPF = request.POST['CPF']
+            membro.nome = request.POST['nome']
+            
+            if 'telefone' in request.POST:
+                membro.telefone = request.POST['telefone']
+            
+            if 'profissao' in request.POST:
+                membro.profissao = request.POST['profissao']
+
+            membro.save()
+
+            pagina = 1
+            
+        return render(request, 'financeiro/paginas/membro/adicionar.html', {'formulario' : MembroForm(), 'pagina' : pagina, 'id' : membro.id, 'nome' : membro.nome})
+
+    return render(request, 'financeiro/paginas/membro/adicionar.html', {'formulario' : MembroForm(), 'pagina' : pagina})
 
 def pagamento(request, acao):
     pagina = 0

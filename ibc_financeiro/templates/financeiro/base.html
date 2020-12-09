@@ -292,6 +292,35 @@
                     <ul class= 'list'>
                         <li class="header">MAIN NAVIGATION</li>                      
 
+                        <li>            <!-- Entrada -->
+                            <a href= 'javascript:void(0)' class= 'menu-toggle'>
+                                <i class= 'material-icons'> attach_money </i>
+                                <span> Entradas </span>
+                            </a>
+
+                            <ul class= 'ml-menu'>
+                                <li>
+                                    <a href= 'javascript:void(0)' class= 'menu-toggle'>
+                                        <span> Adicionar </span>
+                                    </a>
+
+                                    <ul class= 'ml-menu'>
+                                        <li>
+                                            <a href= "{% url 'entrada' 'adicionar' %}">
+                                                <span> Com Membro </span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href= "{% url 'avulso' 'adicionar' %}">
+                                                <span> Avulso </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+
                         <li>            <!-- Saída -->
                             <a href= 'javascript:void(0)' class= 'menu-toggle'>
                                 <i class= 'material-icons'> money_off </i>
