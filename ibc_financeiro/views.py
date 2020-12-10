@@ -15,6 +15,9 @@ from reportlab.platypus import Table
 
 import webbrowser
 
+#pegando datas dos relatorios
+dates = []
+
 # Métodos Renderizados
 def avulso(request, acao):
     if request.method == 'POST':
@@ -228,34 +231,6 @@ def pagamento(request, acao):
 
     return render(request, 'financeiro/paginas/pagamento/adicionar.html', {'formulario' : PagamentoForm(), 'pagina' : pagina})
 
-def relatorio(request, tipo):
-    if tipo == 'entrada':
-        if request.method == 'POST':
-            gerarRelatorio(request, listaEntrada(request), tipo)
-            return render(request, 'index.html', {'nome': 'relatorio_entrada.pdf'})
-
-        return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioEntradaForm()})
-
-    elif tipo == 'saída':
-        if request.method == 'POST':
-            gerarRelatorio(request, listaSaida(request), tipo)
-
-            return render(request, 'index.html', {'nome': 'relatorio_saida.pdf'})
-
-        return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioSaidaForm()})
-
-    elif tipo == 'missão':
-        if request.method == 'POST':
-            listaMissao(request)
-
-        return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioMissaoForm()})
-
-    elif tipo == 'geral':
-        if request.method == 'POST':
-            listaGeral(request)
-        
-        return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioGeralForm()})
-
 def saida(request, acao):
     if(request.method == 'POST'):
         formulario = SaidaForm(request.POST, request.FILES)
@@ -394,11 +369,13 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
             valorEntradas += entrada.valor
         else:
             valorEntradasAvulsa += entrada.valor
+
     for missao in missoes:
         valorMissao += missao.valor
     valorTotalEntradas += valorEntradas + valorEntradasAvulsa + valorMissao
     y = 0
     pagina = False
+    
     caminho = "ibc_financeiro/static/relatorio_geral.pdf"
     pdf = canvas.Canvas(caminho)
     pdf.setTitle("Relatório Geral")
@@ -407,9 +384,9 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     pdf.line(257, 752, 335, 752)
     pdf.setFont('Helvetica', 10)
 
-    pdf.drawString(50, 700, 'Dizimos, Ofertas, Campanhas:........................................................ R$ ')
+    pdf.drawString(50, 700, 'Dizimos, Ofertas:............................................................................. R$ ')
     pdf.drawString(365, 702, str(valorEntradas))
-    pdf.line(363, 700, 550, 700)
+    pdf.line(363, 700, 550, 700)   
     pdf.drawString(50, 680, 'Ofertas Avulsas:............................................................................... R$ ')
     pdf.drawString(365, 682 , str(valorEntradasAvulsa))
     pdf.line(363, 680, 550, 680)
@@ -475,7 +452,7 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     pdf.rect(20, 745, height=20, width=553)
     pdf.setFont('Helvetica', 10)
     pdf.drawString(230, 720, 'CONTROLE DE DÍZIMOS')
-    pdf.drawString(238, 700, 'Semana de '+str(data))
+    pdf.drawString(219, 700, 'De: '+str(dates[0][0].strftime('%d/%m/%Y'))+' Até: '+str(dates[0][1].strftime('%d/%m/%Y')))
 
     pdf.setFont('Helvetica-Bold', 10)
     pdf.drawString(180, 650, 'RELAÇÃO NOMINAL')
@@ -483,6 +460,7 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     pdf.drawString(435, 650, 'VALOR')
     pdf.rect(420, 645, height=20, width=152)
     y = 0
+    valorEntradas = 0
     for entrada in entradas:
         if hasattr(entrada, 'categoria'):
             if entrada.categoria.nome == 'Dizimo':
@@ -490,6 +468,7 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
                     y = 0
                     pdf.showPage()
                 y += 20
+                valorEntradas += entrada.valor
                 pdf.setFont('Helvetica', 10)
                 pdf.drawString(35, 650 - y, str(entrada.membro.nome))
                 pdf.rect(20, 645 - y, height=20, width=400)
@@ -499,7 +478,7 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     pdf.setFont('Helvetica-Bold', 10)
     pdf.drawString(370, 650 - y, 'TOTAL')
     pdf.rect(20, 645 - y, height=20, width=400)
-    pdf.drawString(435, 650 - y, 'R$  '+str(entrada.valor))
+    pdf.drawString(435, 650 - y, 'R$  '+str(valorEntradas))
     pdf.rect(420, 645 - y, height=20, width=152)
     pdf.showPage()
     #Adicionando os comprovantes
@@ -541,6 +520,7 @@ def relatorio(request, tipo):
 
 def listaEntrada(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
+    dates.append([convertDate(request.POST['inicio']), convertDate(request.POST['fim'])])
     congregacoes = request.POST.getlist('congregacao')
     categorias = request.POST.getlist('categoria_entrada')
     formas = request.POST.getlist('forma')
