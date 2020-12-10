@@ -13,8 +13,6 @@ from pathlib import Path
 from itertools import chain                     # Juntar duas listas de queryset de classes diferentes
 from reportlab.platypus import Table
 
-import webbrowser
-
 #pegando datas dos relatorios
 dates = []
 
