@@ -295,7 +295,7 @@ def gerarRelatorio(request, dados, tipo):
             pdf.line(585, 718 - y, 10, 718 - y)
             pdf.drawString(20, 700 - y, str(saida.data.strftime('%d/%m/%Y')))
             pdf.drawString(100, 700 - y, str(saida.congregacao))
-            pdf.drawString(330,700 - y, str(saida.categoria))
+            pdf.drawString(330,700 - y, str(saida.categoria)[0:25])
             pdf.drawString(490,700 - y, str(saida.valor))
         
             valorTotal = valorTotal + saida.valor
@@ -334,7 +334,7 @@ def gerarRelatorio(request, dados, tipo):
             pdf.drawString(20, 700 - y, str(entrada.data.strftime('%d/%m/%Y')))
             pdf.drawString(100, 700 - y, str(entrada.congregacao))
             if hasattr(entrada, 'categoria'):
-                pdf.drawString(330,700 - y, str(entrada.categoria))
+                pdf.drawString(330,700 - y, str(entrada.categoria)[0:25])
             else:
                 pdf.drawString(330,700 - y, "Avulsa")
             pdf.drawString(490,700 - y, str(entrada.valor))
@@ -353,24 +353,107 @@ def gerarRelatorio(request, dados, tipo):
                 pdf.drawImage(arquivo, 200, 250, width= 200, height= 400)
                 pdf.showPage()
         pdf.save()
+    if tipo == 'missão':
+        valorTotal = 0
+        meta = 0
+        y = 0
+        pagina = False
+        nomes_missoes = []
+        for missoes in dados:
+            if missoes.missao.nome not in nomes_missoes:
+                nomes_missoes.append(missoes.missao.nome)
+
+        caminho = "ibc_financeiro/static/relatorio_missões.pdf"
+        pdf = canvas.Canvas(caminho)
+        pdf.setTitle("Relatório de Missões")
+        pdf.drawImage('ibc_financeiro/static/imagens/logo.png', 10,758,height=50, width=60)
+        cabecalhoRelatorio(pdf, data)
+        pdf.drawString(275,755,"Missões")
+        pdf.line(272, 752, 317, 752)
         
+        for item in nomes_missoes:
+            if pagina == False and y > 450:
+                y = 0
+                pdf.showPage()
+                pagina = True
+            if pagina:
+                if y > 550:
+                    y = 0
+                    pdf.showPage()
+                pdf.setFont('Times-Bold', 12)
+                pdf.drawString(25, 750 - y, item)
+
+                pdf.rect(100, 695 - y, 200, 30)
+                pdf.drawString(105, 700 - y, "Data")
+                pdf.rect(300, 695 - y, 200, 30)
+                pdf.drawString(305, 700 - y, "Valor")
+            else:    
+                pdf.setFont('Times-Bold', 12)
+                pdf.drawString(25, 685 - y, item)
+
+                pdf.rect(100, 630 - y, 200, 30)
+                pdf.drawString(105, 635 - y, "Data")
+                pdf.rect(300, 630 - y, 200, 30)
+                pdf.drawString(305, 635 - y, "Valor")
+            for missoes in dados:
+                if missoes.missao.nome == item:        
+                    if pagina == False and y > 450:
+                        y = 0
+                        pdf.showPage()
+                        pagina = True
+                    if pagina:
+                        if y > 550:
+                            y = 0
+                            pdf.showPage()
+                        pdf.setFont('Helvetica', 10)
+                        pdf.rect(100, 665 - y, 200, 30)
+                        pdf.drawString(105, 670 - y, str(missoes.data.strftime('%d/%m/%Y')))
+                        pdf.rect(300, 665 - y, 200, 30)
+                        pdf.drawString(305, 670 - y, "R$  "+str(missoes.valor))
+                        valorTotal += missoes.valor
+                        meta = missoes.missao.meta
+                        y += 30            
+                    else:    
+                        pdf.setFont('Helvetica', 10)
+                        pdf.rect(100, 600 - y, 200, 30)
+                        pdf.drawString(105, 605 - y, str(missoes.data.strftime('%d/%m/%Y')))
+                        pdf.rect(300, 600 - y, 200, 30)
+                        pdf.drawString(305, 605 - y, "R$  "+str(missoes.valor))
+                        valorTotal += missoes.valor
+                        meta = missoes.missao.meta
+                        y += 30
+            if pagina:
+                progressoMissao(pdf, meta, valorTotal, 670 - y)
+            else:
+                progressoMissao(pdf, meta, valorTotal, 600 - y)
+            valorTotal = 0
+            meta = 0
+            y += 150
+        pdf.save()
+    
 def gerarRelatorioGeral(request, entradas, saidas, missoes):
     data = str(date.today().strftime('%d/%m/%Y'))
-    valorEntradas = 0
+    
     valorEntradasAvulsa = 0
     valorMissao = 0
     valorTotalEntradas = 0
     valorTotalSaidas = 0
+    
+    categorias_entradas = []
+    valor_entradas = 0
 
+#Pegando as categorias
     for entrada in entradas:
         if hasattr(entrada, 'categoria'):
-            valorEntradas += entrada.valor
+            if entrada.categoria.nome not in categorias_entradas:
+                categorias_entradas.append(entrada.categoria.nome)
         else:
             valorEntradasAvulsa += entrada.valor
-
+    
     for missao in missoes:
         valorMissao += missao.valor
-    valorTotalEntradas += valorEntradas + valorEntradasAvulsa + valorMissao
+    valorTotalEntradas += valorEntradasAvulsa + valorMissao
+
     y = 0
     pagina = False
     
@@ -382,35 +465,45 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     pdf.line(257, 752, 335, 752)
     pdf.setFont('Helvetica', 10)
 
-    pdf.drawString(50, 700, 'Dizimos, Ofertas:............................................................................. R$ ')
-    pdf.drawString(365, 702, str(valorEntradas))
-    pdf.line(363, 700, 550, 700)   
-    pdf.drawString(50, 680, 'Ofertas Avulsas:............................................................................... R$ ')
-    pdf.drawString(365, 682 , str(valorEntradasAvulsa))
-    pdf.line(363, 680, 550, 680)
-    pdf.drawString(50, 660, 'Missões:........................................................................................... R$  ') 
-    pdf.drawString(365, 662, str(valorMissao))
-    pdf.line(363, 660, 550, 660)
+#Adicionando categorias dinamicas
+    for item in categorias_entradas:
+        for entrada in entradas:
+            if hasattr(entrada, 'categoria'):    
+                if entrada.categoria.nome == item:
+                    valor_entradas += entrada.valor
+        valorTotalEntradas += valor_entradas
+        pdf.drawString(50, 700 - y, item[0:30]+':......................................: ')
+        pdf.drawString(365, 702 -y , " R$  "+str(valor_entradas))
+        pdf.line(363, 700 - y, 550, 700 - y) 
+        y += 20
+        valor_entradas = 0                     
+    pdf.drawString(50, 700 - y, 'Ofertas Avulsas:......................................: ')
+    pdf.drawString(365, 700 - y , " R$  "+str(valorEntradasAvulsa))
+    pdf.line(363, 698 - y, 550, 698 - y)
+    pdf.drawString(50, 678 - y , 'Missões:......................................: ') 
+    pdf.drawString(365, 678 - y, " R$  "+str(valorMissao))
+    pdf.line(363, 676 - y, 550, 676 - y)
     pdf.setFont('Times-Bold', 12)
-    pdf.drawString(245, 642, 'Total de Entradas: R$  ')
-    pdf.drawString(365, 642, str(valorTotalEntradas))
-    pdf.line(363, 640, 550, 640)
-    pdf.drawString(260, 600, 'Pagamentos')
-    pdf.line(257, 598, 325, 598)
+    pdf.drawString(245, 642 - y, 'Total de Entradas: R$  ')
+    pdf.drawString(365, 642 - y, str(valorTotalEntradas))
+    pdf.line(363, 640 - y, 550, 640 - y)
+    pdf.drawString(260, 600 - y, 'Pagamentos')
+    pdf.line(257, 598 - y, 325, 598 - y)
     pdf.setFont('Helvetica', 10)
+    
     #Adicionando Saidas
     for saida in range(1,len(saidas)+1): 
         y = y + 30
         valorTotalSaidas = valorTotalSaidas + saidas[saida - 1].valor
-        if pagina == False:
-            if y > 500:
-                y = 0
-                pdf.showPage()
-        if y > 600:
-                y = 0
-                pdf.showPage()
-        if saida - 1 > 15:
+
+        if pagina == False and y > 450:
+            y = 0
+            pdf.showPage()
             pagina = True
+        if pagina == True:
+            if y > 600:
+                y = 0
+                pdf.showPage()    
             pdf.setFont('Helvetica', 10)       
             pdf.drawString(50, 750 - y, str(saida)+' º - '+str(saidas[saida - 1]))
             pdf.line(70, 748 - y, 343, 748 -y)
@@ -424,7 +517,11 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
             pdf.drawString(345, 578 - y, ' R$')
             pdf.drawString(365, 580 - y, str(saidas[saida - 1].valor))
             pdf.line(363, 578 - y, 550, 578 - y)
+
     if pagina == True:
+        if y > 600:
+            y = 0
+            pdf.showPage()
         pdf.setFont('Times-Bold', 12)
         pdf.drawString(265, 720 - y, 'Total de Saída: R$  ')
         pdf.drawString(365, 720 - y, str(valorTotalSaidas))
@@ -506,8 +603,8 @@ def relatorio(request, tipo):
 
     elif tipo == 'missão':
         if request.method == 'POST':
-            listaMissao(request)
-
+            gerarRelatorio(request, listaMissao(request), tipo)
+            return render(request, 'index.html', {'nome': 'relatorio_missões.pdf'})
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioMissaoForm()})
 
     elif tipo == 'geral':
