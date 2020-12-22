@@ -442,7 +442,7 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     categorias_entradas = []
     valor_entradas = 0
 
-#Pegando as categorias
+    #Pegando as categorias
     for entrada in entradas:
         if hasattr(entrada, 'categoria'):
             if entrada.categoria.nome not in categorias_entradas:
@@ -465,7 +465,7 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     pdf.line(257, 752, 335, 752)
     pdf.setFont('Helvetica', 10)
 
-#Adicionando categorias dinamicas
+    #Adicionando categorias dinamicas
     for item in categorias_entradas:
         for entrada in entradas:
             if hasattr(entrada, 'categoria'):    
@@ -526,15 +526,15 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
         pdf.drawString(265, 720 - y, 'Total de Saída: R$  ')
         pdf.drawString(365, 720 - y, str(valorTotalSaidas))
         pdf.line(363, 718 - y, 550, 718 - y)
-        pdf.drawString(276, 700 - y, 'A Depositar: R$  ')
+        pdf.drawString(276, 698 - y, 'A Depositar: R$  ')
         pdf.line(363, 698 - y, 550, 698 - y)
     else:
         pdf.setFont('Times-Bold', 12)
         pdf.drawString(265, 555 - y, 'Total de Saída: R$  ')
         pdf.drawString(365, 557 - y, str(valorTotalSaidas))
         pdf.line(363, 555 - y, 550, 555 - y)
-        pdf.drawString(276, 560 - y, 'A Depositar: R$  ')
-        pdf.line(363, 658 - y, 550, 658 - y)
+        pdf.drawString(276, 535 - y, 'A Depositar: R$  ')
+        pdf.line(363, 535 - y, 550, 535 - y)
     pdf.drawString(20, 80, 'Conferido por: ')
     pdf.line(0, 60, 200, 60)
     pdf.line(210, 60, 400, 60)
