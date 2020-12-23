@@ -78,7 +78,17 @@ class EntradaAvulsaForm(forms.Form):
 
     comprovante = forms.FileField(label = 'Comprovante', help_text = 'receipt', required = False)
     comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png, .pdf'}
-    
+
+class EntradaMissaoForm(forms.Form):
+    missao = forms.ModelChoiceField(label = 'Missão', help_text = 'feedback', queryset = Missao.objects.all().order_by('nome'), empty_label = 'Nenhuma selecionada')
+    missao.widget.attrs = {'class' : 'form-control'}
+
+    valor = forms.DecimalField(label = 'Valor (R$)', help_text = 'monetization_on', max_digits = 12, decimal_places = 2)
+    valor.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Valor da entrada', 'min' : '0', 'step' : '0.01'}
+
+    data = forms.DateField(label = 'Data', help_text = 'event')
+    data.widget.attrs = {'class' : 'form-control datepicker', 'placeholder' : 'Data que foi recebido a entrada'}
+   
 class FormExcel(forms.Form):
     arquivo = forms.FileField()
     arquivo.widget.attrs["class"] = "form-control"
@@ -95,6 +105,25 @@ class MembroForm(forms.Form):
 
     profissao = forms.CharField(label = 'Profissão', help_text = 'work', max_length = 45, required = False)
     profissao.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Profissão do membro', 'autocomplete' : 'off', 'maxlength' : '45'}
+
+class MissaoForm(forms.Form):
+    congregacao = forms.ModelChoiceField(label = 'Congregação', help_text = 'location_city', queryset = Congregacao.objects.all().order_by('nome'), empty_label = 'Nenhuma selecionada')
+    congregacao.widget.attrs = {'class' : 'form-control'}
+
+    nome = forms.CharField(label = 'Nome', help_text = 'feedback', max_length = 50)
+    nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome da missão', 'autocomplete' : 'off', 'maxlength' : '50'}
+
+    descricao = forms.CharField(label = 'Descrição', help_text = 'short_text', max_length = 100, required = False)
+    descricao.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Descrição breve da missão', 'autocomplete' : 'off', 'maxlength' : '100'}
+
+    inicio = forms.DateField(label = 'Início', help_text = 'today')
+    inicio.widget.attrs = {'class' : 'form-control datepicker', 'placeholder' : 'Data do começo da missão'}
+
+    fim = forms.DateField(label = 'Fim', help_text = 'event')
+    fim.widget.attrs = {'class' : 'form-control datepicker', 'placeholder' : 'Data do fim da missão'}
+
+    meta = forms.DecimalField(label = 'Meta (R$)', help_text = 'monetization_on', max_digits = 12, decimal_places = 2)
+    meta.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Valor esperado de arrecadação', 'min' : '0', 'step' : '0.01'}
 
 class PagamentoForm(forms.Form):
     nome = forms.CharField(label = 'Nome', help_text = 'credit_card', max_length = 50)

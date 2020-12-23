@@ -14,4 +14,6 @@ urlpatterns = [
     path('catentrada/<acao>', catEntrada, name = 'catentrada'),             # Categoria de Entrada
     path('membro/<acao>', membro, name = 'membro'),                         # Membro
     path('avulso/<acao>', avulso, name = 'avulso'),                         # Avulso
+    path('emissao/<acao>', emissao, name = 'emissao'),                      # Entrada de Missão
+    path('missao/<acao>', missao, name = 'missao'),                         # Missão
 ]

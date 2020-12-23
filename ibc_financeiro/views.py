@@ -130,6 +130,20 @@ def congregacao(request, acao):
 
     return render(request, 'financeiro/paginas/congregacao/adicionar.html', {'formulario' : CongregacaoForm(), 'pagina' : pagina})
 
+def emissao(request, acao):
+    if request.method == 'POST':
+        formulario = EntradaMissaoForm(request.POST)
+
+        if formulario.is_valid():
+            entrada = EntradaMissao()
+            entrada.missao = Missao.objects.get(id = request.POST['missao'])
+            entrada.valor = request.POST['valor']
+            entrada.data = convertDate(request.POST['data'])
+
+            entrada.save()
+
+    return render(request, 'financeiro/paginas/emissao/adicionar.html', {'formulario' : EntradaMissaoForm()})
+
 def empresa(request, acao):
     pagina = 0
 
@@ -211,6 +225,33 @@ def membro(request, acao):
         return render(request, 'financeiro/paginas/membro/adicionar.html', {'formulario' : MembroForm(), 'pagina' : pagina, 'id' : membro.id, 'nome' : membro.nome})
 
     return render(request, 'financeiro/paginas/membro/adicionar.html', {'formulario' : MembroForm(), 'pagina' : pagina})
+
+def missao(request, acao):
+    pagina = 0
+
+    missao = Missao()
+
+    if request.method == 'POST':
+        formulario = MissaoForm(request.POST)
+
+        if formulario.is_valid():
+            missao.congregacao = Congregacao.objects.get(id = request.POST['congregacao'])
+            missao.nome = request.POST['nome']
+            
+            if 'descricao' in request.POST:
+                missao.descricao = request.POST['descricao']
+
+            missao.inicio = convertDate(request.POST['inicio'])
+            missao.fim = convertDate(request.POST['fim'])
+            missao.meta = request.POST['meta']
+            
+            missao.save()
+
+            pagina = 1
+
+            return render(request, 'financeiro/paginas/missao/adicionar.html', {'formulario' : MissaoForm(), 'pagina' : pagina, 'id' : missao.id, 'nome' : request.POST['nome']})
+
+    return render(request, 'financeiro/paginas/missao/adicionar.html', {'formulario' : MissaoForm(), 'pagina' : pagina})
 
 def pagamento(request, acao):
     pagina = 0
