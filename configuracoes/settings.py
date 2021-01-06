@@ -46,10 +46,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'configuracoes.wsgi.application'
 
-DATABASES = {
-    'default' : {
-        'ENGINE' : 'django.db.backends.sqlite3',
-        'NAME' : BASE_DIR / 'db.sqlite3',
+DATABASES = {       # Banco de dados
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',       # Conexão com MySQL
+        'NAME': 'ibcorrente_financeiro',            # Nome do banco de dados
+        'USER': 'root',                             # Nome do usuário
+        'PASSWORD': '',                             # Senha do usuário
+        'HOST': 'localhost',                        # Local que está hospedado
+        'PORT': '3306',                             # Porta usada para se conectar
+        'OPTIONS': {                                # Opções adicionais
+            'sql_mode' : 'traditional',             # Remove notificações de aviso
+        }
     }
 }
 
