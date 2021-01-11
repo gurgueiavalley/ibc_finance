@@ -1,221 +1,165 @@
-from django.db import models
-from django.core.validators import MinLengthValidator, FileExtensionValidator
-from datetime import date, datetime
-import os
+from django.db import models                                                        # Atributos do banco de dados
+from django.core.validators import FileExtensionValidator, MinLengthValidator       # Validação de extensão de arquivo | validação de tamanho mínimo de caracteres
+from django.contrib.auth.models import User                                         # Classe User padrão do Django
+import os                                                                           # Manipulações de arquivos
 
-class Administrador(models.Model):
-    nome = models.CharField(max_length = 70)
-    username = models.CharField(unique = True, max_length = 30)
-    email = models.EmailField(unique = True, max_length = 70)
-    senha = models.CharField(max_length = 25, validators = [MinLengthValidator(5)])
+class Categoria(models.Model):              # Categoria
+    TIPOS = (       # Opções de tipo
+        ('Entrada', 'Entrada'),     # Entrada
+        ('Saída', 'Saída')          # Saída
+    )
 
-    class Meta:
-        db_table = 'administrador'
-        verbose_name_plural = 'administradores'
-
-    def __str__(self):
-        return self.nome 
-
-class CategoriaEntrada(models.Model):
-    nome = models.CharField(unique = True, max_length = 50)
-    descricao = models.CharField(blank = True, null = True, max_length = 100)
+    nome = models.CharField(max_length = 35, unique = True)                                             # Nome (máximo de 35 caracteres | único | obrigatório)
+    tipo = models.CharField(max_length = 7, validators = [MinLengthValidator(5)], choices = TIPOS)      # Tipo (máximo de 7 caracteres | mínimo de 5 caracteres | escolhas estáticas | obrigatório)
     
-    class Meta:
-        db_table = 'categoria_entrada'
-        verbose_name = 'categoria de entrada'
-        verbose_name_plural = 'Categorias de Entrada'
+    def __str__(self):      # Nome do objeto
+        return self.nome    # Retorna o nome da categoria
 
-    def __str__(self):
-        return self.nome
-
-class CategoriaSaida(models.Model):
-    nome = models.CharField(unique = True, max_length = 30)
-    descricao = models.CharField(blank = True, null = True, max_length = 100)
-
-    class Meta:
-        db_table = 'categoria_saida'
-        verbose_name = 'categoria de saída'
-        verbose_name_plural = 'Categorias de Saída'
-
-    def __str__(self):
-        return self.nome
-
-class Congregacao(models.Model):
-    nome = models.CharField(max_length = 70)
-    localidade = models.CharField(max_length = 50)
+class Congregacao(models.Model):            # Congregação
+    nome = models.CharField(max_length = 60, unique = True)         # Nome (máximo de 60 caracteres | único | obrigatório)
     
-    class Meta:
-        db_table = 'congregacao'
-        verbose_name = 'congregação'
-        verbose_name_plural = 'congregações'
+    class Meta:             # Valores de leitura
+        verbose_name = 'congregação'                # Nome da classe no singular
+        verbose_name_plural = 'congregações'        # Nome da classe no plural
 
-    def __str__(self):
-        return self.nome
+    def __str__(self):      # Nome do objeto
+        return self.nome    # Retorna o nome
 
-class Contador(models.Model):
-    nome = models.CharField(max_length = 70)
-    username = models.CharField(unique = True, max_length = 30)
-    email = models.EmailField(unique = True, max_length = 70)
-    senha = models.CharField(max_length = 25, validators = [MinLengthValidator(5)])
+class Entrada(models.Model):                # Entrada
+    membro = models.ForeignKey('Membro', on_delete = models.PROTECT)                                                                                                                # Membro que ofertou (relacionamento [1,n] | protegida de deleção | obrigatório)
+    valor = models.DecimalField(max_digits = 12, decimal_places = 3)                                                                                                                # Valor ofertado (centena de milhões | três casas decimais | obrigatório)
+    transacao = models.ForeignKey('Transacao', on_delete = models.PROTECT)                                                                                                          # Transação realizada para ofertar (relacionamento [1,n] | protegida de deleção | obrigatório)
+    data = models.DateField()                                                                                                                                                       # Data ofertada (obrigatório)
+    comprovante = models.FileField(upload_to = 'entradas/comprovantes/membros', blank = True, null = True, validators = [FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])])    # Comprovante da oferta (diretório de armazenagem | opcional | extensões permitidas)
+    categoria = models.ForeignKey(Categoria, on_delete = models.PROTECT)                                                                                                            # Categoria que foi destinada (relacionamento [1,n] | protegida de deleção | obrigatório)
+    congregacao = models.ForeignKey(Congregacao, on_delete = models.PROTECT)                                                                                                        # Congregação que recebeu (relacionamento [1,n] | protegida de deleção | obrigatório)
+    anotacao = models.CharField(max_length = 50, blank = True, null = True)                                                                                                         # Anotação adicional (máximo de 50 caracteres | opcional)
+    usuario = models.ForeignKey(User, on_delete = models.PROTECT)                                                                                                                   # Usuário que cadastrou (relacionamento [1,n] | protegida de deleção | obrigatório)
 
-    class Meta:
-        db_table = 'contador'
-        verbose_name_plural = 'contadores'
+    def __str__(self):                      # Nome do objeto
+        return 'R$ ' + str(self.valor)      # Retorna o símbolo do real com o valor
 
-    def __str__(self):
-        return self.nome
-
-class Empresa(models.Model):
-    CPF_CNPJ = models.CharField(unique = True, max_length = 18, validators = [MinLengthValidator(11)])
-    nome = models.CharField(max_length = 70)
-    descricao = models.CharField(blank = True, null = True, max_length = 100)
-    endereco = models.CharField(blank = True, null = True, max_length = 100)
-    cidade = models.CharField(blank = True, null = True, max_length = 60, default = 'Corrente')
-
-    class Meta:
-        db_table = 'empresa'
-
-    def __str__(self):
-        return self.nome
-
-class Entrada(models.Model):
-    membro = models.ForeignKey('Membro', on_delete = models.CASCADE)
-    congregacao = models.ForeignKey('Congregacao', on_delete = models.CASCADE)
-    data = models.DateField(default = date.today)
-    valor = models.DecimalField(max_digits = 12, decimal_places = 2)
-    forma_de_Entrada = models.ForeignKey('Pagamento', on_delete = models.CASCADE)
-    categoria = models.ForeignKey('CategoriaEntrada', on_delete = models.CASCADE)
-    descricao = models.CharField(blank = True, null = True, max_length = 100)
-    comprovante = models.FileField(blank = True, null = True, validators = [FileExtensionValidator(['jpeg', 'jpg', 'pdf', 'png'])], upload_to = 'documentos/comprovantes/entradas')
-    administrador = models.ForeignKey('Administrador', on_delete = models.CASCADE)
-    
-    class Meta:
-        db_table = 'entrada'
-
-    def __str__(self):
-        return 'R$ ' + str(self.valor)
-
-    def delete(self, *args, **kwargs):
-        if bool(self.comprovante):
-            os.remove(self.comprovante.path)
+    def delete(self, *args, **kwargs):      # Deletar os arquivos
+        if bool(self.comprovante):                      # Se tiver comprovante salvo
+            os.remove(self.comprovante.path)            # Deleta o arquivo
         
-        super(Entrada, self).delete(*args, **kwargs)
+        super(Entrada, self).delete(*args, **kwargs)    # Continua a deleção das informações do banco de dados
 
-class EntradaAvulsa(models.Model):
-    valor = models.DecimalField(max_digits = 12, decimal_places = 2)
-    data = models.DateField(default = date.today)
-    congregacao = models.ForeignKey('Congregacao', on_delete = models.CASCADE)
-    descricao = models.CharField(blank = True, null = True, max_length = 100)
-    comprovante = models.FileField(blank = True, null = True, validators = [FileExtensionValidator(['jpeg', 'jpg', 'pdf', 'png'])], upload_to = 'documentos/comprovantes/entrada_avulsa')
-    administrador = models.ForeignKey('Administrador', on_delete = models.CASCADE)
+class EntradaAvulsa(models.Model):          # Entrada Avulsa
+    valor = models.DecimalField(max_digits = 12, decimal_places = 3)                                                                                                                # Valor ofertado (centena de milhões | três casas decimais | obrigatório)
+    transacao = models.ForeignKey('Transacao', on_delete = models.PROTECT)                                                                                                          # Transação realizada para ofertar (relacionamento [1,n] | protegida de deleção | obrigatório)
+    data = models.DateField()                                                                                                                                                       # Data que foi feito a oferta (obrigatório)
+    comprovante = models.FileField(upload_to = 'entradas/comprovantes/avulsas', blank = True, null = True, validators = [FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])])    # Comprovante da oferta (diretório de armazenamento | opcional | extensões permitidas)
+    congregacao = models.ForeignKey(Congregacao, on_delete = models.PROTECT)                                                                                                        # Congregação que recebeu (relacionamento [1,n] | protegida de deleção | obrigatório)
+    anotacao = models.CharField(max_length = 50, blank = True, null = True)                                                                                                         # Anotação adicional (máximo de 50 caracteres | opcional)
+    usuario = models.ForeignKey(User, on_delete = models.PROTECT)                                                                                                                   # Usuário que cadastrou (relacionamento [1,n] | protegida de deleção | obrigatório)
     
-    class Meta:
-        db_table = 'entrada_avulsa'
-        verbose_name_plural = 'Entradas Avulsa'
+    class Meta:             # Valores de leitura
+        verbose_name_plural = 'entradas avulsa'     # Nome da classe no plural
 
-    def __str__(self):
-        return 'R$ ' + str(self.valor)
+    def __str__(self):      # Nome do objeto
+        return 'R$ ' + str(self.valor)      # Retorna o símbolo do real com o valor
     
-    def delete(self, *args, **kwargs):
-        if bool(self.comprovante):
-            os.remove(self.comprovante.path)
+    def delete(self, *args, **kwargs):      # Deletar os arquivos
+        if bool(self.comprovante):              # Se tiver comprovante salvo
+            os.remove(self.comprovante.path)    # Deleta o arquivo
         
-        super(EntradaAvulsa, self).delete(*args, **kwargs)
+        super(EntradaAvulsa, self).delete(*args, **kwargs)      # Continua a deleção das informações do banco de dados
 
-class EntradaMissao(models.Model):
-    valor = models.DecimalField(max_digits = 12, decimal_places = 2)
-    missao = models.ForeignKey('Missao', on_delete = models.CASCADE)
-    data = models.DateField(default = date.today)
+class EntradaMissao(models.Model):          # Entrada de Missão
+    valor = models.DecimalField(max_digits = 12, decimal_places = 3)            # Valor ofertado (centena de milhões | três casas decimais | obrigatório)
+    data = models.DateField()                                                   # Data que foi feito a oferta (obrigatório)
+    missao = models.ForeignKey('Missao', on_delete = models.PROTECT)            # Missão que foi destinado a oferta (relacionamento [1,n] | protegida de deleção | obrigatório)
+    anotacao = models.CharField(max_length = 50, blank = True, null = True)     # Anotação adicional (máximo de 50 caracteres | opcional)
+    usuario = models.ForeignKey(User, on_delete = models.PROTECT)               # Usuário que cadastrou (relacionamento [1,n] | protegida de deleção | obrigatório)
 
-    class Meta:
-        db_table = 'entrada_missao'
-        verbose_name = 'entrada de missão'
-        verbose_name_plural = 'Entradas de Missões'
+    class Meta:             # Valores de leitura
+        verbose_name = 'entrada de missão'                  # Nome da classe no singular
+        verbose_name_plural = 'entradas de missões'         # Nome da classe no plural
 
-    def __str__(self):
-        return 'R$ ' + str(self.valor)
+    def __str__(self):      # Nome do objeto
+        return 'R$ ' + str(self.valor)      # Retorna o símbolo do real com o valor
 
-class Excel(models.Model):
-    arquivo = models.FileField(validators = [FileExtensionValidator(['xlsx'])], upload_to = 'documentos')
+class Fornecedor(models.Model):             # Fornecedor
+    documento = models.CharField(max_length = 15, unique = True, validators = [MinLengthValidator(14)])     # CPF ou CNPJ (máximo de 15 caracteres | único | mínimo de 14 caracteres | obrigatório)
+    nome = models.CharField(max_length = 70)                                                                # Nome (máximo de 70 caracteres | obrigatório)
+    descricao = models.CharField(max_length = 50, blank = True, null = True)                                # Descrição dos tipos de produtos/serviços (máximo de 50 caracteres | opcional)
+    endereco = models.CharField(max_length = 100, blank = True, null = True)                                # Endereço completo (máximo de 100 caracteres | opcional)
 
-    class Meta:
-        db_table = 'excel'
-        verbose_name_plural = 'Excel'
+    class Meta:             # Valores de leitura
+        verbose_name_plural = 'Fornecedores'    # Nome da classe no plural
 
-    def __str__(self):
-        return 'Arquivo'
+    def __str__(self):      # Nome do objeto
+        return self.nome    # Retorna o nome
 
-    def delete(self, *args, **kwargs):
-        if bool(self.arquivo):
-            os.remove(self.arquivo.path)
-        
-        super(Excel, self).delete(*args, **kwargs)
-
-class Membro(models.Model):
-    CPF = models.CharField(unique = True, blank = True, null = True, max_length = 15, validators = [MinLengthValidator(11)])
-    nome = models.CharField(max_length = 75)
-    telefone = models.CharField(blank = True, null = True, max_length = 14, validators = [MinLengthValidator(8)])
-    profissao = models.CharField(blank = True, null = True, max_length = 45)
-
-    class Meta:
-        db_table = 'membro'
-
-    def __str__(self):
-        return self.nome
-
-class Missao(models.Model):
-    nome = models.CharField(max_length = 50)
-    descricao = models.CharField(blank = True, null = True, max_length = 100)
-    congregacao = models.ForeignKey('Congregacao', on_delete = models.CASCADE)
-    inicio = models.DateField(default = date.today)
-    fim = models.DateField()
-    em_Andamento = models.BooleanField(default = True)
-    meta = models.DecimalField(max_digits = 12, decimal_places = 2)
-
-    class Meta:
-        db_table = 'missao'
-        verbose_name = 'missão'
-        verbose_name_plural = 'missões'
-
-    def __str__(self):
-        return self.nome
-
-class Pagamento(models.Model):
-    nome = models.CharField(unique = True, max_length = 50)
+class Membro(models.Model):                 # Membro
+    SEXOS = (       # Opções de sexo
+        ('Masculino', 'Masculino'),         # Masculino
+        ('Feminino', 'Feminino')            # Feminino
+    )
     
-    class Meta:
-        db_table = 'pagamento'
+    CPF = models.CharField(max_length = 14, blank = True, null = True, unique = True, validators = [MinLengthValidator(14)])        # CPF (máximo de 14 caracteres | opcional | único | mínimo de 14 caracteres)
+    nome = models.CharField(max_length = 55)                                                                                        # Nome (máximo de 55 caracteres | obrigatório)
+    sexo = models.CharField(max_length = 9, blank = True, null = True, validators = [MinLengthValidator(8)], choices = SEXOS)       # Sexo (máximo de 9 caracteres | opcional | mínimo de 8 caracteres | escolhas estáticas)
+    nascimento = models.DateField(blank = True, null = True)                                                                        # Data de nascimento (opcional)
+    celular = models.CharField(max_length = 14, blank = True, null = True, unique = True, validators = [MinLengthValidator(14)])    # Telefone celular para contato (máximo de 14 caracteres | opcional | único | mínimo de 14 caracteres)
+    email = models.EmailField(max_length = 50, blank = True, null = True, unique = True)                                            # E-mail para contato (máximo de 50 caracteres | opcional | único)
+    frequenta = models.BooleanField(default = True)                                                                                 # Frequenta a igreja (normalmente frequenta | obrigatório)
 
-    def __str__(self):
-        return self.nome
+    def __str__(self):      # Nome do objeto
+        return self.nome    # Retorna o nome
 
-class Saida(models.Model):
-    nome = models.CharField(max_length = 75)
-    categoria = models.ForeignKey('CategoriaSaida', on_delete = models.CASCADE)
-    descricao = models.CharField(blank = True, null = True, max_length = 100)
-    congregacao = models.ForeignKey('Congregacao', on_delete = models.CASCADE)
-    data = models.DateField(default = date.today)
-    valor = models.DecimalField(max_digits = 12, decimal_places = 2)
-    forma_de_Pagamento = models.ForeignKey('Pagamento', on_delete = models.CASCADE)
-    empresa = models.ForeignKey('Empresa', on_delete = models.CASCADE)
-    comprovante = models.FileField(blank = True, null = True, validators = [FileExtensionValidator(['jpeg', 'jpg', 'pdf', 'png'])], upload_to = 'documentos/comprovantes/saidas')
-    nota_Fiscal = models.FileField(blank = True, null = True, validators = [FileExtensionValidator(['jpeg', 'jpg', 'pdf', 'png'])], upload_to = 'documentos/notas_fiscais')
-    administrador = models.ForeignKey('Administrador', on_delete = models.CASCADE)
-    postado = models.DateTimeField(default = datetime.today)
+class Missao(models.Model):                 # Missão
+    nome = models.CharField(max_length = 35)                                    # Nome (máximo de 35 caracteres | obrigatório)
+    detalhe = models.CharField(max_length = 45, blank = True, null = True)      # Detalhe do objetivo (máximo de 45 caracteres | opcional)
+    meta = models.DecimalField(max_digits = 12, decimal_places = 3)             # Meta de quanto pretende receber (centena de milhões | três casas decimais | obrigatório)
+    congregacao = models.ForeignKey(Congregacao, on_delete = models.PROTECT)    # Congregação que realizou (relacionamento [1,n] | protegida de deleção | obrigatório)
+    inicio = models.DateField()                                                 # Data que iniciou ou vai iniciar (obrigatório)
+    fim = models.DateField()                                                    # Data que finalizou ou vai finalizar (obrigatório)
+    andamento = models.BooleanField()                                           # Está em andamento (obrigatório)
 
-    class Meta:
-        db_table = 'saida'
-        verbose_name = 'saída'
-        verbose_name_plural = 'saídas'
+    class Meta:             # Valores de leitura
+        verbose_name = 'missão'             # Nome da classe no singular
+        verbose_name_plural = 'missões'     # Nome da classe no plural
 
-    def __str__(self):
-        return self.nome
+    def __str__(self):      # Nome do objeto
+        return self.nome    # Retorna o nome
 
-    def delete(self, *args, **kwargs):
-        if bool(self.comprovante):
-            os.remove(self.comprovante.path)
+class Saida(models.Model):                  # Saída
+    congregacao = models.ForeignKey(Congregacao, on_delete = models.PROTECT)                                                                                                # Congregação que fez o gasto (relacionamento [1,n] | protegida de deleção | obrigatório)
+    nome = models.CharField(max_length = 35)                                                                                                                                # Nome do produto ou serviço (máximo de 35 caracteres | obrigatório)
+    descricao = models.CharField(max_length = 40, blank = True, null = True)                                                                                                # Descrição do produto ou serviço (máximo de 40 caracteres | opcional)
+    valor = models.DecimalField(max_digits = 12, decimal_places = 3)                                                                                                        # Valor gasto (centena de milhoes | três casas decimais | obrigatório)
+    transacao = models.ForeignKey('Transacao', on_delete = models.PROTECT)                                                                                                  # Transação realiza para pagar (relacionamento [1,n] | protegida de deleção | obrigatório)
+    data = models.DateField()                                                                                                                                               # Data que foi gasto (obrigatório)
+    comprovante = models.FileField(upload_to = 'saidas/comprovantes', blank = True, null = True, validators = [FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])])      # Comprovante da compra (diretório de armazenagem | opcional | extensões permitidas)
+    nf = models.FileField(upload_to = 'saidas/nf', blank = True, null = True, validators = [FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])])                         # Comprovante do pagamento (diretório de armazenagem | opcional | extensões permitidas)
+    categoria = models.ForeignKey(Categoria, on_delete = models.PROTECT)                                                                                                    # Categoria que o gasto se encaixa (relacionamento [1,n] | protegida de deleção | obrigatório)
+    fornecedor = models.ForeignKey(Fornecedor, on_delete = models.PROTECT)                                                                                                  # Fornecedor do produto ou serviço (relacionamento [1,n] | protegida de deleção | obrigatório)
+    usuario = models.ForeignKey(User, on_delete = models.PROTECT)                                                                                                           # Usuário que cadastrou (relacionamento [1,n] | protegida de deleção | obrigatório)
+
+    class Meta:                             # Valores de leitura
+        verbose_name = 'saída'              # Nome da classe no singular
+        verbose_name_plural = 'saídas'      # Nome da classe no plural
+
+    def __str__(self):                      # Nome do objeto
+        return self.nome    # Retorna o nome do produto ou serviço
+
+    def delete(self, *args, **kwargs):      # Deletar os arquivos
+        if bool(self.comprovante):              # Se tiver comprovante salvo
+            os.remove(self.comprovante.path)    # Deleta o arquivo
         
-        if bool(self.nota_Fiscal):
-            os.remove(self.nota_Fiscal.path)
+        if bool(self.nf):               # Se tiver nota fiscal salva
+            os.remove(self.nf.path)     # Deleta o arquivo 
         
-        super(Saida, self).delete(*args, **kwargs)
+        super(Saida, self).delete(*args, **kwargs)      # Continua o processo de deleção dos dados do banco
+
+class Transacao(models.Model):              # Transação
+    nome = models.CharField(max_length = 25, unique = True)     # Nome (máximo de 25 caracteres | único | obrigatório)
+    
+    class Meta:             # Valores de leitura
+        verbose_name = 'Transação'              # Nome da classe no singular
+        verbose_name_plural = 'Transações'      # Nome da classe no plural
+
+    def __str__(self):      # Nome do objeto
+        return self.nome    # Retorna o nome

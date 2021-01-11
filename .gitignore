@@ -1,6 +1,7 @@
 virtual
 
 __pycache__
+.vscode
 
 migrations
 documentos
