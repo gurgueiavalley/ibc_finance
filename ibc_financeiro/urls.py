@@ -12,6 +12,7 @@ urlpatterns = [
     path('empresa/<acao>', empresa, name = 'empresa'),                      # Empresa
     path('entrada/<acao>', entrada, name = 'entrada'),                      # Entrada
     path('catentrada/<acao>', catEntrada, name = 'catentrada'),             # Categoria de Entrada
+    path('listar/<tipo>', listar, name = 'listar'),                         #Listar *
     path('membro/<acao>', membro, name = 'membro'),                         # Membro
     path('avulso/<acao>', avulso, name = 'avulso'),                         # Avulso
     path('emissao/<acao>', emissao, name = 'emissao'),                      # Entrada de Missão
