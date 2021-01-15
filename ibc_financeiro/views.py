@@ -37,7 +37,9 @@ def avulso(request, acao):
             entrada.administrador = Administrador.objects.get(id = 1)
 
             entrada.save()
-
+    if acao == 'listar':
+        tipo = 'avulso'
+        return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioEntradaForm()})
     return render(request, 'financeiro/paginas/avulso/adicionar.html', {'formulario' : EntradaAvulsaForm()})
 
 def cadMembrosExcel(request):
@@ -195,7 +197,9 @@ def entrada(request, acao):
             entrada.administrador = Administrador.objects.get(id = 1)
 
             entrada.save()
-
+    if acao == 'listar':
+        tipo = 'entradas'
+        return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioEntradaForm()})
     return render(request, 'financeiro/paginas/entrada/adicionar.html', {'formulario' : EntradaForm()})
 
 def index(request):
@@ -251,6 +255,10 @@ def missao(request, acao):
 
             return render(request, 'financeiro/paginas/missao/adicionar.html', {'formulario' : MissaoForm(), 'pagina' : pagina, 'id' : missao.id, 'nome' : request.POST['nome']})
 
+    if acao == 'listar':
+        tipo = 'missao'
+        return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioMissaoForm()})
+
     return render(request, 'financeiro/paginas/missao/adicionar.html', {'formulario' : MissaoForm(), 'pagina' : pagina})
 
 def pagamento(request, acao):
@@ -293,9 +301,36 @@ def saida(request, acao):
             
             saida.administrador = Administrador.objects.get(id = 1)
             saida.save()
-            
+
+    elif acao == 'listar':
+        tipo = 'saídas'
+        return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioSaidaForm()})
     return render(request, 'financeiro/paginas/saida/adicionar.html', {'formulario' : SaidaForm()})
 
+def listar(request, tipo):
+    if tipo == 'saídas':
+        saidas = listaSaida(request)
+        return render(request, 'financeiro/paginas/saida/tabela.html', {'saidas' : saidas})
+
+    elif tipo == 'entradas':
+        entradas = []
+        e = listaEntrada(request)
+        for entrada in e:
+            if hasattr(entrada, 'categoria'):
+                entradas.append(entrada)
+        return render(request, 'financeiro/paginas/entrada/tabela.html', {'entradas' : entradas})
+
+    elif tipo == 'missao':
+        missoes = listaMissao(request)
+        return render(request, 'financeiro/paginas/missao/tabela.html', {'missoes' : missoes})
+
+    elif tipo == 'avulso':
+        avulso = []
+        e = listaEntrada(request)
+        for entrada in e:
+            if not hasattr(entrada, 'categoria'):
+                avulso.append(entrada)
+        return render(request, 'financeiro/paginas/avulso/tabela.html', {'avulso' : avulso})
 # Métodos Auxiliares
 def cabecalhoRelatorio(pdf, data):              # Insere Cabeçalhos Relatórios
     pdf.drawImage('ibc_financeiro/static/imagens/logo.png', 10,758,height=50, width=60)
@@ -308,23 +343,27 @@ def cabecalhoRelatorio(pdf, data):              # Insere Cabeçalhos Relatórios
 def convertDate(date):                          # Converte formato da data
     return datetime.strptime(date, '%d/%m/%Y').date()
 
+def getData():
+    return date.today().strftime('%d/%m/%Y')
+
 def gerarRelatorio(request, dados, tipo):
-    data = str(date.today().strftime('%d/%m/%Y'))
     valorTotal = 0
     y = 0
     
     if tipo == 'saída':
         caminho = "ibc_financeiro/static/relatorio_saida.pdf"
         pdf = canvas.Canvas(caminho)
+
         pdf.setTitle("Relatório de Saidas")
-        pdf.drawImage('ibc_financeiro/static/imagens/logo.png', 10,758,height=50, width=60)
-        cabecalhoRelatorio(pdf, data)
+        
+        cabecalhoRelatorio(pdf, str(getData()))
         pdf.drawString(20, 700, "Data ")
         pdf.drawString(100, 700, "Congregação ")
         pdf.drawString(330,700,"Categoria ")
         pdf.drawString(490,700,"Valor ")
         pdf.drawString(278,755,"Saídas")
         pdf.line(275, 752, 315, 752)
+        
         pdf.setFont('Helvetica', 10)
         #Listando todas as saidas
         for saida in dados:
@@ -357,7 +396,7 @@ def gerarRelatorio(request, dados, tipo):
         caminho = "ibc_financeiro/static/relatorio_entrada.pdf"
         pdf = canvas.Canvas(caminho)
         pdf.setTitle("Relatório de Entradas")
-        cabecalhoRelatorio(pdf, data)
+        cabecalhoRelatorio(pdf, str(getData()))
         pdf.drawString(20, 700, "Data ")
         pdf.drawString(100, 700, "Congregação ")
         pdf.drawString(330,700,"Categoria ")
@@ -408,7 +447,7 @@ def gerarRelatorio(request, dados, tipo):
         pdf = canvas.Canvas(caminho)
         pdf.setTitle("Relatório de Missões")
         pdf.drawImage('ibc_financeiro/static/imagens/logo.png', 10,758,height=50, width=60)
-        cabecalhoRelatorio(pdf, data)
+        cabecalhoRelatorio(pdf, str(getData()))
         pdf.drawString(275,755,"Missões")
         pdf.line(272, 752, 317, 752)
         
@@ -473,7 +512,7 @@ def gerarRelatorio(request, dados, tipo):
         pdf.save()
     
 def gerarRelatorioGeral(request, entradas, saidas, missoes):
-    data = str(date.today().strftime('%d/%m/%Y'))
+    data = str(getData())
     
     valorEntradasAvulsa = 0
     valorMissao = 0
