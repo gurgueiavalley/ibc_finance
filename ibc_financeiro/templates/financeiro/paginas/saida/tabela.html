@@ -1,0 +1,68 @@
+{% extends 'financeiro/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    {% block titulo %}
+        Saídas
+    {% endblock %}
+{% endblock %}
+
+{% block CSS %}    
+    <link rel="stylesheet" href="{% static 'css/paginas/tabela.css' %}">
+{% endblock %}
+
+{% block dinamico %}
+    <div class= 'row clearfix'>
+        <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>
+            <div class="container-fluid">
+            <!-- Basic Examples -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>VALOR</th>
+                                            <th>NOME</th>
+                                            <th>CONGREGAÇÃO</th>
+                                            <th>DATA</th>
+                                            <th>COMPROVANTE</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for saida in saidas %}
+                                            <tr>
+                                                <td><a href="#">{{saida.valor}}</a></td>
+                                                <td>{{saida.nome}}</td>
+                                                <td>{{saida.congregacao}}</td>
+                                                <td>{{saida.data}}</td>
+                                                <td id = "tabela">
+                                                    {% if saida.comprovante != "" %}
+                                                        <i class="material-icons" id="iconTrue">check_circle<i/>
+                                                    {% else %}
+                                                        <i class="material-icons" id="iconFalse">info<i/>
+                                                    {% endif %}    
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- #END# Basic Examples -->
+        </div>
+    </div>
+{% endblock %}
+
+{% block JS %}    
+    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'js/pages/tables/jquery-datatable.js' %}"></script>
+    <script src="{% static 'js/paginas/saida/tabela_saida.js' %}"></script>
+    <script src="{% static 'js/paginas/saida/tabela_saida.bootstrap.js' %}"></script>
+{% endblock %}

@@ -325,6 +325,31 @@
                                         </li>
                                     </ul>
                                 </li>
+                                <li>
+                                    <a href= 'javascript:void(0)' class= 'menu-toggle'>
+                                        <span> Listar </span>
+                                    </a>
+
+                                    <ul class= 'ml-menu'>
+                                        <li>
+                                            <a href= "{% url 'entrada' 'listar' %}">
+                                                <span> Com Membro </span>
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <a href= "{% url 'avulso' 'listar' %}">
+                                                <span> Avulso </span>
+                                            </a>
+                                        </li>
+                                        
+                                        <li>
+                                            <a href= "{% url 'missao' 'listar' %}">
+                                                <span> De Missão </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
                             </ul>
                         </li>
 
@@ -336,6 +361,7 @@
 
                             <ul class= 'ml-menu'>
                                 <li> <a href= "{% url 'saida' 'adicionar' %}"> Adicionar </a> </li>
+                                 <li> <a href= "{% url 'saida' 'listar' %}"> Listar </a> </li>
                             </ul>
                         </li>  
 
