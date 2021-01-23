@@ -324,6 +324,10 @@ def listar(request, tipo):
         missoes = listaMissao(request)
         return render(request, 'financeiro/paginas/missao/tabela.html', {'missoes' : missoes})
 
+    elif tipo == 'membros':
+        membros = Membro.objects.all()
+        return render(request, 'financeiro/paginas/membro/tabela.html', {'membros' : membros})
+
     elif tipo == 'avulso':
         avulso = []
         e = listaEntrada(request)
