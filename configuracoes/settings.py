@@ -85,6 +85,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-# Diretório dos documentos dinâmicos
-MEDIA_URL = '/ibc_financeiro/documentos/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'ibc_financeiro')
+# Diretório para salvar arquivos dinâmicos
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
