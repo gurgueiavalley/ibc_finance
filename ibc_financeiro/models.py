@@ -26,15 +26,15 @@ class Congregacao(models.Model):            # Congregação
         return self.nome    # Retorna o nome
 
 class Entrada(models.Model):                # Entrada
-    membro = models.ForeignKey('Membro', on_delete = models.PROTECT)                                                                                                                # Membro que ofertou (relacionamento [1,n] | protegida de deleção | obrigatório)
-    valor = models.DecimalField(max_digits = 12, decimal_places = 3)                                                                                                                # Valor ofertado (centena de milhões | três casas decimais | obrigatório)
-    transacao = models.ForeignKey('Transacao', on_delete = models.PROTECT)                                                                                                          # Transação realizada para ofertar (relacionamento [1,n] | protegida de deleção | obrigatório)
-    data = models.DateField()                                                                                                                                                       # Data ofertada (obrigatório)
-    comprovante = models.FileField(upload_to = 'entradas/comprovantes/membros', blank = True, null = True, validators = [FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])])    # Comprovante da oferta (diretório de armazenagem | opcional | extensões permitidas)
-    categoria = models.ForeignKey(Categoria, on_delete = models.PROTECT)                                                                                                            # Categoria que foi destinada (relacionamento [1,n] | protegida de deleção | obrigatório)
-    congregacao = models.ForeignKey(Congregacao, on_delete = models.PROTECT)                                                                                                        # Congregação que recebeu (relacionamento [1,n] | protegida de deleção | obrigatório)
-    anotacao = models.CharField(max_length = 50, blank = True, null = True)                                                                                                         # Anotação adicional (máximo de 50 caracteres | opcional)
-    usuario = models.ForeignKey(User, on_delete = models.PROTECT)                                                                                                                   # Usuário que cadastrou (relacionamento [1,n] | protegida de deleção | obrigatório)
+    membro = models.ForeignKey('Membro', on_delete = models.PROTECT)                                                                                                                            # Membro que ofertou (relacionamento [1,n] | protegida de deleção | obrigatório)
+    valor = models.DecimalField(max_digits = 12, decimal_places = 3)                                                                                                                            # Valor ofertado (centena de milhões | três casas decimais | obrigatório)
+    transacao = models.ForeignKey('Transacao', on_delete = models.PROTECT)                                                                                                                      # Transação realizada para ofertar (relacionamento [1,n] | protegida de deleção | obrigatório)
+    data = models.DateField()                                                                                                                                                                   # Data ofertada (obrigatório)
+    comprovante = models.FileField(upload_to = 'financeiro/entradas/comprovantes/membros', blank = True, null = True, validators = [FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])])     # Comprovante da oferta (diretório de armazenagem | opcional | extensões permitidas)
+    categoria = models.ForeignKey(Categoria, on_delete = models.PROTECT)                                                                                                                        # Categoria que foi destinada (relacionamento [1,n] | protegida de deleção | obrigatório)
+    congregacao = models.ForeignKey(Congregacao, on_delete = models.PROTECT)                                                                                                                    # Congregação que recebeu (relacionamento [1,n] | protegida de deleção | obrigatório)
+    anotacao = models.CharField(max_length = 50, blank = True, null = True)                                                                                                                     # Anotação adicional (máximo de 50 caracteres | opcional)
+    usuario = models.ForeignKey(User, on_delete = models.PROTECT)                                                                                                                               # Usuário que cadastrou (relacionamento [1,n] | protegida de deleção | obrigatório)
 
     def __str__(self):                      # Nome do objeto
         return 'R$ ' + str(self.valor)      # Retorna o símbolo do real com o valor
@@ -46,13 +46,13 @@ class Entrada(models.Model):                # Entrada
         super(Entrada, self).delete(*args, **kwargs)    # Continua a deleção das informações do banco de dados
 
 class EntradaAvulsa(models.Model):          # Entrada Avulsa
-    valor = models.DecimalField(max_digits = 12, decimal_places = 3)                                                                                                                # Valor ofertado (centena de milhões | três casas decimais | obrigatório)
-    transacao = models.ForeignKey('Transacao', on_delete = models.PROTECT)                                                                                                          # Transação realizada para ofertar (relacionamento [1,n] | protegida de deleção | obrigatório)
-    data = models.DateField()                                                                                                                                                       # Data que foi feito a oferta (obrigatório)
-    comprovante = models.FileField(upload_to = 'entradas/comprovantes/avulsas', blank = True, null = True, validators = [FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])])    # Comprovante da oferta (diretório de armazenamento | opcional | extensões permitidas)
-    congregacao = models.ForeignKey(Congregacao, on_delete = models.PROTECT)                                                                                                        # Congregação que recebeu (relacionamento [1,n] | protegida de deleção | obrigatório)
-    anotacao = models.CharField(max_length = 50, blank = True, null = True)                                                                                                         # Anotação adicional (máximo de 50 caracteres | opcional)
-    usuario = models.ForeignKey(User, on_delete = models.PROTECT)                                                                                                                   # Usuário que cadastrou (relacionamento [1,n] | protegida de deleção | obrigatório)
+    valor = models.DecimalField(max_digits = 12, decimal_places = 3)                                                                                                                            # Valor ofertado (centena de milhões | três casas decimais | obrigatório)
+    transacao = models.ForeignKey('Transacao', on_delete = models.PROTECT)                                                                                                                      # Transação realizada para ofertar (relacionamento [1,n] | protegida de deleção | obrigatório)
+    data = models.DateField()                                                                                                                                                                   # Data que foi feito a oferta (obrigatório)
+    comprovante = models.FileField(upload_to = 'financeiro/entradas/comprovantes/avulsas', blank = True, null = True, validators = [FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])])     # Comprovante da oferta (diretório de armazenamento | opcional | extensões permitidas)
+    congregacao = models.ForeignKey(Congregacao, on_delete = models.PROTECT)                                                                                                                    # Congregação que recebeu (relacionamento [1,n] | protegida de deleção | obrigatório)
+    anotacao = models.CharField(max_length = 50, blank = True, null = True)                                                                                                                     # Anotação adicional (máximo de 50 caracteres | opcional)
+    usuario = models.ForeignKey(User, on_delete = models.PROTECT)                                                                                                                               # Usuário que cadastrou (relacionamento [1,n] | protegida de deleção | obrigatório)
     
     class Meta:             # Valores de leitura
         verbose_name_plural = 'entradas avulsa'     # Nome da classe no plural
@@ -67,18 +67,26 @@ class EntradaAvulsa(models.Model):          # Entrada Avulsa
         super(EntradaAvulsa, self).delete(*args, **kwargs)      # Continua a deleção das informações do banco de dados
 
 class EntradaMissao(models.Model):          # Entrada de Missão
-    valor = models.DecimalField(max_digits = 12, decimal_places = 3)            # Valor ofertado (centena de milhões | três casas decimais | obrigatório)
-    data = models.DateField()                                                   # Data que foi feito a oferta (obrigatório)
-    missao = models.ForeignKey('Missao', on_delete = models.PROTECT)            # Missão que foi destinado a oferta (relacionamento [1,n] | protegida de deleção | obrigatório)
-    anotacao = models.CharField(max_length = 50, blank = True, null = True)     # Anotação adicional (máximo de 50 caracteres | opcional)
-    usuario = models.ForeignKey(User, on_delete = models.PROTECT)               # Usuário que cadastrou (relacionamento [1,n] | protegida de deleção | obrigatório)
+    valor = models.DecimalField(max_digits = 12, decimal_places = 3)                                                                                                                            # Valor ofertado (centena de milhões | três casas decimais | obrigatório)
+    transacao = models.ForeignKey('Transacao', on_delete = models.PROTECT)                                                                                                                      # Transação realizada para ofertar (relacionamento [1,n] | protegida de deleção | obrigatório)
+    data = models.DateField()                                                                                                                                                                   # Data que foi feito a oferta (obrigatório)
+    comprovante = models.FileField(upload_to = 'financeiro/entradas/comprovantes/missoes', blank = True, null = True, validators = [FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])])     # Comprovante da oferta (diretório de armazenamento | opcional | extensões permitidas)
+    missao = models.ForeignKey('Missao', on_delete = models.PROTECT)                                                                                                                            # Missão que foi destinado a oferta (relacionamento [1,n] | protegida de deleção | obrigatório)
+    anotacao = models.CharField(max_length = 50, blank = True, null = True)                                                                                                                     # Anotação adicional (máximo de 50 caracteres | opcional)
+    usuario = models.ForeignKey(User, on_delete = models.PROTECT)                                                                                                                               # Usuário que cadastrou (relacionamento [1,n] | protegida de deleção | obrigatório)
 
-    class Meta:             # Valores de leitura
+    class Meta:                             # Valores de leitura
         verbose_name = 'entrada de missão'                  # Nome da classe no singular
         verbose_name_plural = 'entradas de missões'         # Nome da classe no plural
 
-    def __str__(self):      # Nome do objeto
+    def __str__(self):                      # Nome do objeto
         return 'R$ ' + str(self.valor)      # Retorna o símbolo do real com o valor
+
+    def delete(self, *args, **kwargs):      # Deletar os arquivos
+        if bool(self.comprovante):              # Se tiver comprovante salvo
+            os.remove(self.comprovante.path)    # Deleta o arquivo
+        
+        super(EntradaMissao, self).delete(*args, **kwargs)      # Continua a deleção das informações do banco de dados
 
 class Fornecedor(models.Model):             # Fornecedor
     documento = models.CharField(max_length = 15, unique = True, validators = [MinLengthValidator(14)])     # CPF ou CNPJ (máximo de 15 caracteres | único | mínimo de 14 caracteres | obrigatório)
@@ -87,7 +95,7 @@ class Fornecedor(models.Model):             # Fornecedor
     endereco = models.CharField(max_length = 100, blank = True, null = True)                                # Endereço completo (máximo de 100 caracteres | opcional)
 
     class Meta:             # Valores de leitura
-        verbose_name_plural = 'Fornecedores'    # Nome da classe no plural
+        verbose_name_plural = 'fornecedores'    # Nome da classe no plural
 
     def __str__(self):      # Nome do objeto
         return self.nome    # Retorna o nome
@@ -104,7 +112,6 @@ class Membro(models.Model):                 # Membro
     nascimento = models.DateField(blank = True, null = True)                                                                        # Data de nascimento (opcional)
     celular = models.CharField(max_length = 14, blank = True, null = True, unique = True, validators = [MinLengthValidator(14)])    # Telefone celular para contato (máximo de 14 caracteres | opcional | único | mínimo de 14 caracteres)
     email = models.EmailField(max_length = 50, blank = True, null = True, unique = True)                                            # E-mail para contato (máximo de 50 caracteres | opcional | único)
-    frequenta = models.BooleanField(default = True)                                                                                 # Frequenta a igreja (normalmente frequenta | obrigatório)
 
     def __str__(self):      # Nome do objeto
         return self.nome    # Retorna o nome
@@ -126,17 +133,17 @@ class Missao(models.Model):                 # Missão
         return self.nome    # Retorna o nome
 
 class Saida(models.Model):                  # Saída
-    congregacao = models.ForeignKey(Congregacao, on_delete = models.PROTECT)                                                                                                # Congregação que fez o gasto (relacionamento [1,n] | protegida de deleção | obrigatório)
-    nome = models.CharField(max_length = 35)                                                                                                                                # Nome do produto ou serviço (máximo de 35 caracteres | obrigatório)
-    descricao = models.CharField(max_length = 40, blank = True, null = True)                                                                                                # Descrição do produto ou serviço (máximo de 40 caracteres | opcional)
-    valor = models.DecimalField(max_digits = 12, decimal_places = 3)                                                                                                        # Valor gasto (centena de milhoes | três casas decimais | obrigatório)
-    transacao = models.ForeignKey('Transacao', on_delete = models.PROTECT)                                                                                                  # Transação realiza para pagar (relacionamento [1,n] | protegida de deleção | obrigatório)
-    data = models.DateField()                                                                                                                                               # Data que foi gasto (obrigatório)
-    comprovante = models.FileField(upload_to = 'saidas/comprovantes', blank = True, null = True, validators = [FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])])      # Comprovante da compra (diretório de armazenagem | opcional | extensões permitidas)
-    nf = models.FileField(upload_to = 'saidas/nf', blank = True, null = True, validators = [FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])])                         # Comprovante do pagamento (diretório de armazenagem | opcional | extensões permitidas)
-    categoria = models.ForeignKey(Categoria, on_delete = models.PROTECT)                                                                                                    # Categoria que o gasto se encaixa (relacionamento [1,n] | protegida de deleção | obrigatório)
-    fornecedor = models.ForeignKey(Fornecedor, on_delete = models.PROTECT)                                                                                                  # Fornecedor do produto ou serviço (relacionamento [1,n] | protegida de deleção | obrigatório)
-    usuario = models.ForeignKey(User, on_delete = models.PROTECT)                                                                                                           # Usuário que cadastrou (relacionamento [1,n] | protegida de deleção | obrigatório)
+    congregacao = models.ForeignKey(Congregacao, on_delete = models.PROTECT)                                                                                                            # Congregação que fez o gasto (relacionamento [1,n] | protegida de deleção | obrigatório)
+    nome = models.CharField(max_length = 35)                                                                                                                                            # Nome do produto ou serviço (máximo de 35 caracteres | obrigatório)
+    descricao = models.CharField(max_length = 40, blank = True, null = True)                                                                                                            # Descrição do produto ou serviço (máximo de 40 caracteres | opcional)
+    valor = models.DecimalField(max_digits = 12, decimal_places = 3)                                                                                                                    # Valor gasto (centena de milhoes | três casas decimais | obrigatório)
+    transacao = models.ForeignKey('Transacao', on_delete = models.PROTECT)                                                                                                              # Transação realizada para pagar (relacionamento [1,n] | protegida de deleção | obrigatório)
+    data = models.DateField()                                                                                                                                                           # Data que foi gasto (obrigatório)
+    comprovante = models.FileField(upload_to = 'financeiro/saidas/comprovantes', blank = True, null = True, validators = [FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])])       # Comprovante da compra (diretório de armazenagem | opcional | extensões permitidas)
+    nf = models.FileField(upload_to = 'financeiro/saidas/nf', blank = True, null = True, validators = [FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])])                          # Comprovante do pagamento (diretório de armazenagem | opcional | extensões permitidas)
+    categoria = models.ForeignKey(Categoria, on_delete = models.PROTECT)                                                                                                                # Categoria que o gasto se encaixa (relacionamento [1,n] | protegida de deleção | obrigatório)
+    fornecedor = models.ForeignKey(Fornecedor, on_delete = models.PROTECT)                                                                                                              # Fornecedor do produto ou serviço (relacionamento [1,n] | protegida de deleção | obrigatório)
+    usuario = models.ForeignKey(User, on_delete = models.PROTECT)                                                                                                                       # Usuário que cadastrou (relacionamento [1,n] | protegida de deleção | obrigatório)
 
     class Meta:                             # Valores de leitura
         verbose_name = 'saída'              # Nome da classe no singular

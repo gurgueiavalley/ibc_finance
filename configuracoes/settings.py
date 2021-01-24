@@ -49,7 +49,7 @@ WSGI_APPLICATION = 'configuracoes.wsgi.application'
 DATABASES = {       # Banco de dados
     'default': {
         'ENGINE': 'django.db.backends.mysql',       # Conexão com MySQL
-        'NAME': 'ibcorrente_financeiro',            # Nome do banco de dados
+        'NAME': 'financeiro',                       # Nome do banco de dados
         'USER': 'root',                             # Nome do usuário
         'PASSWORD': '',                             # Senha do usuário
         'HOST': 'localhost',                        # Local que está hospedado
