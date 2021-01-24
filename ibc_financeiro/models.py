@@ -5,8 +5,8 @@ import os                                                                       
 
 class Categoria(models.Model):              # Categoria
     TIPOS = (       # Opções de tipo
-        ('Entrada', 'Entrada'),     # Entrada
-        ('Saída', 'Saída')          # Saída
+        ('ENTRADA', 'ENTRADA'),     # Entrada
+        ('SAÍDA', 'SAÍDA')          # Saída
     )
 
     nome = models.CharField(max_length = 35, unique = True)                                             # Nome (máximo de 35 caracteres | único | obrigatório)
@@ -27,7 +27,7 @@ class Congregacao(models.Model):            # Congregação
 
 class Entrada(models.Model):                # Entrada
     membro = models.ForeignKey('Membro', on_delete = models.PROTECT)                                                                                                                            # Membro que ofertou (relacionamento [1,n] | protegida de deleção | obrigatório)
-    valor = models.DecimalField(max_digits = 12, decimal_places = 3)                                                                                                                            # Valor ofertado (centena de milhões | três casas decimais | obrigatório)
+    valor = models.DecimalField(max_digits = 11, decimal_places = 2)                                                                                                                            # Valor ofertado (centena de milhões | duas casas decimais | obrigatório)
     transacao = models.ForeignKey('Transacao', on_delete = models.PROTECT)                                                                                                                      # Transação realizada para ofertar (relacionamento [1,n] | protegida de deleção | obrigatório)
     data = models.DateField()                                                                                                                                                                   # Data ofertada (obrigatório)
     comprovante = models.FileField(upload_to = 'financeiro/entradas/comprovantes/membros', blank = True, null = True, validators = [FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])])     # Comprovante da oferta (diretório de armazenagem | opcional | extensões permitidas)
@@ -39,17 +39,17 @@ class Entrada(models.Model):                # Entrada
     def __str__(self):                      # Nome do objeto
         return 'R$ ' + str(self.valor)      # Retorna o símbolo do real com o valor
 
-    def save(self, *args, **kwargs):        # Deletar os arquivos na alteração
-        try:        # Faz o teste
-            salvo = Entrada.objects.get(id = self.id)       # Pega os dados salvos no banco
+    def save(self, *args, **kwargs):		# Deletar arquivos na alteração
+		try:        # Faz o teste
+			salvo = Entrada.objects.get(id = self.id)       # Pega os dados salvos no banco
+			
+			if salvo.comprovante != self.comprovante:       # Se o comprovante salvo não for igual o atual
+				os.remove(salvo.comprovante.path)			# Deleta o comprovante salvo
 
-            if salvo.comprovante != self.comprovante:       # Se o comprovante salvo não for igual o atual
-                os.remove(salvo.comprovante.path)           # Deleta o comprovante salvo
+		except:		# Caso de erro no teste
+			pass	# Não faz nada
 
-        except:     # Caso de erro no teste
-            pass    # Não faz nada
-
-        super(Entrada, self).save(*args, **kwargs)      # Continua a alteração no banco de dados
+		super(Entrada, self).save(*args, **kwargs)      # Continua a alteração dos dados no banco
 
     def delete(self, *args, **kwargs):      # Deletar os arquivos na deleção
         if bool(self.comprovante):                      # Se tiver comprovante salvo
@@ -58,7 +58,7 @@ class Entrada(models.Model):                # Entrada
         super(Entrada, self).delete(*args, **kwargs)    # Continua a deleção das informações do banco de dados
 
 class EntradaAvulsa(models.Model):          # Entrada Avulsa
-    valor = models.DecimalField(max_digits = 12, decimal_places = 3)                                                                                                                            # Valor ofertado (centena de milhões | três casas decimais | obrigatório)
+    valor = models.DecimalField(max_digits = 11, decimal_places = 2)                                                                                                                            # Valor ofertado (centena de milhões | duas casas decimais | obrigatório)
     transacao = models.ForeignKey('Transacao', on_delete = models.PROTECT)                                                                                                                      # Transação realizada para ofertar (relacionamento [1,n] | protegida de deleção | obrigatório)
     data = models.DateField()                                                                                                                                                                   # Data que foi feito a oferta (obrigatório)
     comprovante = models.FileField(upload_to = 'financeiro/entradas/comprovantes/avulsas', blank = True, null = True, validators = [FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])])     # Comprovante da oferta (diretório de armazenamento | opcional | extensões permitidas)
@@ -91,7 +91,7 @@ class EntradaAvulsa(models.Model):          # Entrada Avulsa
         super(EntradaAvulsa, self).delete(*args, **kwargs)      # Continua a deleção das informações do banco de dados
 
 class EntradaMissao(models.Model):          # Entrada de Missão
-    valor = models.DecimalField(max_digits = 12, decimal_places = 3)                                                                                                                            # Valor ofertado (centena de milhões | três casas decimais | obrigatório)
+    valor = models.DecimalField(max_digits = 11, decimal_places = 2)                                                                                                                            # Valor ofertado (centena de milhões | duas casas decimais | obrigatório)
     transacao = models.ForeignKey('Transacao', on_delete = models.PROTECT)                                                                                                                      # Transação realizada para ofertar (relacionamento [1,n] | protegida de deleção | obrigatório)
     data = models.DateField()                                                                                                                                                                   # Data que foi feito a oferta (obrigatório)
     comprovante = models.FileField(upload_to = 'financeiro/entradas/comprovantes/missoes', blank = True, null = True, validators = [FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])])     # Comprovante da oferta (diretório de armazenamento | opcional | extensões permitidas)
@@ -138,8 +138,8 @@ class Fornecedor(models.Model):             # Fornecedor
 
 class Membro(models.Model):                 # Membro
     SEXOS = (       # Opções de sexo
-        ('Masculino', 'Masculino'),         # Masculino
-        ('Feminino', 'Feminino')            # Feminino
+        ('MASCULINO', 'MASCULINO'),     # Masculino
+        ('FEMININO', 'FEMININO')        # Feminino
     )
     
     CPF = models.CharField(max_length = 14, blank = True, null = True, unique = True, validators = [MinLengthValidator(14)])        # CPF (máximo de 14 caracteres | opcional | único | mínimo de 14 caracteres)
@@ -155,7 +155,7 @@ class Membro(models.Model):                 # Membro
 class Missao(models.Model):                 # Missão
     nome = models.CharField(max_length = 35)                                    # Nome (máximo de 35 caracteres | obrigatório)
     detalhe = models.CharField(max_length = 45, blank = True, null = True)      # Detalhe do objetivo (máximo de 45 caracteres | opcional)
-    meta = models.DecimalField(max_digits = 12, decimal_places = 3)             # Meta de quanto pretende receber (centena de milhões | três casas decimais | obrigatório)
+    meta = models.DecimalField(max_digits = 11, decimal_places = 2)             # Meta de quanto pretende receber (centena de milhões | duas casas decimais | obrigatório)
     congregacao = models.ForeignKey(Congregacao, on_delete = models.PROTECT)    # Congregação que realizou (relacionamento [1,n] | protegida de deleção | obrigatório)
     inicio = models.DateField()                                                 # Data que iniciou ou vai iniciar (obrigatório)
     fim = models.DateField()                                                    # Data que finalizou ou vai finalizar (obrigatório)
@@ -172,7 +172,7 @@ class Saida(models.Model):                  # Saída
     congregacao = models.ForeignKey(Congregacao, on_delete = models.PROTECT)                                                                                                            # Congregação que fez o gasto (relacionamento [1,n] | protegida de deleção | obrigatório)
     nome = models.CharField(max_length = 35)                                                                                                                                            # Nome do produto ou serviço (máximo de 35 caracteres | obrigatório)
     descricao = models.CharField(max_length = 40, blank = True, null = True)                                                                                                            # Descrição do produto ou serviço (máximo de 40 caracteres | opcional)
-    valor = models.DecimalField(max_digits = 12, decimal_places = 3)                                                                                                                    # Valor gasto (centena de milhoes | três casas decimais | obrigatório)
+    valor = models.DecimalField(max_digits = 11, decimal_places = 2)                                                                                                                    # Valor gasto (centena de milhoes | duas casas decimais | obrigatório)
     transacao = models.ForeignKey('Transacao', on_delete = models.PROTECT)                                                                                                              # Transação realizada para pagar (relacionamento [1,n] | protegida de deleção | obrigatório)
     data = models.DateField()                                                                                                                                                           # Data que foi gasto (obrigatório)
     comprovante = models.FileField(upload_to = 'financeiro/saidas/comprovantes', blank = True, null = True, validators = [FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])])       # Comprovante da compra (diretório de armazenagem | opcional | extensões permitidas)
