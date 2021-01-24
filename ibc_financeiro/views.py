@@ -338,7 +338,7 @@ def listar(request, tipo):
         return render(request, 'financeiro/paginas/avulso/tabela.html', {'avulso' : avulso})
 # Métodos Auxiliares
 def cabecalhoRelatorio(pdf, data):              # Insere Cabeçalhos Relatórios
-    pdf.drawImage('ibc_financeiro/static/imagens/logo.png', 10,758,height=50, width=60)
+    pdf.drawImage('ibc_financeiro/static/imagens/logo.jpg', 10,758,height=60, width=60)
     pdf.setFont('Times-Bold', 12)
     pdf.drawString(200,800,"IGREJA BATISTA DE CORRENTE")
     pdf.drawString(182,785,"Departamento de Administração e Finanças")
