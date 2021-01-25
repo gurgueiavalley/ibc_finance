@@ -39,17 +39,17 @@ class Entrada(models.Model):                # Entrada
     def __str__(self):                      # Nome do objeto
         return 'R$ ' + str(self.valor)      # Retorna o símbolo do real com o valor
 
-    def save(self, *args, **kwargs):		# Deletar arquivos na alteração
-		try:        # Faz o teste
-			salvo = Entrada.objects.get(id = self.id)       # Pega os dados salvos no banco
-			
-			if salvo.comprovante != self.comprovante:       # Se o comprovante salvo não for igual o atual
-				os.remove(salvo.comprovante.path)			# Deleta o comprovante salvo
+    def save(self, *args, **kwargs):        # Deletar os arquivos na alteração
+        try:        # Faz o teste
+            salvo = Entrada.objects.get(id = self.id)       # Pega os dados salvos no banco
 
-		except:		# Caso de erro no teste
-			pass	# Não faz nada
+            if salvo.comprovante != self.comprovante:       # Se o comprovante salvo não for igual o atual
+                os.remove(salvo.comprovante.path)           # Deleta o comprovante salvo
 
-		super(Entrada, self).save(*args, **kwargs)      # Continua a alteração dos dados no banco
+        except:     # Caso de erro no teste
+            pass    # Não faz nada
+
+        super(Entrada, self).save(*args, **kwargs)      # Continua a alteração no banco de dados
 
     def delete(self, *args, **kwargs):      # Deletar os arquivos na deleção
         if bool(self.comprovante):                      # Se tiver comprovante salvo
