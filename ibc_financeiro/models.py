@@ -39,7 +39,19 @@ class Entrada(models.Model):                # Entrada
     def __str__(self):                      # Nome do objeto
         return 'R$ ' + str(self.valor)      # Retorna o símbolo do real com o valor
 
-    def delete(self, *args, **kwargs):      # Deletar os arquivos
+    def save(self, *args, **kwargs):        # Deletar os arquivos na alteração
+        try:        # Faz o teste
+            salvo = Entrada.objects.get(id = self.id)       # Pega os dados salvos no banco
+
+            if salvo.comprovante != self.comprovante:       # Se o comprovante salvo não for igual o atual
+                os.remove(salvo.comprovante.path)           # Deleta o comprovante salvo
+
+        except:     # Caso de erro no teste
+            pass    # Não faz nada
+
+        super(Entrada, self).save(*args, **kwargs)      # Continua a alteração no banco de dados
+
+    def delete(self, *args, **kwargs):      # Deletar os arquivos na deleção
         if bool(self.comprovante):                      # Se tiver comprovante salvo
             os.remove(self.comprovante.path)            # Deleta o arquivo
         
@@ -59,8 +71,20 @@ class EntradaAvulsa(models.Model):          # Entrada Avulsa
 
     def __str__(self):      # Nome do objeto
         return 'R$ ' + str(self.valor)      # Retorna o símbolo do real com o valor
-    
-    def delete(self, *args, **kwargs):      # Deletar os arquivos
+
+    def save(self, *args, **kwargs):        # Deletar os arquivos na alteração
+        try:        # Faz o teste
+            salvo = EntradaAvulsa.objects.get(id = self.id)       # Pega os dados salvos no banco
+
+            if salvo.comprovante != self.comprovante:       # Se o comprovante salvo não for igual o atual
+                os.remove(salvo.comprovante.path)           # Deleta o comprovante salvo
+
+        except:     # Caso de erro no teste
+            pass    # Não faz nada
+
+        super(EntradaAvulsa, self).save(*args, **kwargs)      # Continua a alteração no banco de dados
+
+    def delete(self, *args, **kwargs):      # Deletar os arquivos na deleção
         if bool(self.comprovante):              # Se tiver comprovante salvo
             os.remove(self.comprovante.path)    # Deleta o arquivo
         
@@ -82,7 +106,19 @@ class EntradaMissao(models.Model):          # Entrada de Missão
     def __str__(self):                      # Nome do objeto
         return 'R$ ' + str(self.valor)      # Retorna o símbolo do real com o valor
 
-    def delete(self, *args, **kwargs):      # Deletar os arquivos
+    def save(self, *args, **kwargs):        # Deletar os arquivos na alteração
+        try:        # Faz o teste
+            salvo = EntradaMissao.objects.get(id = self.id)       # Pega os dados salvos no banco
+
+            if salvo.comprovante != self.comprovante:       # Se o comprovante salvo não for igual o atual
+                os.remove(salvo.comprovante.path)           # Deleta o comprovante salvo
+
+        except:     # Caso de erro no teste
+            pass    # Não faz nada
+
+        super(EntradaMissao, self).save(*args, **kwargs)      # Continua a alteração no banco de dados
+
+    def delete(self, *args, **kwargs):      # Deletar os arquivos na deleção
         if bool(self.comprovante):              # Se tiver comprovante salvo
             os.remove(self.comprovante.path)    # Deleta o arquivo
         
@@ -152,7 +188,22 @@ class Saida(models.Model):                  # Saída
     def __str__(self):                      # Nome do objeto
         return self.nome    # Retorna o nome do produto ou serviço
 
-    def delete(self, *args, **kwargs):      # Deletar os arquivos
+    def save(self, *args, **kwargs):        # Deletar os arquivos na alteração
+        try:        # Faz o teste
+            salvo = Saida.objects.get(id = self.id)       # Pega os dados salvos no banco
+
+            if salvo.comprovante != self.comprovante:       # Se o comprovante salvo não for igual o atual
+                os.remove(salvo.comprovante.path)           # Deleta o comprovante salvo
+
+            if salvo.nf != self.nf:             # Se a nota fiscal salva não for igual o atual
+                os.remove(salvo.nf.path)        # Deleta a nota fiscal salva
+
+        except:     # Caso de erro no teste
+            pass    # Não faz nada
+
+        super(Entrada, self).save(*args, **kwargs)      # Continua a alteração no banco de dados
+
+    def delete(self, *args, **kwargs):      # Deletar os arquivos na deleção
         if bool(self.comprovante):              # Se tiver comprovante salvo
             os.remove(self.comprovante.path)    # Deleta o arquivo
         

@@ -2,11 +2,12 @@ from django.shortcuts import render
 
 from .models import *
 from .forms import *
+from django.contrib.auth.models import User
 
 import pandas as pd
 from decimal import Decimal
 import os
-from datetime import datetime
+from datetime import datetime, date
 from reportlab.pdfgen import canvas
 from django.conf import settings
 from pathlib import Path
@@ -25,33 +26,32 @@ def avulso(request, acao):
             entrada = EntradaAvulsa()
             entrada.congregacao = Congregacao.objects.get(id = request.POST['congregacao'])
             entrada.data = convertDate(request.POST['data'])
+            entrada.transacao = Transacao.objects.get(id = request.POST['transacao'])
 
             if 'descricao' in request.POST:
-                entrada.descricao = request.POST['descricao']
+                entrada.anotacao = request.POST['descricao']
 
             entrada.valor = request.POST['valor']
 
             if 'comprovante' in request.FILES:
                 entrada.comprovante = request.FILES['comprovante']
 
-            entrada.administrador = Administrador.objects.get(id = 1)
+            entrada.usuario = User.objects.get(id = 1)
 
             entrada.save()
 
     return render(request, 'financeiro/paginas/avulso/adicionar.html', {'formulario' : EntradaAvulsaForm()})
 
 def cadMembrosExcel(request):
-    #Instalar o pandas
-    #pip install pandas
     if request.method == 'POST':
-        excel = Excel()
+        # excel = Excel()
         form = FormExcel(request.POST, request.FILES)
         if form.is_valid():
-            excel.arquivo = request.FILES['arquivo']
-            excel.save() 
-            dados = pd.read_excel(excel.arquivo.path)
+            # excel.arquivo = request.FILES['arquivo']
+            # excel.save() 
+            # dados = pd.read_excel(excel.arquivo.path)
             membros = []
-            membros = dados
+            # membros = dados
             for m in range(0, membros.__len__()):
                 membrosExistente = Membro.objects.filter(CPF=membros['CPF'][m])
                 if membrosExistente.__len__() == 1:
@@ -63,7 +63,7 @@ def cadMembrosExcel(request):
                     membro.telefone = membros['TELEFONE'][m]
                     membro.profissao = membros['PROFISSAO'][m]
                     membro.save()
-            excel.delete()
+            # excel.delete()
             return render(request, 'index.html', {})
     else:
         form = FormExcel()
@@ -73,43 +73,39 @@ def categoria(request, acao):
     pagina = 0
 
     if request.method == 'POST':
-        formulario = CategoriaSaidaForm(request.POST)
+        formulario = CategoriaForm(request.POST)
 
         if formulario.is_valid():
-            categoria = CategoriaSaida()
+            categoria = Categoria()
             categoria.nome = request.POST['nome']
-            
-            if 'descricao' in request.POST:
-                categoria.descricao = request.POST['descricao']
+            categoria.tipo = request.POST['tipo']
             
             categoria.save()
 
             pagina = 1
             
-        return render(request, 'financeiro/paginas/categoria/adicionar.html', {'formulario' : CategoriaSaidaForm(), 'pagina' : pagina, 'id' : categoria.id, 'nome' : categoria.nome})
+        return render(request, 'financeiro/paginas/categoria/adicionar.html', {'formulario' : CategoriaForm(), 'pagina' : pagina, 'id' : categoria.id, 'nome' : categoria.nome})
 
-    return render(request, 'financeiro/paginas/categoria/adicionar.html', {'formulario' : CategoriaSaidaForm(), 'pagina' : pagina})
+    return render(request, 'financeiro/paginas/categoria/adicionar.html', {'formulario' : CategoriaForm(), 'pagina' : pagina})
 
 def catEntrada(request, acao):
     pagina = 0
 
     if request.method == 'POST':
-        formulario = CategoriaEntradaForm(request.POST)
+        formulario = CategoriaForm(request.POST)
 
         if formulario.is_valid():
-            categoria = CategoriaEntrada()
+            categoria = Categoria()
             categoria.nome = request.POST['nome']
-            
-            if 'descricao' in request.POST:
-                categoria.descricao = request.POST['descricao']
-            
+            categoria.tipo = request.POST['tipo']
+        
             categoria.save()
 
             pagina = 1
             
-        return render(request, 'financeiro/paginas/catentrada/adicionar.html', {'formulario' : CategoriaEntradaForm(), 'pagina' : pagina, 'id' : categoria.id, 'nome' : categoria.nome})
+        return render(request, 'financeiro/paginas/catentrada/adicionar.html', {'formulario' : CategoriaForm(), 'pagina' : pagina, 'id' : categoria.id, 'nome' : categoria.nome})
 
-    return render(request, 'financeiro/paginas/catentrada/adicionar.html', {'formulario' : CategoriaEntradaForm(), 'pagina' : pagina})
+    return render(request, 'financeiro/paginas/catentrada/adicionar.html', {'formulario' : CategoriaForm(), 'pagina' : pagina})
 
 def congregacao(request, acao):
     pagina = 0
@@ -121,7 +117,6 @@ def congregacao(request, acao):
 
         if formulario.is_valid():
             congregacao.nome = request.POST['nome']
-            congregacao.localidade = request.POST['localidade']
             congregacao.save()
 
             pagina = 1
@@ -137,8 +132,16 @@ def emissao(request, acao):
         if formulario.is_valid():
             entrada = EntradaMissao()
             entrada.missao = Missao.objects.get(id = request.POST['missao'])
+            entrada.transacao = Transacao.objects.get(id = request.POST['transacao'])
+            entrada.usuario = User.objects.get(id = 1)
             entrada.valor = request.POST['valor']
             entrada.data = convertDate(request.POST['data'])
+
+            if 'anotacao' in request.POST:
+                entrada.anotacao = request.POST['anotacao']
+
+            if 'comprovante' in request.FILES:
+                entrada.comprovante = request.FILES['comprovante']
 
             entrada.save()
 
@@ -148,29 +151,26 @@ def empresa(request, acao):
     pagina = 0
 
     if request.method == 'POST':
-        formulario = EmpresaForm(request.POST)
+        formulario = FornecedorForm(request.POST)
 
         if formulario.is_valid():
-            empresa = Empresa()
-            empresa.CPF_CNPJ = request.POST['CPF_CNPJ']
-            empresa.nome = request.POST['nome']
+            fornecedor = Fornecedor()
+            fornecedor.documento = request.POST['documento']
+            fornecedor.nome = request.POST['nome']
             
             if 'descricao' in request.POST:
-                empresa.descricao = request.POST['descricao']
+                fornecedor.descricao = request.POST['descricao']
             
             if 'endereco' in request.POST:
-                empresa.endereco = request.POST['endereco']
+                fornecedor.endereco = request.POST['endereco']
 
-            if 'cidade' in request.POST:
-                empresa.cidade = request.POST['cidade']
-
-            empresa.save()
+            fornecedor.save()
 
             pagina = 1
             
-        return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : EmpresaForm(), 'pagina' : pagina, 'id' : empresa.id, 'nome' : empresa.nome})
+        return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : FornecedorForm(), 'pagina' : pagina, 'id' : fornecedor.id, 'nome' : fornecedor.nome})
 
-    return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : EmpresaForm(), 'pagina' : pagina})
+    return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : FornecedorForm(), 'pagina' : pagina})
 
 def entrada(request, acao):
     if request.method == 'POST':
@@ -179,12 +179,12 @@ def entrada(request, acao):
         if formulario.is_valid():
             entrada = Entrada()
             entrada.congregacao = Congregacao.objects.get(id = request.POST['congregacao'])
-            entrada.categoria = CategoriaEntrada.objects.get(id = request.POST['categoria'])
-            entrada.forma_de_Entrada = Pagamento.objects.get(id = request.POST['pagamento'])
+            entrada.categoria = Categoria.objects.get(id = request.POST['categoria'])
+            entrada.transacao = Transacao.objects.get(id = request.POST['transacao'])
             entrada.membro = Membro.objects.get(id = request.POST['membro'])
 
-            if 'descricao' in request.POST:
-                entrada.descricao = request.POST['descricao']
+            if 'anotacao' in request.POST:
+                entrada.anotacao = request.POST['anotacao']
 
             entrada.valor = request.POST['valor']
             entrada.data = convertDate(request.POST['data'])
@@ -192,7 +192,7 @@ def entrada(request, acao):
             if 'comprovante' in request.FILES:
                 entrada.comprovante = request.FILES['comprovante']
 
-            entrada.administrador = Administrador.objects.get(id = 1)
+            entrada.usuario = User.objects.get(id = 1)
 
             entrada.save()
 
@@ -212,11 +212,11 @@ def membro(request, acao):
             membro.CPF = request.POST['CPF']
             membro.nome = request.POST['nome']
             
-            if 'telefone' in request.POST:
-                membro.telefone = request.POST['telefone']
+            if 'celular' in request.POST:
+                membro.celular = request.POST['celular']
             
-            if 'profissao' in request.POST:
-                membro.profissao = request.POST['profissao']
+            if 'email' in request.POST:
+                membro.email = request.POST['email']
 
             membro.save()
 
@@ -238,13 +238,14 @@ def missao(request, acao):
             missao.congregacao = Congregacao.objects.get(id = request.POST['congregacao'])
             missao.nome = request.POST['nome']
             
-            if 'descricao' in request.POST:
-                missao.descricao = request.POST['descricao']
+            if 'detalhe' in request.POST:
+                missao.detalhe = request.POST['detalhe']
 
             missao.inicio = convertDate(request.POST['inicio'])
             missao.fim = convertDate(request.POST['fim'])
             missao.meta = request.POST['meta']
-            
+            missao.andamento = True
+
             missao.save()
 
             pagina = 1
@@ -257,18 +258,18 @@ def pagamento(request, acao):
     pagina = 0
 
     if request.method == 'POST':
-        formulario = PagamentoForm(request.POST)
+        formulario = TransacaoForm(request.POST)
 
         if formulario.is_valid():
-            pagamento = Pagamento()
-            pagamento.nome = request.POST['nome']
-            pagamento.save()
+            transacao = Transacao()
+            transacao.nome = request.POST['nome']
+            transacao.save()
 
             pagina = 1
             
-        return render(request, 'financeiro/paginas/pagamento/adicionar.html', {'formulario' : PagamentoForm(), 'pagina' : pagina, 'id' : pagamento.id, 'nome' : pagamento.nome})
+        return render(request, 'financeiro/paginas/pagamento/adicionar.html', {'formulario' : TransacaoForm(), 'pagina' : pagina, 'id' : transacao.id, 'nome' : transacao.nome})
 
-    return render(request, 'financeiro/paginas/pagamento/adicionar.html', {'formulario' : PagamentoForm(), 'pagina' : pagina})
+    return render(request, 'financeiro/paginas/pagamento/adicionar.html', {'formulario' : TransacaoForm(), 'pagina' : pagina})
 
 def saida(request, acao):
     if(request.method == 'POST'):
@@ -277,9 +278,9 @@ def saida(request, acao):
         if formulario.is_valid():
             saida = Saida()
             saida.congregacao = Congregacao.objects.get(id = request.POST['congregacao'])
-            saida.categoria = CategoriaSaida.objects.get(id = request.POST['categoria'])
-            saida.forma_de_Pagamento = Pagamento.objects.get(id = request.POST['pagamento'])
-            saida.empresa = Empresa.objects.get(id = request.POST['empresa'])
+            saida.categoria = Categoria.objects.get(id = request.POST['categoria'])
+            saida.transacao = Transacao.objects.get(id = request.POST['transacao'])
+            saida.fornecedor = Fornecedor.objects.get(id = request.POST['fornecedor'])
             saida.nome = request.POST['nome']
             saida.descricao = request.POST['descricao']
             saida.valor = request.POST['valor']
@@ -289,9 +290,9 @@ def saida(request, acao):
                 saida.comprovante = request.FILES['comprovante']
 
             if('nota_fiscal' in request.FILES):
-                saida.nota_Fiscal = request.FILES['nota_fiscal']
+                saida.nf = request.FILES['nota_fiscal']
             
-            saida.administrador = Administrador.objects.get(id = 1)
+            saida.usuario = User.objects.get(id = 1)
             saida.save()
             
     return render(request, 'financeiro/paginas/saida/adicionar.html', {'formulario' : SaidaForm()})
@@ -349,7 +350,7 @@ def gerarRelatorio(request, dados, tipo):
             if str(saida.comprovante) != "":
                 if saida.descricao != None:    
                     pdf.drawString(20, 780, str(saida.descricao))
-                arquivo = "ibc_financeiro/"+str(saida.comprovante)
+                arquivo = "media/"+str(saida.comprovante)
                 pdf.drawImage(arquivo, 200, 250, width= 200, height= 400)
                 pdf.showPage()
         pdf.save()
@@ -388,9 +389,9 @@ def gerarRelatorio(request, dados, tipo):
         pdf.showPage()
         for entrada in dados:
             if str(entrada.comprovante) != "":
-                if entrada.descricao != None:    
-                    pdf.drawString(20, 780, str(entrada.descricao))
-                arquivo = "ibc_financeiro/"+str(entrada.comprovante)
+                if entrada.anotacao != None:    
+                    pdf.drawString(20, 780, str(entrada.anotacao))
+                arquivo = "media/" + str(entrada.comprovante)
                 pdf.drawImage(arquivo, 200, 250, width= 200, height= 400)
                 pdf.showPage()
         pdf.save()
@@ -621,7 +622,7 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     for saida in saidas:
         if saida.comprovante != "":
             pdf.drawString(20, 780, str(saida.nome))
-            arquivo = "ibc_financeiro/"+str(saida.comprovante)
+            arquivo = "media/"+str(saida.comprovante)
             pdf.drawImage(arquivo, 150, 250, width= 250, height= 400)
             pdf.showPage()
     pdf.save()
@@ -658,14 +659,14 @@ def listaEntrada(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
     dates.append([convertDate(request.POST['inicio']), convertDate(request.POST['fim'])])
     congregacoes = request.POST.getlist('congregacao')
-    categorias = request.POST.getlist('categoria_entrada')
-    formas = request.POST.getlist('forma')
+    categorias = request.POST.getlist('categoriaa')
+    formas = request.POST.getlist('transacao')
     membros = request.POST.getlist('membro')
 
     entradas = Entrada.objects.filter(data__range = datas).order_by('data')
     entradas = entradas.filter(congregacao__nome__in = congregacoes) if congregacoes != [] else entradas
     entradas = entradas.filter(categoria__nome__in = categorias) if categorias != [] else entradas
-    entradas = entradas.filter(forma_de_Entrada__nome__in = formas) if formas != [] else entradas
+    entradas = entradas.filter(transacao__nome__in = formas) if formas != [] else entradas
     entradas = entradas.filter(membro__nome__in = membros) if membros != [] else entradas
 
     avulsas = EntradaAvulsa.objects.filter(data__range = datas).order_by('data')
@@ -673,39 +674,29 @@ def listaEntrada(request):
 
     return list(chain(entradas, avulsas))
 
-def listaGeral(request):
-    entradas = listaEntrada(request)
-    saidas = listaSaida(request)
-
-    return list(chain(entradas, saidas))
-
 def listaMissao(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
     congregacoes = request.POST.getlist('congregacao')
     missoes = request.POST.getlist('missao')
-    andamento = True if 'andamento' in request.POST else False
-
-    print(andamento)
 
     entradas = EntradaMissao.objects.filter(data__range = datas).order_by('data')
     entradas = entradas if congregacoes == [] else entradas.filter(missao__congregacao__nome__in = congregacoes)
     entradas = entradas if missoes == [] else entradas.filter(missao__nome__in = missoes)
-    entradas = entradas if andamento == False else entradas.filter(missao__em_Andamento = andamento)
 
     return entradas
 
 def listaSaida(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
     congregacoes = request.POST.getlist('congregacao')
-    categorias = request.POST.getlist('categoria_saida')
-    pagamentos = request.POST.getlist('pagamento')
-    empresas = request.POST.getlist('empresa')
+    categorias = request.POST.getlist('categoria')
+    pagamentos = request.POST.getlist('transacao')
+    empresas = request.POST.getlist('fornecedor')
 
     saidas = Saida.objects.filter(data__range = datas).order_by('data')
     saidas = saidas.filter(congregacao__nome__in = congregacoes) if congregacoes != [] else saidas
     saidas = saidas.filter(categoria__nome__in = categorias) if categorias != [] else saidas
-    saidas = saidas.filter(forma_de_Pagamento__nome__in = pagamentos) if pagamentos != [] else saidas
-    saidas = saidas.filter(empresa__nome__in = empresas) if empresas != [] else saidas
+    saidas = saidas.filter(transacao__nome__in = pagamentos) if pagamentos != [] else saidas
+    saidas = saidas.filter(fornecedor__nome__in = empresas) if empresas != [] else saidas
 
     return saidas
 

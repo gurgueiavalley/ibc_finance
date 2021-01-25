@@ -62,8 +62,22 @@
                                 </div>
                             </div>
 
-                            {% for campo in formulario.visible_fields|slice:'1:3' %}
-                                <div class= 'col-md-6'>
+                            <div class= 'col-md-12'>
+                                <strong> {{ formulario.anotacao.label }} </strong>
+
+                                <div class= 'input-group'>
+                                    <span class= 'input-group-addon'>
+                                        <i class= 'material-icons'> {{ formulario.anotacao.help_text }} </i>
+                                    </span>
+
+                                    <div class= 'form-line'>
+                                        {{ formulario.anotacao }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% for campo in formulario.visible_fields|slice:'1:4' %}
+                                <div class= 'col-md-4'>
                                     <strong> {{ campo.label }} <b> * </b> </strong>
 
                                     <div class= 'input-group'>
@@ -77,6 +91,37 @@
                                     </div>
                                 </div>
                             {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class= 'row clearfix'>
+            <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>
+                <div class= 'card'>
+                    <div class= 'header'>
+                        <h2>
+                            Documento
+                            <small> Insira o documento que comprove a entrada. Você pode inserir depois, caso ainda não tenha </small>
+                        </h2>
+                    </div>
+
+                    <div class= 'body'>
+                        <div class= 'row clearfix'>
+                            <div class= 'col-md-12'>
+                                <strong> {{ formulario.comprovante.label }} </strong>
+
+                                <div class= 'input-group'>
+                                    <span class= 'input-group-addon'>
+                                        <i class= 'material-icons'> {{ formulario.comprovante.help_text }} </i>
+                                    </span>
+
+                                    <div class= 'file'> 
+                                        {{ formulario.comprovante }}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
