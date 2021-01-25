@@ -38,10 +38,10 @@
                                             <tr>
                                                 <td><a href="#">{% if membro.CPF %} {{membro.CPF}} {% endif %}</a></td>
                                                 <td>{{membro.nome}}</td>
-                                                <td>{% if membro.telefone %} {{membro.telefone}} {% endif %}</td>
+                                                <td>{% if membro.celular %} {{membro.celular}} {% endif %}</td>
                                                 <td id = "tabela">
-                                                    {% if membro.telefone %}
-                                                       <a href="https://api.whatsapp.com/send?phone={{membro.telefone}}" target="_blank">
+                                                    {% if membro.celular %}
+                                                       <a href="https://api.whatsapp.com/send?phone={{membro.celular}}" target="_blank">
                                                             <i id="iconTrue" class="fa fa-whatsapp" aria-hidden="true"></i>
                                                         </a>
                                                     {% endif %}
@@ -61,8 +61,8 @@
 {% endblock %}
 
 {% block JS %}    
-    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
-    <script src="{% static 'js/pages/tables/jquery-datatable.js' %}"></script>
-    <script src="{% static 'js/paginas/membro/tabela_membro.js' %}"></script>
-    <script src="{% static 'js/paginas/membro/tabela_membro.bootstrap.js' %}"></script>
+    <script src="{% static 'js/base/jquery.min.js' %}"></script>
+    <script src="{% static 'js/paginas/jquery-datatable.js' %}"></script>
+    <script src="{% static 'js/paginas/entrada/tabela_entrada.js' %}"></script>
+    <script src="{% static 'js/paginas/entrada/tabela_entrada.bootstrap.js' %}"></script>
 {% endblock %}

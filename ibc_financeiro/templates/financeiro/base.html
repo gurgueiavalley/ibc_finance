@@ -6,21 +6,22 @@
         <meta charset= 'utf-8'>
         <meta content= 'width= device-width, initial-scale= 1, maximum-scale= 1, user-scalable= no' name= 'viewport'>
 
-        <link rel= 'icon' type= 'image/png' href= "{% static 'imagens/logo.jpg' %}">
+        <link rel= 'icon' type= 'image/jpg' href= "{% static 'imagens/logo.jpg' %}">
         <title> {% block title %} {% endblock %} </title>
 
         <!-- CSS -->
         <link rel= 'stylesheet' href= 'https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext' type= 'text/css'>
         <link rel= 'stylesheet' href= 'https://fonts.googleapis.com/icon?family=Material+Icons' type= 'text/css'>
 
-        <link rel= 'stylesheet' href= "{% static 'plugins/bootstrap/css/bootstrap.css' %}">
-        <link rel= 'stylesheet' href= "{% static 'plugins/node-waves/waves.css' %}">
-        <link rel= 'stylesheet' href= "{% static 'plugins/animate-css/animate.css' %}">
+        <link rel= 'stylesheet' href= "{% static 'css/base/bootstrap.css' %}">
+        <link rel= 'stylesheet' href= "{% static 'css/base/waves.css' %}">
+        <link rel= 'stylesheet' href= "{% static 'css/base/animate.css' %}">
+        <link rel= 'stylesheet' href= "{% static 'css/base/font-awesome.min.css' %}">
         
         {% block CSS %} {% endblock %}
         
-        <link rel= 'stylesheet' href= "{% static 'css/style.css' %}">
-        <link rel= 'stylesheet' href= "{% static 'css/themes/all-themes.css' %}">
+        <link rel= 'stylesheet' href= "{% static 'css/base/style.css' %}">
+        <link rel= 'stylesheet' href= "{% static 'css/base/all-themes.css' %}">
     </head>
 
     <body class= 'theme-blue'>
@@ -268,7 +269,7 @@
             <aside id= 'leftsidebar' class= 'sidebar'>
                 <div class= 'user-info'>
                     <div class= 'image'>
-                        <img src= "{% static 'images/user.png' %}" width= '48' height= '48' alt= 'User'>
+                        <img src= "{% static 'imagens/user.png' %}" width= '48' height= '48' alt= 'User'>
                     </div>
 
                     <div class="info-container">
@@ -372,7 +373,6 @@
                             </a>
 
                             <ul class= 'ml-menu'>
-                                <li> <a href= "{% url 'cadMembrosExcel' %}"> Importar </a> </li>
                                 <li> <a href= "{% url 'listar' 'membros' %}"> Listar </a> </li>
                             </ul>
                         </li>
@@ -558,15 +558,15 @@
         </section>
         
         <!-- JS -->
-        <script src= "{% static 'plugins/jquery/jquery.min.js' %}"> </script>
-        <script src= "{% static 'plugins/bootstrap/js/bootstrap.js' %}"> </script>
-        <script src= "{% static 'plugins/bootstrap-select/js/bootstrap-select.js' %}"> </script>
-        <script src= "{% static 'plugins/jquery-slimscroll/jquery.slimscroll.js' %}"> </script>
-        <script src= "{% static 'plugins/node-waves/waves.js' %}"> </script>
+        <script src= "{% static 'js/base/jquery.min.js' %}"> </script>
+        <script src= "{% static 'js/base/bootstrap.js' %}"> </script>
+        <script src= "{% static 'js/base/bootstrap-select.js' %}"> </script>
+        <script src= "{% static 'js/base/jquery.slimscroll.js' %}"> </script>
+        <script src= "{% static 'js/base/waves.js' %}"> </script>
         
         {% block JS %} {% endblock %}
 
-        <script src= "{% static 'js/admin.js' %}"> </script>
-        <script src= "{% static 'js/demo.js' %}"> </script>
+        <script src= "{% static 'js/base/admin.js' %}"> </script>
+        <script src= "{% static 'js/base/demo.js' %}"> </script>
     </body>
 </html>

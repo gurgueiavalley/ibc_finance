@@ -451,7 +451,7 @@ def gerarRelatorio(request, dados, tipo):
         caminho = "ibc_financeiro/static/relatorio_missões.pdf"
         pdf = canvas.Canvas(caminho)
         pdf.setTitle("Relatório de Missões")
-        pdf.drawImage('ibc_financeiro/static/imagens/logo.png', 10,758,height=50, width=60)
+        pdf.drawImage('ibc_financeiro/static/imagens/logo.jpg', 10,758,height=50, width=60)
         cabecalhoRelatorio(pdf, str(getData()))
         pdf.drawString(275,755,"Missões")
         pdf.line(272, 752, 317, 752)
