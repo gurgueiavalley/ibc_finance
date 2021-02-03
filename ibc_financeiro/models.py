@@ -201,7 +201,7 @@ class Saida(models.Model):                  # Saída
         except:     # Caso de erro no teste
             pass    # Não faz nada
 
-        super(Entrada, self).save(*args, **kwargs)      # Continua a alteração no banco de dados
+        super(Saida, self).save(*args, **kwargs)      # Continua a alteração no banco de dados
 
     def delete(self, *args, **kwargs):      # Deletar os arquivos na deleção
         if bool(self.comprovante):              # Se tiver comprovante salvo

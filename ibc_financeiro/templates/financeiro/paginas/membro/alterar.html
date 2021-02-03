@@ -1,0 +1,121 @@
+{% extends 'financeiro/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    {% block titulo %}
+        Alterar Membro
+    {% endblock %}
+{% endblock %}
+
+{% block CSS %}
+    <link rel= 'stylesheet' href= 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.min.css'>
+    
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-datepicker/bootstrap-datepicker.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/waitme/waitMe.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-select/bootstrap-select.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/dropzone/dropzone.css' %}">
+
+    <link rel= 'stylesheet' href= "{% static 'css/paginas/saida/saida.css' %}">
+
+{% endblock %}
+
+{% block dinamico %}
+    <form method= 'POST' action= "{% url 'alterar' 'membro' membro.id %}" id= 'formulario'>
+        {% csrf_token %}
+        
+        <div class= 'row clearfix'>
+            <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>   
+                <div class= 'card'>
+                    <div class= 'header'>
+                        <h2>
+                            Dados
+                            <small> Click nos campos que deseja fazer alterações. Os dados com <b> * </b> são obrigatórios </small>
+                        </h2>
+                    </div>
+                    
+                    <div class= 'body'>
+                        <div class= 'row clearfix'>
+                            <div class= 'col-md-6'>
+                                <strong> {{ formulario.CPF.label }} </strong>
+
+                                <div class= 'input-group'>
+                                    <span class= 'input-group-addon'>
+                                        <i class= 'material-icons'> {{ formulario.CPF.help_text }} </i>
+                                    </span>
+
+                                    <div class= 'form-line'>
+                                        {{ formulario.CPF }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class= 'col-md-6'>
+                                <strong> {{ formulario.nome.label }} <b> * </b> </strong>
+
+                                <div class= 'input-group'>
+                                    <span class= 'input-group-addon'>
+                                        <i class= 'material-icons'> {{ formulario.nome.help_text }} </i>
+                                    </span>
+
+                                    <div class= 'form-line'>
+                                        {{ formulario.nome }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% for campo in formulario.visible_fields|slice:'2:6' %}
+                                <div class= 'col-md-6'>
+                                    <strong> {{ campo.label }} </strong>
+
+                                    <div class= 'input-group'>
+                                        <span class= 'input-group-addon'>
+                                            <i class= 'material-icons'> {{ campo.help_text }} </i>
+                                        </span>
+
+                                        <div class= 'form-line'>
+                                            {{ campo }}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="width: 100%; display: flex; justify-content: space-between;">
+            <div style="text-align: left;">
+                <button class= 'btn btn-success btn-lg waves-effect'>
+                    <i class= 'material-icons'> update </i>
+                    <span> ALTERAR </span>
+                </button>
+            </div> 
+            <div style="text-align: right;">
+                <button class= 'btn btn-danger btn-lg waves-effect' onclick="window.confirm('Deseja excluir ?');">
+                    <i class= 'material-icons'> delete </i>
+                    <span> DELETAR </span>
+                </button>
+            </div>
+        </div>  
+    </form>
+    
+{% endblock %}
+
+{% block JS %}
+    <script src= "{% static 'js/plugins/autosize/autosize.js' %}"> </script>
+    <script src= "{% static 'js/plugins/momentjs/moment.js' %}"> </script>
+    <script src= "{% static 'js/plugins/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.js' %}"> </script>
+    <script src= "{% static 'js/plugins/bootstrap-datepicker/bootstrap-datepicker.js' %}"> </script>
+
+    <script src= 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/pt-br.min.js'> </script>
+
+    {% comment %} Preenchendo os campos do formulario {% endcomment %}
+    <script>
+        document.getElementById("id_CPF").value = '{{membro.CPF}}';
+        document.getElementById("id_nome").value = '{{membro.nome}}';
+        document.getElementById("id_celular").value = '{{membro.celular}}';
+        document.getElementById("id_email").value = '{{membro.email}}';
+    </script>
+{% endblock %}

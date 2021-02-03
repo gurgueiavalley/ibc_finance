@@ -35,7 +35,7 @@
                                     <tbody>
                                         {% for saida in saidas %}
                                             <tr>
-                                                <td><a href="#">{{saida.valor}}</a></td>
+                                                <td><a href="{%url 'alterar' 'saida' saida.pk %}">{{saida.valor}}</a></td>
                                                 <td>{{saida.nome}}</td>
                                                 <td>{{saida.congregacao}}</td>
                                                 <td>{{saida.data}}</td>

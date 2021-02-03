@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from .models import *
 from .forms import *
@@ -43,6 +43,48 @@ def avulso(request, acao):
         tipo = 'avulso'
         return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioEntradaForm()})
     return render(request, 'financeiro/paginas/avulso/adicionar.html', {'formulario' : EntradaAvulsaForm()})
+
+def alterar(request, tipo, pk):
+    if tipo == 'membro':
+        membro = Membro.objects.get(pk=pk)
+        if request.method == 'POST':
+            formulario = MembroForm(request.POST)
+            if formulario.is_valid():
+                membro.CPF = request.POST['CPF']
+                membro.nome = request.POST['nome']
+                membro.celular = request.POST['celular']
+                membro.email = request.POST['email']
+                membro.save()
+            return redirect('listar', tipo='membros')
+        else:
+            formulario = MembroForm()
+            return render(request, 'financeiro/paginas/membro/alterar.html', {'formulario': formulario, 'membro': membro})
+    elif tipo == 'saida':
+        saida = Saida.objects.get(pk=pk)
+        if request.method == 'POST':
+            formulario = SaidaForm(request.POST)
+            if formulario.is_valid():
+                saida.congregacao = Congregacao.objects.get(id = request.POST['congregacao'])
+                saida.categoria = Categoria.objects.get(id = request.POST['categoria'])
+                saida.transacao = Transacao.objects.get(id = request.POST['transacao'])
+                saida.fornecedor = Fornecedor.objects.get(id = request.POST['fornecedor'])
+                saida.nome = request.POST['nome']
+                saida.descricao = request.POST['descricao']
+                saida.valor = request.POST['valor']
+                saida.data = convertDate(request.POST['data'])
+
+                if('comprovante' in request.FILES):
+                    saida.comprovante = request.FILES['comprovante']
+
+                if('nota_fiscal' in request.FILES):
+                    saida.nf = request.FILES['nota_fiscal']
+                
+                saida.usuario = User.objects.get(id = 1)
+                saida.save()
+            return redirect('index')
+        else:
+            formulario = SaidaForm()
+            return render(request, 'financeiro/paginas/saida/alterar.html', {'formulario': formulario, 'saida': saida})
 
 def cadMembrosExcel(request):
     if request.method == 'POST':
@@ -207,7 +249,6 @@ def index(request):
 
 def membro(request, acao):
     pagina = 0
-
     if request.method == 'POST':
         formulario = MembroForm(request.POST)
 

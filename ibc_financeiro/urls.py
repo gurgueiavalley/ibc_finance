@@ -17,4 +17,5 @@ urlpatterns = [
     path('avulso/<acao>', avulso, name = 'avulso'),                         # Avulso
     path('emissao/<acao>', emissao, name = 'emissao'),                      # Entrada de Missão
     path('missao/<acao>', missao, name = 'missao'),                         # Missão
+    path('alterar/<tipo>/<int:pk>', alterar, name = 'alterar'),                         # Alterar *
 ]

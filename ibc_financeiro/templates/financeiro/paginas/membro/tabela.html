@@ -36,7 +36,7 @@
                                     <tbody>
                                         {% for membro in membros %}
                                             <tr>
-                                                <td><a href="#">{% if membro.CPF %} {{membro.CPF}} {% endif %}</a></td>
+                                                <td><a href="{%url 'alterar' 'membro' membro.pk%}">{% if membro.CPF %} {{membro.CPF}} {% endif %}</a></td>
                                                 <td>{{membro.nome}}</td>
                                                 <td>{% if membro.celular %} {{membro.celular}} {% endif %}</td>
                                                 <td id = "tabela">

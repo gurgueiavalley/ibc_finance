@@ -1,0 +1,163 @@
+{% extends 'financeiro/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    {% block titulo %}
+        Alterar Saída
+    {% endblock %}
+{% endblock %}
+
+{% block CSS %}
+    <link rel= 'stylesheet' href= 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.min.css'>
+    
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-datepicker/bootstrap-datepicker.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/waitme/waitMe.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-select/bootstrap-select.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/dropzone/dropzone.css' %}">
+
+    <link rel= 'stylesheet' href= "{% static 'css/paginas/saida/saida.css' %}">
+{% endblock %}
+
+{% block dinamico %}
+    <form method= 'POST' action= "{% url 'alterar' 'saida' saida.pk %}" enctype= 'multipart/form-data' id= 'formulario'>
+        {% csrf_token %}
+        
+        <div class= 'row clearfix'>
+            <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>   
+                <div class= 'card'>
+                    <div class= 'header'>
+                        <h2>
+                            Dados
+                            <small> Insira os dados para adicionar uma nova saída. Os dados com <b> * </b> são obrigatórios </small>
+                        </h2>
+                    </div>
+                    
+                    <div class= 'body'>
+                        <div class= 'row clearfix'>
+                            {% for campo in formulario.visible_fields|slice:'0:4' %}
+                                <div class= 'col-md-3'>
+                                    <div class= 'col-md-10 titulo'>
+                                        <strong> {{ campo.label }} <b> * </b> </strong>
+                                    </div>
+                                    
+                                    <div class= 'col-md-2 text-right titulo'>
+                                        <i class= 'material-icons adicionar' onclick= 'adicionar("{{ campo.label }}")'> add </i>
+                                    </div>
+
+                                    <div class= 'input-group'>
+                                        <span class= 'input-group-addon'>
+                                            <i class= 'material-icons'> {{ campo.help_text }} </i>
+                                        </span>
+
+                                        {{ campo }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                            {% for campo in formulario.visible_fields|slice:'4:8' %}
+                                <div class= 'col-md-6'>
+                                    <strong> {{ campo.label }} <b> * </b> </strong>
+
+                                    <div class= 'input-group'>
+                                        <span class= 'input-group-addon'>
+                                            <i class= 'material-icons'> {{ campo.help_text }} </i>
+                                        </span>
+
+                                        <div class= 'form-line'>
+                                            {{ campo }}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+        
+        <div class= 'row clearfix'>
+            <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>
+                <div class= 'card'>
+                    <div class= 'header'>
+                        <h2>
+                            Documentos
+                            <small> Insira os documentos que comprove a compra e o pagamento. Você pode inserir depois, caso ainda não tenha </small>
+                        </h2>
+                    </div>
+
+                    <div class= 'body'>
+                        <div class= 'row clearfix'>
+                            {% for campo in formulario.visible_fields|slice:'8:10' %}
+                                <div class= 'col-md-6'>
+                                    <strong> {{ campo.label }} </strong>
+                                    {% if campo.label == "Comprovante" and saida.comprovante %}
+                                        <br>
+                                        <strong style="font-size: 10px;">Atualmente: <a href="#">{{saida.comprovante}}</a></strong>
+                                    {% elif campo.label == "Nota Fiscal" and saida.nf %}
+                                        <br>
+                                        <strong style="font-size: 10px;">Atualmente: <a href="#">{{saida.nf}}</a></strong>
+                                    {% endif %}
+                                    <div class= 'input-group'>
+                                        <span class= 'input-group-addon'>
+                                            <i class= 'material-icons'> {{ campo.help_text }} </i>
+                                        </span>
+                                        
+                                        <div class= 'file'> 
+                                            {{ campo }}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class= 'btn btn-success btn-lg waves-effect'>
+            <i class= 'material-icons'> update </i>
+            <span> ALTERAR SAÍDA </span>
+        </button>
+    </form>
+{% endblock %}
+
+{% block JS %}
+    <script src= "{% static 'js/plugins/autosize/autosize.js' %}"> </script>
+    <script src= "{% static 'js/plugins/momentjs/moment.js' %}"> </script>
+    <script src= "{% static 'js/plugins/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.js' %}"> </script>
+    <script src= "{% static 'js/plugins/bootstrap-datepicker/bootstrap-datepicker.js' %}"> </script>
+
+    <script src= 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/pt-br.min.js'> </script>
+
+    <script src= "{% static 'js/paginas/saida/saida.js' %}"> </script>
+    
+    {% comment %} Preenchendo os campos do formulario {% endcomment %}
+    <script>
+        document.getElementById('id_congregacao').value = '{{saida.congregacao.id}}'
+        document.getElementById('id_categoria').value = '{{saida.categoria.id}}'
+        document.getElementById('id_transacao').value = '{{saida.transacao.id}}'
+        document.getElementById('id_fornecedor').value = '{{saida.fornecedor.id}}'
+        document.getElementById('id_nome').value = '{{saida.nome}}'
+        document.getElementById('id_descricao').value = '{{saida.descricao}}'
+        document.getElementById('id_valor').value = parseFloat('{{saida.valor}}')
+        document.getElementById('id_data').value = '{{ saida.data.day }}/{{ saida.data.month }}/{{ saida.data.year }}'
+    </script>
+
+    <script>
+        const adicionar = (classe) => {
+            if(classe == 'Congregação')
+                window.open("{% url 'congregacao' 'adicionar' %}", '', 'popup')
+            
+            else if(classe == 'Categoria')
+                window.open("{% url 'categoria' 'adicionar' %}", '', 'popup')
+
+            else if(classe == 'Forma de Pagamento')
+                window.open("{% url 'pagamento' 'adicionar' %}", '', 'popup')
+            
+            else if(classe == 'Fornecedor')
+                window.open("{% url 'empresa' 'adicionar' %}", '', 'popup')
+        }
+    </script>
+{% endblock %}
