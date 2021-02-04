@@ -109,8 +109,14 @@
     <script src= "{% static 'js/plugins/bootstrap-datepicker/bootstrap-datepicker.js' %}"> </script>
 
     <script src= 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/pt-br.min.js'> </script>
+    <script src= 'https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js'> </script>     <!-- JQuery Mask -->
 
     {% comment %} <script src= "{% static 'js/paginas/saida/saida.js' %}"> </script> {% endcomment %}
+
+    <script>
+        $('#id_CPF').mask('000.000.000-00')
+        $('#id_celular').mask('00 0 0000-0000')
+    </script>
 
     <script>
         if({{ pagina }} == 1){

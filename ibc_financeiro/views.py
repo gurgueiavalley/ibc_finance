@@ -44,48 +44,6 @@ def avulso(request, acao):
         return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioEntradaForm()})
     return render(request, 'financeiro/paginas/avulso/adicionar.html', {'formulario' : EntradaAvulsaForm()})
 
-def alterar(request, tipo, pk):
-    if tipo == 'membro':
-        membro = Membro.objects.get(pk=pk)
-        if request.method == 'POST':
-            formulario = MembroForm(request.POST)
-            if formulario.is_valid():
-                membro.CPF = request.POST['CPF']
-                membro.nome = request.POST['nome']
-                membro.celular = request.POST['celular']
-                membro.email = request.POST['email']
-                membro.save()
-            return redirect('listar', tipo='membros')
-        else:
-            formulario = MembroForm()
-            return render(request, 'financeiro/paginas/membro/alterar.html', {'formulario': formulario, 'membro': membro})
-    elif tipo == 'saida':
-        saida = Saida.objects.get(pk=pk)
-        if request.method == 'POST':
-            formulario = SaidaForm(request.POST)
-            if formulario.is_valid():
-                saida.congregacao = Congregacao.objects.get(id = request.POST['congregacao'])
-                saida.categoria = Categoria.objects.get(id = request.POST['categoria'])
-                saida.transacao = Transacao.objects.get(id = request.POST['transacao'])
-                saida.fornecedor = Fornecedor.objects.get(id = request.POST['fornecedor'])
-                saida.nome = request.POST['nome']
-                saida.descricao = request.POST['descricao']
-                saida.valor = request.POST['valor']
-                saida.data = convertDate(request.POST['data'])
-
-                if('comprovante' in request.FILES):
-                    saida.comprovante = request.FILES['comprovante']
-
-                if('nota_fiscal' in request.FILES):
-                    saida.nf = request.FILES['nota_fiscal']
-                
-                saida.usuario = User.objects.get(id = 1)
-                saida.save()
-            return redirect('index')
-        else:
-            formulario = SaidaForm()
-            return render(request, 'financeiro/paginas/saida/alterar.html', {'formulario': formulario, 'saida': saida})
-
 def cadMembrosExcel(request):
     if request.method == 'POST':
         # excel = Excel()
@@ -122,7 +80,7 @@ def categoria(request, acao):
         if formulario.is_valid():
             categoria = Categoria()
             categoria.nome = request.POST['nome']
-            categoria.tipo = request.POST['tipo']
+            categoria.tipo = 'SAÍDA'
             
             categoria.save()
 
@@ -141,7 +99,7 @@ def catEntrada(request, acao):
         if formulario.is_valid():
             categoria = Categoria()
             categoria.nome = request.POST['nome']
-            categoria.tipo = request.POST['tipo']
+            categoria.tipo = 'ENTRADA'
         
             categoria.save()
 
@@ -212,7 +170,7 @@ def empresa(request, acao):
 
             pagina = 1
             
-        return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : FornecedorForm(), 'pagina' : pagina, 'id' : fornecedor.id, 'nome' : fornecedor.nome})
+            return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : FornecedorForm(), 'pagina' : pagina, 'id' : fornecedor.id, 'nome' : fornecedor.nome})
 
     return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : FornecedorForm(), 'pagina' : pagina})
 
@@ -248,6 +206,23 @@ def index(request):
     return render(request, 'financeiro/index.html')
 
 def membro(request, acao):
+    if acao == 'alterar':
+        membro = Membro.objects.get(id = request.GET.get('id'))
+
+        if request.method == 'POST':
+            formulario = MembroForm(request.POST)
+            if formulario.is_valid():
+                membro.CPF = request.POST['CPF']
+                membro.nome = request.POST['nome']
+                membro.celular = request.POST['celular']
+                membro.email = request.POST['email']
+                membro.save()
+            return redirect('listar', tipo='membros')
+        
+        else:
+            return render(request, 'financeiro/paginas/membro/alterar.html', {'formulario': MembroForm(), 'membro': membro})
+    
+    
     pagina = 0
     if request.method == 'POST':
         formulario = MembroForm(request.POST)
@@ -321,6 +296,35 @@ def pagamento(request, acao):
     return render(request, 'financeiro/paginas/pagamento/adicionar.html', {'formulario' : TransacaoForm(), 'pagina' : pagina})
 
 def saida(request, acao):
+    if acao == 'alterar':
+        saida = Saida.objects.get(id = request.GET.get('id'))
+
+        if request.method == 'POST':
+            formulario = SaidaForm(request.POST)
+
+            if formulario.is_valid():
+                saida.congregacao = Congregacao.objects.get(id = request.POST['congregacao'])
+                saida.categoria = Categoria.objects.get(id = request.POST['categoria'])
+                saida.transacao = Transacao.objects.get(id = request.POST['transacao'])
+                saida.fornecedor = Fornecedor.objects.get(id = request.POST['fornecedor'])
+                saida.nome = request.POST['nome']
+                saida.descricao = request.POST['descricao']
+                saida.valor = request.POST['valor']
+                saida.data = convertDate(request.POST['data'])
+
+                if('comprovante' in request.FILES):
+                    saida.comprovante = request.FILES['comprovante']
+
+                if('nota_fiscal' in request.FILES):
+                    saida.nf = request.FILES['nota_fiscal']
+                
+                saida.usuario = User.objects.get(id = 1)
+                saida.save()
+            return redirect('index')
+
+        return render(request, 'financeiro/paginas/saida/alterar.html', {'formulario': SaidaForm(), 'saida': saida})
+
+
     if(request.method == 'POST'):
         formulario = SaidaForm(request.POST, request.FILES)
 
@@ -743,7 +747,7 @@ def listaEntrada(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
     dates.append([convertDate(request.POST['inicio']), convertDate(request.POST['fim'])])
     congregacoes = request.POST.getlist('congregacao')
-    categorias = request.POST.getlist('categoriaa')
+    categorias = request.POST.getlist('categoria_entrada')
     formas = request.POST.getlist('transacao')
     membros = request.POST.getlist('membro')
 
@@ -753,10 +757,13 @@ def listaEntrada(request):
     entradas = entradas.filter(transacao__nome__in = formas) if formas != [] else entradas
     entradas = entradas.filter(membro__nome__in = membros) if membros != [] else entradas
 
-    avulsas = EntradaAvulsa.objects.filter(data__range = datas).order_by('data')
-    avulsas = avulsas.filter(congregacao__nome__in = congregacoes) if congregacoes != [] else avulsas
+    if categorias == []:
+        avulsas = EntradaAvulsa.objects.filter(data__range = datas).order_by('data')
+        avulsas = avulsas.filter(congregacao__nome__in = congregacoes) if congregacoes != [] else avulsas
 
-    return list(chain(entradas, avulsas))
+        return list(chain(entradas, avulsas))
+
+    return entradas
 
 def listaMissao(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]

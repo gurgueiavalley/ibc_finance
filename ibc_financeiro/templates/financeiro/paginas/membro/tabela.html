@@ -36,13 +36,14 @@
                                     <tbody>
                                         {% for membro in membros %}
                                             <tr>
-                                                <td><a href="{%url 'alterar' 'membro' membro.pk%}">{% if membro.CPF %} {{membro.CPF}} {% endif %}</a></td>
+                                                <td><a href="{%url 'membro' 'alterar' %}?id={{membro.pk}}">{% if membro.CPF %} {{membro.CPF}} {% endif %}</a></td>
                                                 <td>{{membro.nome}}</td>
                                                 <td>{% if membro.celular %} {{membro.celular}} {% endif %}</td>
-                                                <td id = "tabela">
+                                                
+                                                <td id = 'tabela'>
                                                     {% if membro.celular %}
-                                                       <a href="https://api.whatsapp.com/send?phone={{membro.celular}}" target="_blank">
-                                                            <i id="iconTrue" class="fa fa-whatsapp" aria-hidden="true"></i>
+                                                        <a style= 'font-size: 17px' href= 'https://api.whatsapp.com/send?phone=+55{{ membro.celular|cut:" "|cut:"-" }}' target= '_blank'>
+                                                            <i class= 'fa fa-whatsapp'> </i>
                                                         </a>
                                                     {% endif %}
                                                 </td>
