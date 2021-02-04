@@ -39,7 +39,7 @@ class EntradaForm(forms.Form):
     anotacao.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Detalhe ou descrição breve da entrada', 'autocomplete' : 'off', 'maxlenght' : '100'}
 
     valor = forms.DecimalField(label = 'Valor (R$)', help_text = 'monetization_on', max_digits = 12, decimal_places = 2)
-    valor.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Valor da entrada', 'min' : '0', 'step' : '0.01'}
+    valor.widget.attrs = {'class' : 'form-control', 'autocomplete' : 'off', 'placeholder' : 'Valor da entrada', 'min' : '0', 'step' : '0.01'}
 
     data = forms.DateField(label = 'Data', help_text = 'event')
     data.widget.attrs = {'class' : 'form-control datepicker', 'placeholder' : 'Data que foi recebido a entrada'}
@@ -58,7 +58,7 @@ class EntradaAvulsaForm(forms.Form):
     descricao.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Detalhe ou descrição breve da entrada', 'autocomplete' : 'off', 'maxlenght' : '100'}
 
     valor = forms.DecimalField(label = 'Valor (R$)', help_text = 'monetization_on', max_digits = 12, decimal_places = 2)
-    valor.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Valor da entrada', 'min' : '0', 'step' : '0.01'}
+    valor.widget.attrs = {'class' : 'form-control', 'autocomplete' : 'off', 'placeholder' : 'Valor da entrada', 'min' : '0', 'step' : '0.01'}
 
     data = forms.DateField(label = 'Data', help_text = 'event')
     data.widget.attrs = {'class' : 'form-control datepicker', 'placeholder' : 'Data que foi recebido a entrada'}
@@ -74,7 +74,7 @@ class EntradaMissaoForm(forms.Form):
     transacao.widget.attrs = {'class' : 'form-control'}
 
     valor = forms.DecimalField(label = 'Valor (R$)', help_text = 'monetization_on', max_digits = 12, decimal_places = 2)
-    valor.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Valor da entrada', 'min' : '0', 'step' : '0.01'}
+    valor.widget.attrs = {'class' : 'form-control', 'autocomplete' : 'off', 'placeholder' : 'Valor da entrada', 'min' : '0', 'step' : '0.01'}
 
     data = forms.DateField(label = 'Data', help_text = 'event')
     data.widget.attrs = {'class' : 'form-control datepicker', 'placeholder' : 'Data que foi recebido a entrada'}
@@ -115,7 +115,7 @@ class MissaoForm(forms.Form):
     fim.widget.attrs = {'class' : 'form-control datepicker', 'placeholder' : 'Data do fim da missão'}
 
     meta = forms.DecimalField(label = 'Meta (R$)', help_text = 'monetization_on', max_digits = 12, decimal_places = 3)
-    meta.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Valor esperado de arrecadação', 'min' : '0', 'step' : '0.01'}
+    meta.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Valor esperado de arrecadação', 'autocomplete' : 'off', 'min' : '0', 'step' : '0.01'}
 
 class TransacaoForm(forms.Form):
     nome = forms.CharField(label = 'Nome', help_text = 'credit_card', max_length = 25)
@@ -123,10 +123,10 @@ class TransacaoForm(forms.Form):
 
 class RelatorioEntradaForm(forms.Form):
     inicio = forms.DateField(label = 'De:')
-    inicio.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data'}
+    inicio.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data', 'autocomplete' : 'off'}
 
     fim = forms.DateField(label = 'Até:')
-    fim.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data'}
+    fim.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data', 'autocomplete' : 'off'}
 
     congregacao = forms.ModelMultipleChoiceField(label = 'Congregações', required = False, queryset = Congregacao.objects.all().order_by('nome'), to_field_name = 'nome')
     congregacao.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhuma selecionada'}
@@ -142,10 +142,10 @@ class RelatorioEntradaForm(forms.Form):
 
 class RelatorioMissaoForm(forms.Form):
     inicio = forms.DateField(label = 'De:')
-    inicio.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data'}
+    inicio.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data', 'autocomplete' : 'off'}
 
     fim = forms.DateField(label = 'Até:')
-    fim.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data'}
+    fim.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data', 'autocomplete' : 'off'}
 
     congregacao = forms.ModelMultipleChoiceField(label = 'Congregações', required = False, queryset = Congregacao.objects.all().order_by('nome'), to_field_name = 'nome')
     congregacao.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhuma selecionada'}
@@ -155,10 +155,10 @@ class RelatorioMissaoForm(forms.Form):
 
 class RelatorioSaidaForm(forms.Form):
     inicio = forms.DateField(label = 'De:')
-    inicio.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data'}
+    inicio.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data', 'autocomplete' : 'off'}
 
     fim = forms.DateField(label = 'Até:')
-    fim.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data'}
+    fim.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data', 'autocomplete' : 'off'}
 
     congregacao = forms.ModelMultipleChoiceField(label = 'Congregações', required = False, queryset = Congregacao.objects.all().order_by('nome'), to_field_name = 'nome')
     congregacao.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhuma selecionada'}
@@ -174,10 +174,10 @@ class RelatorioSaidaForm(forms.Form):
 
 class RelatorioGeralForm(forms.Form):
     inicio = forms.DateField(label = 'De:')
-    inicio.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data'}
+    inicio.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data', 'autocomplete' : 'off'}
 
     fim = forms.DateField(label = 'Até:')
-    fim.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data'}
+    fim.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data', 'autocomplete' : 'off'}
 
     congregacao = forms.ModelMultipleChoiceField(label = 'Congregações', required = False, queryset = Congregacao.objects.all().order_by('nome'), to_field_name = 'nome')
     congregacao.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhuma selecionada'}
@@ -217,7 +217,7 @@ class SaidaForm(forms.Form):
     descricao.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Descrição breve do produto ou serviço', 'autocomplete' : 'off'}
 
     valor = forms.DecimalField(label = 'Valor (R$)', help_text = 'monetization_on', max_digits = 12, decimal_places = 2)
-    valor.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Valor do produto ou serviço', 'min' : '0', 'step' : '0.01'}
+    valor.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Valor do produto ou serviço', 'min' : '0', 'step' : '0.01', 'autocomplete' : 'off'}
 
     data = forms.DateField(label = 'Data', help_text = 'event')
     data.widget.attrs = {'class' : 'form-control datepicker', 'placeholder' : 'Data que foi realizado o pagamento', 'format' : '%d/%m/%Y'}
@@ -227,7 +227,3 @@ class SaidaForm(forms.Form):
 
     nota_fiscal = forms.FileField(label = 'Nota Fiscal', help_text = 'sticky_note_2', required = False)
     nota_fiscal.widget.attrs = {'accept' : '.jpg, .jpeg, .png, .pdf'}
-
-    class Meta:
-        model = Saida
-        fields = '__all__'
