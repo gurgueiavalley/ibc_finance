@@ -87,13 +87,13 @@ class EntradaMissaoForm(forms.Form):
    
 class MembroForm(forms.Form):
     CPF = forms.CharField(label = 'CPF', help_text = 'fingerprint', max_length = 15, required = False)
-    CPF.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Número do CPF', 'autocomplete' : 'off', 'maxlength' : '15'}
+    CPF.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Número do CPF', 'autocomplete' : 'off', 'minlength' : '15', 'maxlength' : '15'}
 
     nome = forms.CharField(label = 'Nome', help_text = 'perm_identity', max_length = 75)
     nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome do membro', 'autocomplete' : 'off', 'maxlength' : '75'}
 
     celular = forms.CharField(label = 'Celular', help_text = 'smartphone', max_length = 14, required = False)
-    celular.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Número do celular', 'autocomplete' : 'off', 'maxlength' : '14'}
+    celular.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Número do celular', 'autocomplete' : 'off', 'minlength' : '14' , 'maxlength' : '14'}
 
     email = forms.EmailField(label = 'E-mail', help_text = 'mail', max_length = 45, required = False)
     email.widget.attrs = {'class' : 'form-control', 'placeholder' : 'E-mail', 'autocomplete' : 'off', 'maxlength' : '50'}
