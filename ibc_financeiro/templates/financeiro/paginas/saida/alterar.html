@@ -133,8 +133,8 @@
 
     <script src= "{% static 'js/paginas/saida/saida.js' %}"> </script>
     
-    {% comment %} Preenchendo os campos do formulario {% endcomment %}
-    <script>
+    
+    <script>        // Preenchendo os campos do formulario
         document.getElementById('id_congregacao').value = '{{saida.congregacao.id}}'
         document.getElementById('id_categoria').value = '{{saida.categoria.id}}'
         document.getElementById('id_transacao').value = '{{saida.transacao.id}}'

@@ -19,6 +19,12 @@
 
     <link rel= 'stylesheet' href= "{% static 'css/paginas/saida/saida.css' %}">
 
+    <style>
+        .btn-danger{
+            margin-top: -15px;
+        }
+    </style>
+
 {% endblock %}
 
 {% block dinamico %}
@@ -85,20 +91,20 @@
                 </div>
             </div>
         </div>
-        <div style="width: 100%; display: flex; justify-content: space-between;">
-            <div style="text-align: left;">
-                <button class= 'btn btn-success btn-lg waves-effect'>
-                    <i class= 'material-icons'> update </i>
-                    <span> ALTERAR </span>
-                </button>
-            </div> 
-            <div style="text-align: right;">
-                <button class= 'btn btn-danger btn-lg waves-effect' onclick="window.confirm('Deseja excluir ?');">
-                    <i class= 'material-icons'> delete </i>
-                    <span> DELETAR </span>
-                </button>
-            </div>
-        </div>  
+
+        <div style= 'width: 50%; float: left'>
+            <button class= 'btn btn-lg btn-success waves-effect'>
+                <i class= 'material-icons'> update </i>
+                <span> ALTERAR </span>
+            </button>
+        </div>
+
+        <div style= 'width: 50%; float: right; text-align: right'>
+            <button class= 'btn btn-lg btn-danger waves-effect' onclick= "window.confirm('Deseja excluir ?')">
+                <i class= 'material-icons'> delete </i>
+                <span> DELETAR </span>
+            </button>
+        </div>
     </form>
     
 {% endblock %}

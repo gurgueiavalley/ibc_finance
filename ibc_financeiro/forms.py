@@ -3,18 +3,15 @@ from .models import *
 
 class CategoriaForm(forms.Form):
     nome = forms.CharField(label = 'Nome', help_text = 'category', max_length = 30)
-    nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome da categoria', 'autocomplete' : 'off', 'maxlength' : '30'}
-
-    tipo = forms.ChoiceField(label = 'Tipo', help_text = 'category', choices = (('Entrada', 'Entrada'), ('Saída', 'Saída')))
-    tipo.widget.attrs = {'class' : 'form-control'}    
+    nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome da categoria', 'autocomplete' : 'off', 'maxlength' : '30'}   
 
 class CongregacaoForm(forms.Form):
     nome = forms.CharField(label = 'Nome', help_text = 'location_city', max_length = 70)
     nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome da congregação', 'autocomplete' : 'off', 'maxlength' : '70'}
 
 class FornecedorForm(forms.Form):
-    documento = forms.CharField(label = 'CPF/CNPJ', help_text = 'fingerprint', max_length = 18)
-    documento.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Número do CPF/CNPJ do fornecedor', 'autocomplete' : 'off', 'maxlength' : '18'}
+    documento = forms.CharField(label = 'CPF/CNPJ', help_text = 'fingerprint', max_length = 15)
+    documento.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Número do CPF/CNPJ do fornecedor', 'autocomplete' : 'off', 'maxlength' : '15'}
 
     nome = forms.CharField(label = 'Nome', help_text = 'perm_identity', max_length = 70)
     nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome do fornecedor', 'autocomplete' : 'off', 'maxlength' : '70'}
@@ -89,7 +86,7 @@ class EntradaMissaoForm(forms.Form):
     comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png, .pdf'}
    
 class MembroForm(forms.Form):
-    CPF = forms.CharField(label = 'CPF', help_text = 'fingerprint', max_length = 15)
+    CPF = forms.CharField(label = 'CPF', help_text = 'fingerprint', max_length = 15, required = False)
     CPF.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Número do CPF', 'autocomplete' : 'off', 'maxlength' : '15'}
 
     nome = forms.CharField(label = 'Nome', help_text = 'perm_identity', max_length = 75)
@@ -207,7 +204,7 @@ class SaidaForm(forms.Form):
     categoria = forms.ModelChoiceField(label = 'Categoria', help_text = 'category', queryset = Categoria.objects.filter(tipo = 'SAÍDA').order_by('nome'), empty_label = 'Nenhuma selecionada')
     categoria.widget.attrs = {'class' : 'form-control'}
 
-    transacao = forms.ModelChoiceField(label = 'Transação', help_text = 'credit_card', queryset = Transacao.objects.all().order_by('nome'), empty_label = 'Nenhuma selecionada')
+    transacao = forms.ModelChoiceField(label = 'Forma de Pagamento', help_text = 'credit_card', queryset = Transacao.objects.all().order_by('nome'), empty_label = 'Nenhuma selecionada')
     transacao.widget.attrs = {'class' : 'form-control'}
 
     fornecedor = forms.ModelChoiceField(label = 'Fornecedor', help_text = 'store', queryset = Fornecedor.objects.all().order_by('nome'), empty_label = 'Nenhum selecionado')
