@@ -21,7 +21,7 @@
 {% endblock %}
 
 {% block dinamico %}
-    <form method= 'POST' action= "{% url 'alterar' 'saida' saida.pk %}" enctype= 'multipart/form-data' id= 'formulario'>
+    <form method= 'POST' action= "{% url 'saida' 'alterar' %} ?id={{saida.pk}}" enctype= 'multipart/form-data' id= 'formulario'>
         {% csrf_token %}
         
         <div class= 'row clearfix'>
