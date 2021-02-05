@@ -22,6 +22,12 @@
         
         <link rel= 'stylesheet' href= "{% static 'css/base/style.css' %}">
         <link rel= 'stylesheet' href= "{% static 'css/base/all-themes.css' %}">
+
+        <style>
+            .form-control, td{
+                text-transform: uppercase;
+            }
+        </style>
     </head>
 
     <body class= 'theme-blue'>
@@ -374,6 +380,8 @@
                             </a>
 
                             <ul class= 'ml-menu'>
+                                <li> <a href= "{% url 'membro' 'adicionar' %}"> Adicionar </a> </li>
+                                <li> <a href= "{% url 'membro' 'importar' %}"> Importar </a> </li>
                                 <li> <a href= "{% url 'listar' 'membros' %}"> Listar </a> </li>
                             </ul>
                         </li>

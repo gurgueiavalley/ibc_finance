@@ -4,7 +4,7 @@ from .models import *
 from .forms import *
 from django.contrib.auth.models import User
 
-import pandas as pd
+import pandas
 from decimal import Decimal
 import os
 from datetime import datetime, date
@@ -14,11 +14,38 @@ from pathlib import Path
 from itertools import chain                     # Juntar duas listas de queryset de classes diferentes
 from reportlab.platypus import Table
 
+from django.core.files.storage import default_storage
+
 #pegando datas dos relatorios
 dates = []
 
 # Métodos Renderizados
 def avulso(request, acao):
+    if acao == 'alterar':
+        entrada = EntradaAvulsa.objects.get(id = request.GET.get('id'))
+        
+        if request.method == 'POST':
+            formulario = EntradaAvulsaForm(request.POST, request.FILES)
+            
+            if formulario.is_valid():
+                entrada.congregacao = Congregacao.objects.get(id = request.POST['congregacao'])
+                entrada.data = convertDate(request.POST['data'])
+                
+                entrada.transacao = Transacao.objects.get(id = request.POST['transacao'])
+                
+                entrada.anotacao = request.POST['descricao']
+                entrada.valor = request.POST['valor']
+
+                if 'comprovante' in request.FILES:
+                    entrada.comprovante = request.FILES['comprovante']
+
+                if 'deletar' in request.POST:
+                    entrada.comprovante = None
+
+                entrada.save()
+
+        return render(request, 'financeiro/paginas/avulso/alterar.html', {'formulario' : EntradaAvulsaForm(), 'dados' : entrada})
+    
     if request.method == 'POST':
         formulario = EntradaAvulsaForm(request.POST)
 
@@ -43,33 +70,6 @@ def avulso(request, acao):
         tipo = 'avulso'
         return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioEntradaForm()})
     return render(request, 'financeiro/paginas/avulso/adicionar.html', {'formulario' : EntradaAvulsaForm()})
-
-def cadMembrosExcel(request):
-    if request.method == 'POST':
-        # excel = Excel()
-        form = FormExcel(request.POST, request.FILES)
-        if form.is_valid():
-            # excel.arquivo = request.FILES['arquivo']
-            # excel.save() 
-            # dados = pd.read_excel(excel.arquivo.path)
-            membros = []
-            # membros = dados
-            for m in range(0, membros.__len__()):
-                membrosExistente = Membro.objects.filter(CPF=membros['CPF'][m])
-                if membrosExistente.__len__() == 1:
-                    print("Já existe")
-                else:
-                    membro = Membro()
-                    membro.CPF = membros['CPF'][m]
-                    membro.nome = membros['NOME'][m]
-                    membro.telefone = membros['TELEFONE'][m]
-                    membro.profissao = membros['PROFISSAO'][m]
-                    membro.save()
-            # excel.delete()
-            return render(request, 'index.html', {})
-    else:
-        form = FormExcel()
-    return render(request, 'financeiro/form_excel.html', {'form': form})
 
 def categoria(request, acao):
     pagina = 0
@@ -128,6 +128,31 @@ def congregacao(request, acao):
     return render(request, 'financeiro/paginas/congregacao/adicionar.html', {'formulario' : CongregacaoForm(), 'pagina' : pagina})
 
 def emissao(request, acao):
+    if acao == 'alterar':
+        entrada = EntradaMissao.objects.get(id = request.GET.get('id'))
+        
+        if request.method == 'POST':
+            formulario = EntradaMissaoForm(request.POST, request.FILES)
+            
+            if formulario.is_valid():
+                entrada.missao = Missao.objects.get(id = request.POST['missao'])
+                
+                entrada.anotacao = request.POST['anotacao']
+
+                entrada.transacao = Transacao.objects.get(id = request.POST['transacao'])
+                entrada.valor = request.POST['valor']
+                entrada.data = convertDate(request.POST['data'])
+
+                if 'comprovante' in request.FILES:
+                    entrada.comprovante = request.FILES['comprovante']
+
+                if 'deletar' in request.POST:
+                    entrada.comprovante = None
+
+                entrada.save()
+
+        return render(request, 'financeiro/paginas/emissao/alterar.html', {'formulario' : EntradaMissaoForm(), 'dados' : entrada})
+    
     if request.method == 'POST':
         formulario = EntradaMissaoForm(request.POST)
 
@@ -175,6 +200,32 @@ def empresa(request, acao):
     return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : FornecedorForm(), 'pagina' : pagina})
 
 def entrada(request, acao):
+    if acao == 'alterar':
+        entrada = Entrada.objects.get(id = request.GET.get('id'))
+        
+        if request.method == 'POST':
+            formulario = EntradaForm(request.POST, request.FILES)
+            
+            if formulario.is_valid():
+                entrada.congregacao = Congregacao.objects.get(id = request.POST['congregacao'])
+                entrada.categoria = Categoria.objects.get(id = request.POST['categoria'])
+                entrada.transacao = Transacao.objects.get(id = request.POST['transacao'])
+                entrada.membro = Membro.objects.get(id = request.POST['membro'])
+
+                entrada.anotacao = request.POST['anotacao']
+                entrada.valor = request.POST['valor']
+                entrada.data = convertDate(request.POST['data'])
+
+                if 'comprovante' in request.FILES:
+                    entrada.comprovante = request.FILES['comprovante']
+
+                if 'deletar' in request.POST:
+                    entrada.comprovante = None
+
+                entrada.save()
+
+        return render(request, 'financeiro/paginas/entrada/alterar.html', {'formulario' : EntradaForm(), 'dados' : entrada})
+    
     if request.method == 'POST':
         formulario = EntradaForm(request.POST)
 
@@ -206,7 +257,39 @@ def index(request):
     return render(request, 'financeiro/index.html')
 
 def membro(request, acao):
-    if acao == 'alterar':
+    if acao == 'importar':
+        if request.method == 'POST':
+            arquivo = request.FILES['file']
+
+            nomeArquivo = default_storage.save('membros.' + arquivo.name.split('.')[-1], arquivo)
+            
+            planilha = pandas.read_excel(default_storage.open(nomeArquivo))
+
+            for indice in range(len(planilha)):
+                try:
+                    Membro.objects.get(CPF = planilha['CPF'][indice])
+
+                except:
+                    membro = Membro()
+
+                    membro.CPF = planilha['CPF'][indice]
+                    membro.nome = planilha['NOME'][indice].upper()
+                    membro.sexo = planilha['SEXO'][indice].upper()
+                    # membro.nascimento = convertDate(planilha['NASCIMENTO'][indice])
+                    membro.celular = planilha['CELULAR'][indice]
+                    # membro.email = planilha['E-MAIL'][indice].upper()
+
+                    # print(planilha['NASCIMENTO'][indice])
+
+                    membro.save()
+
+            os.remove(os.getcwd() + default_storage.url(nomeArquivo))
+        
+            return render(request, 'financeiro/paginas/membro/tabela.html', {'membros' : Membro.objects.all().order_by('nome')})
+
+        return render(request, 'financeiro/paginas/membro/importar.html')
+    
+    elif acao == 'alterar':
         membro = Membro.objects.get(id = request.GET.get('id'))
 
         if request.method == 'POST':
@@ -216,12 +299,14 @@ def membro(request, acao):
                 membro.nome = request.POST['nome']
                 membro.celular = request.POST['celular']
                 membro.email = request.POST['email']
+                membro.sexo = request.POST['sexo']
+                membro.nascimento = convertDate(request.POST['nascimento'])
+
                 membro.save()
             return redirect('listar', tipo='membros')
         
         else:
             return render(request, 'financeiro/paginas/membro/alterar.html', {'formulario': MembroForm(), 'membro': membro})
-    
     
     pagina = 0
     if request.method == 'POST':
@@ -237,12 +322,22 @@ def membro(request, acao):
             
             if 'email' in request.POST:
                 membro.email = request.POST['email']
+            
+            if 'sexo' in request.POST:
+                membro.sexo = request.POST['sexo']
+            
+            if 'nascimento' in request.POST:
+                membro.nascimento = convertDate(request.POST['nascimento'])
 
             membro.save()
 
             pagina = 1
             
         return render(request, 'financeiro/paginas/membro/adicionar.html', {'formulario' : MembroForm(), 'pagina' : pagina, 'id' : membro.id, 'nome' : membro.nome})
+
+    if 'pop' in request.GET:
+        return render(request, 'financeiro/paginas/membro/adicionar.html', {'formulario' : MembroForm(), 'pagina' : pagina, 'pop' : 'yes'})
+        
 
     return render(request, 'financeiro/paginas/membro/adicionar.html', {'formulario' : MembroForm(), 'pagina' : pagina})
 
