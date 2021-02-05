@@ -248,7 +248,10 @@
 
         $('#id_transacao').val({{ dados.transacao.id }})
 
-        $('#id_descricao').val('{{ dados.anotacao }}')
+        {% if dados.anotacao %}
+            $('#id_descricao').val('{{ dados.anotacao }}')
+        {% endif %}
+        
         $('#id_valor').val(parseFloat({{ dados.valor }}))
     </script>
 

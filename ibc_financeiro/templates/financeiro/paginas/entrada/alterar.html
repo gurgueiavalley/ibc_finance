@@ -214,7 +214,10 @@
         $('#id_transacao').val({{ dados.transacao.id }})
         $('#id_membro').val({{ dados.membro.id }})
 
-        $('#id_anotacao').val('{{ dados.anotacao }}')
+        {% if dados.anotacao %}
+            $('#id_anotacao').val('{{ dados.anotacao }}')
+        {% endif %}
+        
         $('#id_valor').val(parseFloat({{ dados.valor }}))
 
         const   day     = {{ dados.data.day }} <= 9 ? '0{{dados.data.day}}' : {{ dados.data.day }},
