@@ -34,7 +34,12 @@
                                     <tbody>
                                         {% for missao in missoes %}
                                             <tr>
-                                                <td><a href="#">{{missao.valor}}</a></td>
+                                                <td>
+                                                    <a href= "{% url 'emissao' 'alterar' %}?id={{missao.id}}">
+                                                        R$ {{ missao.valor }}
+                                                    </a>
+                                                </td>
+                                                
                                                 <td>{{missao.missao.nome}}</td>
                                                 <td>{{missao.data}}</td>
                                                 <td id = "tabela">

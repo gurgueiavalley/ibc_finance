@@ -75,7 +75,13 @@
                             </div>
 
                             <div class= 'col-md-12'>
-                                <strong> {{ formulario.transacao.label }} <b> * </b> </strong>
+                                <div class= 'col-md-10 titulo'>
+                                    <strong> {{ formulario.transacao.label }} <b> * </b> </strong>
+                                </div>
+                                
+                                <div class= 'col-md-2 text-right titulo'>
+                                    <i class= 'material-icons adicionar' onclick= 'adicionar("{{ formulario.transacao.label }}")'> add </i>
+                                </div>
 
                                 <div class= 'input-group'>
                                     <span class= 'input-group-addon'>

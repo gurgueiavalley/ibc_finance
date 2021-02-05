@@ -35,7 +35,7 @@
                                     <tbody>
                                         {% for entrada in entradas %}
                                             <tr>
-                                                <td><a href="#">{{entrada.valor}}</a></td>
+                                                <td> <a href= "{% url 'entrada' 'alterar' %}?id={{ entrada.pk }}"> R$ {{ entrada.valor }} </a> </td>
                                                 <td>{{entrada.categoria}}</td>
                                                 <td>{{entrada.congregacao}}</td>
                                                 <td>{{entrada.membro}}</td>

@@ -48,7 +48,7 @@
                                 </div>
                                 
                                 <div class= 'col-md-2 text-right titulo'>
-                                    <i class= 'material-icons adicionar' onclick= 'adicionar()'> add </i>
+                                    <i class= 'material-icons adicionar' onclick= "adicionar('{{formulario.missao.label}}')"> add </i>
                                 </div>
 
                                 <div class= 'input-group'>
@@ -56,9 +56,7 @@
                                         <i class= 'material-icons'> {{ formulario.missao.help_text }} </i>
                                     </span>
 
-                                    <div class= 'form-line'>
-                                        {{ formulario.missao }}
-                                    </div>
+                                    {{ formulario.missao }}
                                 </div>
                             </div>
 
@@ -76,7 +74,25 @@
                                 </div>
                             </div>
 
-                            {% for campo in formulario.visible_fields|slice:'1:4' %}
+                            <div class= 'col-md-4'>
+                                <div class= 'col-md-10 titulo'>
+                                    <strong> {{ formulario.transacao.label }} <b> * </b> </strong>
+                                </div>
+                                
+                                <div class= 'col-md-2 text-right titulo'>
+                                    <i class= 'material-icons adicionar' onclick= "adicionar('{{formulario.transacao.label}}')"> add </i>
+                                </div>
+
+                                <div class= 'input-group'>
+                                    <span class= 'input-group-addon'>
+                                        <i class= 'material-icons'> {{ formulario.transacao.help_text }} </i>
+                                    </span>
+
+                                    {{ formulario.transacao }}
+                                </div>
+                            </div>
+
+                            {% for campo in formulario.visible_fields|slice:'2:4' %}
                                 <div class= 'col-md-4'>
                                     <strong> {{ campo.label }} <b> * </b> </strong>
 
@@ -146,8 +162,12 @@
     <script src= "{% static 'js/paginas/saida/saida.js' %}"> </script>
 
     <script>
-        const adicionar = () => {
-            window.open("{% url 'missao' 'adicionar' %}", '', 'popup')
+        const adicionar = (classe) => {
+            if(classe == 'Missão')
+                window.open("{% url 'missao' 'adicionar' %}", '', 'popup')
+
+            else if(classe == 'Forma de Entrada')
+                window.open("{% url 'pagamento' 'adicionar' %}", '', 'popup')
         }
     </script>
 {% endblock %}

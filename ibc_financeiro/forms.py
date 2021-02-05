@@ -45,7 +45,9 @@ class EntradaForm(forms.Form):
     data.widget.attrs = {'class' : 'form-control datepicker', 'placeholder' : 'Data que foi recebido a entrada'}
 
     comprovante = forms.FileField(label = 'Comprovante', help_text = 'receipt', required = False)
-    comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png, .pdf'}
+    comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png'}
+
+    deletar = forms.BooleanField(label = 'Deletar o Atual', required = False)
 
 class EntradaAvulsaForm(forms.Form):
     congregacao = forms.ModelChoiceField(label = 'Congregação', help_text = 'location_city', queryset = Congregacao.objects.all().order_by('nome'), empty_label = 'Nenhuma selecionada')
@@ -54,7 +56,7 @@ class EntradaAvulsaForm(forms.Form):
     transacao = forms.ModelChoiceField(label = 'Forma de Entrada', help_text = 'credit_card', queryset = Transacao.objects.all().order_by('nome'), empty_label = 'Nenhuma selecionada')
     transacao.widget.attrs = {'class' : 'form-control'}
 
-    descricao = forms.CharField(label = 'Descrição', help_text = 'short_text', max_length = 100, required = False)
+    descricao = forms.CharField(label = 'Anotação', help_text = 'short_text', max_length = 100, required = False)
     descricao.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Detalhe ou descrição breve da entrada', 'autocomplete' : 'off', 'maxlenght' : '100'}
 
     valor = forms.DecimalField(label = 'Valor (R$)', help_text = 'monetization_on', max_digits = 12, decimal_places = 2)
@@ -64,13 +66,15 @@ class EntradaAvulsaForm(forms.Form):
     data.widget.attrs = {'class' : 'form-control datepicker', 'placeholder' : 'Data que foi recebido a entrada'}
 
     comprovante = forms.FileField(label = 'Comprovante', help_text = 'receipt', required = False)
-    comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png, .pdf'}
+    comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png'}
+
+    deletar = forms.BooleanField(label = 'Deletar o Atual', required = False)
 
 class EntradaMissaoForm(forms.Form):
     missao = forms.ModelChoiceField(label = 'Missão', help_text = 'feedback', queryset = Missao.objects.all().order_by('nome'), empty_label = 'Nenhuma selecionada')
     missao.widget.attrs = {'class' : 'form-control'}
 
-    transacao = forms.ModelChoiceField(label = 'Transação', help_text = 'credit_card', queryset = Transacao.objects.all().order_by('nome'), empty_label = 'Nenhuma selecionada')
+    transacao = forms.ModelChoiceField(label = 'Forma de Entrada', help_text = 'credit_card', queryset = Transacao.objects.all().order_by('nome'), empty_label = 'Nenhuma selecionada')
     transacao.widget.attrs = {'class' : 'form-control'}
 
     valor = forms.DecimalField(label = 'Valor (R$)', help_text = 'monetization_on', max_digits = 12, decimal_places = 2)
@@ -83,20 +87,34 @@ class EntradaMissaoForm(forms.Form):
     anotacao.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Detalhe ou descrição breve da entrada', 'autocomplete' : 'off', 'maxlenght' : '100'}
 
     comprovante = forms.FileField(label = 'Comprovante', help_text = 'receipt', required = False)
-    comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png, .pdf'}
+    comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png'}
+
+    deletar = forms.BooleanField(label = 'Deletar o Atual', required = False)
    
 class MembroForm(forms.Form):
-    CPF = forms.CharField(label = 'CPF', help_text = 'fingerprint', max_length = 15, required = False)
-    CPF.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Número do CPF', 'autocomplete' : 'off', 'minlength' : '15', 'maxlength' : '15'}
+    SEXOS = (
+        (None, 'NENHUM SELECIONADO'),
+        ('MASCULINO', 'MASCULINO'),
+        ('FEMININO', 'FEMININO')
+    )
+
+    CPF = forms.CharField(label = 'CPF', help_text = 'fingerprint', max_length = 14, required = False)
+    CPF.widget.attrs = {'class' : 'form-control', 'placeholder' : '000.000.000-00', 'autocomplete' : 'off', 'minlength' : '14', 'maxlength' : '14'}
 
     nome = forms.CharField(label = 'Nome', help_text = 'perm_identity', max_length = 75)
     nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome do membro', 'autocomplete' : 'off', 'maxlength' : '75'}
 
+    sexo = forms.ChoiceField(label = 'Sexo', help_text = 'male', choices = SEXOS, required = False)
+    sexo.widget.attrs = {'class' : 'form-control'}
+
+    nascimento = forms.DateField(label = 'Data de Nascimento', help_text = 'event')
+    nascimento.widget.attrs = {'class' : 'form-control datepicker', 'placeholder' : '__/__/____'}
+
     celular = forms.CharField(label = 'Celular', help_text = 'smartphone', max_length = 14, required = False)
-    celular.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Número do celular', 'autocomplete' : 'off', 'minlength' : '14' , 'maxlength' : '14'}
+    celular.widget.attrs = {'class' : 'form-control', 'placeholder' : '00 0 0000-0000', 'autocomplete' : 'off', 'minlength' : '14' , 'maxlength' : '14'}
 
     email = forms.EmailField(label = 'E-mail', help_text = 'mail', max_length = 45, required = False)
-    email.widget.attrs = {'class' : 'form-control', 'placeholder' : 'E-mail', 'autocomplete' : 'off', 'maxlength' : '50'}
+    email.widget.attrs = {'class' : 'form-control', 'placeholder' : 'exemplo@exemplo.exemplo', 'autocomplete' : 'off', 'maxlength' : '50'}
 
 class MissaoForm(forms.Form):
     congregacao = forms.ModelChoiceField(label = 'Congregação', help_text = 'location_city', queryset = Congregacao.objects.all().order_by('nome'), empty_label = 'Nenhuma selecionada')
@@ -223,7 +241,7 @@ class SaidaForm(forms.Form):
     data.widget.attrs = {'class' : 'form-control datepicker', 'placeholder' : 'Data que foi realizado o pagamento', 'format' : '%d/%m/%Y'}
 
     comprovante = forms.FileField(label = 'Comprovante', help_text = 'receipt', required = False)
-    comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png, .pdf'}
+    comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png'}
 
     nota_fiscal = forms.FileField(label = 'Nota Fiscal', help_text = 'sticky_note_2', required = False)
-    nota_fiscal.widget.attrs = {'accept' : '.jpg, .jpeg, .png, .pdf'}
+    nota_fiscal.widget.attrs = {'accept' : '.jpg, .jpeg, .png'}
