@@ -424,7 +424,7 @@ def gerarRelatorio(request, dados, tipo):
             pdf.setFont('Helvetica', 10)
             pdf.line(585, 718 - y, 10, 718 - y)
             pdf.drawString(20, 700 - y, str(saida.data.strftime('%d/%m/%Y')))
-            pdf.drawString(100, 700 - y, str(saida.congregacao)[0:35])
+            pdf.drawString(100, 700 - y, str(saida.congregacao))
             pdf.drawString(330,700 - y, str(saida.categoria)[0:25])
             pdf.drawString(490,700 - y, str(saida.valor))
         
@@ -439,7 +439,7 @@ def gerarRelatorio(request, dados, tipo):
                 if saida.descricao != None:    
                     pdf.drawString(20, 780, str(saida.descricao))
                 arquivo = "media/"+str(saida.comprovante)
-                pdf.drawImage(arquivo, 30, 100, width= 550, height= 650)
+                pdf.drawImage(arquivo, 200, 250, width= 200, height= 400)
                 pdf.showPage()
         pdf.save()
     elif tipo == 'entrada':
@@ -462,7 +462,7 @@ def gerarRelatorio(request, dados, tipo):
             pdf.setFont('Helvetica', 10)
             pdf.line(585, 718 - y, 10, 718 - y)
             pdf.drawString(20, 700 - y, str(entrada.data.strftime('%d/%m/%Y')))
-            pdf.drawString(100, 700 - y, str(entrada.congregacao)[0:35])
+            pdf.drawString(100, 700 - y, str(entrada.congregacao))
             if hasattr(entrada, 'categoria'):
                 pdf.drawString(330,700 - y, str(entrada.categoria)[0:25])
             else:
@@ -480,7 +480,7 @@ def gerarRelatorio(request, dados, tipo):
                 if entrada.anotacao != None:    
                     pdf.drawString(20, 780, str(entrada.anotacao))
                 arquivo = "media/" + str(entrada.comprovante)
-                pdf.drawImage(arquivo, 30, 100, width= 550, height= 650)
+                pdf.drawImage(arquivo, 200, 250, width= 200, height= 400)
                 pdf.showPage()
         pdf.save()
     if tipo == 'missão':
@@ -635,14 +635,14 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
                 y = 0
                 pdf.showPage()    
             pdf.setFont('Helvetica', 10)       
-            pdf.drawString(50, 750 - y, str(saida)+' º - '+str(saidas[saida - 1])[0:42])
+            pdf.drawString(50, 750 - y, str(saida)+' º - '+str(saidas[saida - 1]))
             pdf.line(70, 748 - y, 343, 748 -y)
             pdf.drawString(345, 748 - y, ' R$')
             pdf.drawString(365, 750 - y, str(saidas[saida - 1].valor))
             pdf.line(363, 748 - y, 550, 748 - y)
         else:
             pdf.setFont('Helvetica', 10)       
-            pdf.drawString(50, 580 - y, str(saida)+' º - '+str(saidas[saida - 1])[0:42])
+            pdf.drawString(50, 580 - y, str(saida)+' º - '+str(saidas[saida - 1]))
             pdf.line(70, 578 - y, 343, 578 -y)
             pdf.drawString(345, 578 - y, ' R$')
             pdf.drawString(365, 580 - y, str(saidas[saida - 1].valor))
@@ -711,7 +711,7 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
         if saida.comprovante != "":
             pdf.drawString(20, 780, str(saida.nome))
             arquivo = "media/"+str(saida.comprovante)
-            pdf.drawImage(arquivo, 30, 100, width= 550, height= 650)
+            pdf.drawImage(arquivo, 150, 250, width= 250, height= 400)
             pdf.showPage()
     pdf.save()
 

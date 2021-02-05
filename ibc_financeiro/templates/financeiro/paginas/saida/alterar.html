@@ -21,7 +21,7 @@
 {% endblock %}
 
 {% block dinamico %}
-    <form method= 'POST' action= "{% url 'saida' 'alterar' %} ?id={{saida.pk}}" enctype= 'multipart/form-data' id= 'formulario'>
+    <form method= 'POST' action= "{% url 'saida' 'alterar' %}?id={{saida.pk}}" enctype= 'multipart/form-data' id= 'formulario'>
         {% csrf_token %}
         
         <div class= 'row clearfix'>
@@ -30,7 +30,7 @@
                     <div class= 'header'>
                         <h2>
                             Dados
-                            <small> Insira os dados para adicionar uma nova saída. Os dados com <b> * </b> são obrigatórios </small>
+                            <small> Insira os dados para alterar a saída. Os dados com <b> * </b> são obrigatórios </small>
                         </h2>
                     </div>
                     
@@ -94,10 +94,10 @@
                                     <strong> {{ campo.label }} </strong>
                                     {% if campo.label == "Comprovante" and saida.comprovante %}
                                         <br>
-                                        <strong style="font-size: 10px;">Atualmente: <a href="#">{{saida.comprovante}}</a></strong>
+                                        <strong style="font-size: 10px;">Atualmente: <a href="http://127.0.0.1:8000/media/{{saida.comprovante}}" target="_blank">{{saida.comprovante}}</a></strong>
                                     {% elif campo.label == "Nota Fiscal" and saida.nf %}
                                         <br>
-                                        <strong style="font-size: 10px;">Atualmente: <a href="#">{{saida.nf}}</a></strong>
+                                        <strong style="font-size: 10px;">Atualmente: <a href="http://127.0.0.1:8000/media/{{saida.nf}}" target="_blank">{{saida.nf}}</a></strong>
                                     {% endif %}
                                     <div class= 'input-group'>
                                         <span class= 'input-group-addon'>
