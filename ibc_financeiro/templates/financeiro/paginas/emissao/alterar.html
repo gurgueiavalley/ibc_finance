@@ -4,7 +4,7 @@
 
 {% block title %}
     {% block titulo %}
-        Adicionar uma Entrada de Missão
+        Alterar uma Entrada
     {% endblock %}
 {% endblock %}
 
@@ -23,11 +23,28 @@
         .card .body .col-md-12{
             margin-bottom: 0 !important;
         }
+
+        [type="checkbox"]:not(:checked), [type="checkbox"]:checked{
+            position: unset !important;
+            opacity: unset !important;
+            margin-left: 0;
+        }
+
+        .link, .link:hover{
+            text-decoration: none !important;
+            color: #999 !important;
+        }
+
+        .margins-zero{
+            margin-top: 0;
+            margin-bottom: 0 !important;
+        }
+
     </style>
 {% endblock %}
 
 {% block dinamico %}
-    <form method= 'POST' action= "{% url 'emissao' 'adicionar' %}" enctype= 'multipart/form-data' id= 'formulario'>
+    <form method= 'POST' action= "{% url 'emissao' 'alterar' %}?id={{dados.id}}" enctype= 'multipart/form-data' id= 'formulario'>
         {% csrf_token %}
         
         <div class= 'row clearfix'>
@@ -111,8 +128,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-
+        </div>    
+        
         <div class= 'row clearfix'>
             <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>
                 <div class= 'card'>
@@ -126,9 +143,9 @@
                     <div class= 'body'>
                         <div class= 'row clearfix'>
                             <div class= 'col-md-12'>
-                                <strong> {{ formulario.comprovante.label }} </strong>
+                                <strong> {{ formulario.comprovante.label }} </strong> 
 
-                                <div class= 'input-group'>
+                                <div class= 'input-group margins-zero'>
                                     <span class= 'input-group-addon'>
                                         <i class= 'material-icons'> {{ formulario.comprovante.help_text }} </i>
                                     </span>
@@ -137,16 +154,46 @@
                                         {{ formulario.comprovante }}
                                     </div>
                                 </div>
+
+                                {% if dados.comprovante %}
+                                    <div class= 'input-group margins-zero'>
+                                        <span class= 'input-group-addon' style= 'padding-top: 3px'>
+                                            <a id= 'a1' target= '_blank' class= 'link'>
+                                                <i class= 'material-icons'> visibility </i>
+                                            </a>
+                                        </span>
+
+                                        <div class= 'file'>
+                                            <a id= 'a2' target= '_blank' class= 'link'>
+                                                Visualizar o Atual
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class= 'input-group margins-zero link' style= 'top: -10px'>
+                                        <span class= 'input-group-addon' style= 'padding-right: 15px; padding-left: 2px'>
+                                            {{ formulario.deletar }}
+                                        </span>
+
+                                        <div class= 'file'> 
+                                            {{ formulario.deletar.label }}
+                                        </div>
+                                    </div>
+                                
+                                {% else %}
+                                    <br>
+                                    
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>    
+        </div>
 
         <button class= 'btn btn-success btn-lg waves-effect'>
-            <i class= 'material-icons'> add </i>
-            <span> ADICIONAR ENTRADA </span>
+            <i class= 'material-icons'> update </i>
+            <span> ALTERAR </span>
         </button>
     </form>
 {% endblock %}
@@ -169,5 +216,24 @@
             else if(classe == 'Forma de Entrada')
                 window.open("{% url 'pagamento' 'adicionar' %}", '', 'popup')
         }
+    </script>
+
+    <script>
+        $('#id_missao').val({{ dados.missao.id }})
+
+        $('#id_anotacao').val('{{ dados.anotacao }}')
+
+        $('#id_transacao').val({{ dados.transacao.id }})
+        $('#id_valor').val(parseFloat({{ dados.valor }}))
+
+        const   day     = {{ dados.data.day }} <= 9 ? '0{{dados.data.day}}' : {{ dados.data.day }},
+                month   = {{ dados.data.month }} <= 9 ? '0{{dados.data.month}}' : {{ dados.data.month }}
+
+        $('#id_data').val(`${day}/${month}/{{dados.data.year}}`)
+    </script>
+
+    <script>
+        $('#a1').attr('href', window.location.origin + '/media/{{dados.comprovante}}')
+        $('#a2').attr('href', window.location.origin + '/media/{{dados.comprovante}}')
     </script>
 {% endblock %}

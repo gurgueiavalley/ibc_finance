@@ -5,12 +5,10 @@
 {% endblock %}
 
 {% block dinamico %}
-    <form action="{% url 'cadMembrosExcel' %}" method="POST" enctype="multipart/form-data">
+    <form action="{% url 'membro' 'importar' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <label class="text">Arquivo Excel</label>
-        {% for form in form %}
-            {{form}}
-        {% endfor %}
+        <input type= 'file' name= 'file'>
         <br>
         <button class="btn btn-primary">Importar</button>
     </form>    

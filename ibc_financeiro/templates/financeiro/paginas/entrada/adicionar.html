@@ -157,7 +157,7 @@
                 window.open("{% url 'pagamento' 'adicionar' %}", '', 'popup')
             
             else if(classe == 'Membro')
-                window.open("{% url 'membro' 'adicionar' %}", '', 'popup')
+                window.open("{% url 'membro' 'adicionar' %}?pop=on", '', 'popup')
         }
     </script>
 {% endblock %}

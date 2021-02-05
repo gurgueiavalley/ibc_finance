@@ -33,7 +33,12 @@
                                     <tbody>
                                         {% for entrada in avulso %}
                                             <tr>
-                                                <td><a href="#">{{entrada.valor}}</a></td>
+                                                <td>
+                                                    <a href= "{% url 'avulso' 'alterar' %}?id={{ entrada.id }}">
+                                                        R$ {{ entrada.valor }}
+                                                    </a>
+                                                </td>
+                                                
                                                 <td>{{entrada.congregacao}}</td>
                                                 <td>{{entrada.data}}</td>
                                             </tr>

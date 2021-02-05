@@ -3,7 +3,6 @@ from .views import *
 
 urlpatterns = [
     path('', index, name = 'index'),
-    path('cadMembrosExcel', cadMembrosExcel, name='cadMembrosExcel'),
     path('relatorio/<tipo>', relatorio, name = 'relatorio'),                # Relatório
     path('saida/<acao>', saida, name = 'saida'),                            # Saída
     path('congregacao/<acao>', congregacao, name = 'congregacao'),          # Congregação
