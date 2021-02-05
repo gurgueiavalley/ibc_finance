@@ -18,6 +18,24 @@
     <link rel= 'stylesheet' href= "{% static 'css/plugins/dropzone/dropzone.css' %}">
 
     <link rel= 'stylesheet' href= "{% static 'css/paginas/saida/saida.css' %}">
+
+    <style>
+        [type="checkbox"]:not(:checked), [type="checkbox"]:checked{
+            position: unset !important;
+            opacity: unset !important;
+            margin-left: 0;
+        }
+
+        .link, .link:hover{
+            text-decoration: none !important;
+            color: #999 !important;
+        }
+
+        .margins-zero{
+            margin-top: 0;
+            margin-bottom: 0 !important;
+        }
+    </style>
 {% endblock %}
 
 {% block dinamico %}
@@ -89,27 +107,93 @@
 
                     <div class= 'body'>
                         <div class= 'row clearfix'>
-                            {% for campo in formulario.visible_fields|slice:'8:10' %}
-                                <div class= 'col-md-6'>
-                                    <strong> {{ campo.label }} </strong>
-                                    {% if campo.label == "Comprovante" and saida.comprovante %}
-                                        <br>
-                                        <strong style="font-size: 10px;">Atualmente: <a href="http://127.0.0.1:8000/media/{{saida.comprovante}}" target="_blank">{{saida.comprovante}}</a></strong>
-                                    {% elif campo.label == "Nota Fiscal" and saida.nf %}
-                                        <br>
-                                        <strong style="font-size: 10px;">Atualmente: <a href="http://127.0.0.1:8000/media/{{saida.nf}}" target="_blank">{{saida.nf}}</a></strong>
-                                    {% endif %}
-                                    <div class= 'input-group'>
-                                        <span class= 'input-group-addon'>
-                                            <i class= 'material-icons'> {{ campo.help_text }} </i>
-                                        </span>
-                                        
-                                        <div class= 'file'> 
-                                            {{ campo }}
-                                        </div>
+                            <div class= 'col-md-6'>
+                                <strong> {{ formulario.comprovante.label }} </strong>
+
+                                <div class= 'input-group margins-zero'>
+                                    <span class= 'input-group-addon'>
+                                        <i class= 'material-icons'> {{ formulario.comprovante.help_text }} </i>
+                                    </span>
+
+                                    <div class= 'file'> 
+                                        {{ formulario.comprovante }}
                                     </div>
                                 </div>
-                            {% endfor %}
+
+                                {% if saida.comprovante %}
+                                    <div class= 'input-group margins-zero'>
+                                        <span class= 'input-group-addon' style= 'padding-top: 3px'>
+                                            <a id= 'a1comprovante' target= '_blank' class= 'link'>
+                                                <i class= 'material-icons'> visibility </i>
+                                            </a>
+                                        </span>
+
+                                        <div class= 'file'>
+                                            <a id= 'a2comprovante' target= '_blank' class= 'link'>
+                                                Visualizar o Atual
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class= 'input-group margins-zero link' style= 'top: -10px'>
+                                        <span class= 'input-group-addon' style= 'padding-right: 15px; padding-left: 2px'>
+                                            {{ formulario.deletar }}
+                                        </span>
+
+                                        <div class= 'file'> 
+                                            {{ formulario.deletar.label }}
+                                        </div>
+                                    </div>
+                            
+                                {% else %}
+                                    <br>
+                                    
+                                {% endif %}
+                            </div>
+
+                            <div class= 'col-md-6'>
+                                <strong> {{ formulario.nota_fiscal.label }} </strong>
+
+                                <div class= 'input-group margins-zero'>
+                                    <span class= 'input-group-addon'>
+                                        <i class= 'material-icons'> {{ formulario.nota_fiscal.help_text }} </i>
+                                    </span>
+
+                                    <div class= 'file'> 
+                                        {{ formulario.nota_fiscal }}
+                                    </div>
+                                </div>
+
+                                {% if saida.nf %}
+                                    <div class= 'input-group margins-zero'>
+                                        <span class= 'input-group-addon' style= 'padding-top: 3px'>
+                                            <a id= 'a1nf' target= '_blank' class= 'link'>
+                                                <i class= 'material-icons'> visibility </i>
+                                            </a>
+                                        </span>
+
+                                        <div class= 'file'>
+                                            <a id= 'a2nf' target= '_blank' class= 'link'>
+                                                Visualizar o Atual
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class= 'input-group margins-zero link' style= 'top: -10px'>
+                                        <span class= 'input-group-addon' style= 'padding-right: 15px; padding-left: 2px'>
+                                            {{ formulario.deletar2 }}
+                                        </span>
+
+                                        <div class= 'file'> 
+                                            {{ formulario.deletar2.label }}
+                                        </div>
+                                    </div>
+                            
+                                {% else %}
+                                    <br>
+                                    
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -159,5 +243,13 @@
             else if(classe == 'Fornecedor')
                 window.open("{% url 'empresa' 'adicionar' %}", '', 'popup')
         }
+    </script>
+
+    <script>
+        $('#a1comprovante').attr('href', window.location.origin + '/media/{{saida.comprovante}}')
+        $('#a2comprovante').attr('href', window.location.origin + '/media/{{saida.comprovante}}')
+        
+        $('#a1nf').attr('href', window.location.origin + '/media/{{saida.nf}}')
+        $('#a2nf').attr('href', window.location.origin + '/media/{{saida.nf}}')
     </script>
 {% endblock %}

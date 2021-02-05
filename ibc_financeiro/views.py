@@ -410,12 +410,17 @@ def saida(request, acao):
                 if('comprovante' in request.FILES):
                     saida.comprovante = request.FILES['comprovante']
 
+                if('deletar' in request.POST):
+                    saida.comprovante = None
+
                 if('nota_fiscal' in request.FILES):
                     saida.nf = request.FILES['nota_fiscal']
+
+                if('deletar2' in request.POST):
+                    saida.nf = None
                 
                 saida.usuario = User.objects.get(id = 1)
                 saida.save()
-            return redirect('index')
 
         return render(request, 'financeiro/paginas/saida/alterar.html', {'formulario': SaidaForm(), 'saida': saida})
 

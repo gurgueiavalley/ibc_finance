@@ -245,3 +245,6 @@ class SaidaForm(forms.Form):
 
     nota_fiscal = forms.FileField(label = 'Nota Fiscal', help_text = 'sticky_note_2', required = False)
     nota_fiscal.widget.attrs = {'accept' : '.jpg, .jpeg, .png'}
+
+    deletar = forms.BooleanField(label = 'Deletar o Atual', required = False)
+    deletar2 = forms.BooleanField(label = 'Deletar o Atual', required = False)
