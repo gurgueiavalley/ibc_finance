@@ -127,16 +127,24 @@
 
     {% comment %} Preenchendo os campos do formulario {% endcomment %}
     <script>
-        document.getElementById("id_CPF").value = '{{membro.CPF}}';
+        {% if membro.CPF %}
+            document.getElementById("id_CPF").value = '{{membro.CPF}}';
+        {% endif %}
+        
         document.getElementById("id_nome").value = '{{membro.nome}}';
-        document.getElementById("id_celular").value = '{{membro.celular}}';
-        document.getElementById("id_email").value = '{{membro.email}}';
+        
+        {% if membro.celular %}
+            document.getElementById("id_celular").value = '{{membro.celular}}';
+        {% endif %}
+        
+        {% if membro.email %}
+            document.getElementById("id_email").value = '{{membro.email}}';
+        {% endif %}
         
         $('#id_sexo').val('{{ membro.sexo }}')
 
-        const   day     = {{ membro.nascimento.day }} <= 9 ? '0{{membro.nascimento.day}}' : {{ membro.nascimento.day }},
-                month   = {{ membro.nascimento.month }} <= 9 ? '0{{membro.nascimento.month}}' : {{ membro.nascimento.month }}
-
-        $('#id_nascimento').val(`${day}/${month}/{{membro.nascimento.year}}`)
+        {% if membro.nascimento %}
+            $('#id_nascimento').val('{{membro.nascimento.day}}/{{membro.nascimento.month}}/{{membro.nascimento.year}}')
+        {% endif %}
     </script>
 {% endblock %}
