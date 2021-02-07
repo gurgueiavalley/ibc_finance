@@ -11363,7 +11363,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sEmptyTable": "Nenhum dado encontrado",
+			"sEmptyTable": "Nenhuma Entrada Encontrada",
 	
 	
 			/**

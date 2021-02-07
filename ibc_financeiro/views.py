@@ -257,6 +257,15 @@ def index(request):
     return render(request, 'financeiro/index.html')
 
 def membro(request, acao):
+    if acao == 'deletar':
+        membro = Membro.objects.get(id=request.GET['id'])
+        if request.method == 'POST':
+            membro.delete()
+            return redirect('listar', tipo='membros')
+        else:
+            entradas = Entrada.objects.filter(membro_id=membro.id)
+            return render(request, 'financeiro/paginas/membro/deletar.html', {'membro': membro,'entradas': entradas})
+
     if acao == 'importar':
         if request.method == 'POST':
             arquivo = request.FILES['file']
