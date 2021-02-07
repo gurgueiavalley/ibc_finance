@@ -216,8 +216,8 @@ class Transacao(models.Model):              # Transação
     nome = models.CharField(max_length = 25, unique = True)     # Nome (máximo de 25 caracteres | único | obrigatório)
     
     class Meta:             # Valores de leitura
-        verbose_name = 'Transação'              # Nome da classe no singular
-        verbose_name_plural = 'Transações'      # Nome da classe no plural
+        verbose_name = 'transação'              # Nome da classe no singular
+        verbose_name_plural = 'transações'      # Nome da classe no plural
 
     def __str__(self):      # Nome do objeto
         return self.nome    # Retorna o nome

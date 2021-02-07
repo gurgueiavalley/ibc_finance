@@ -27,8 +27,8 @@
                                 <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                     <thead>
                                         <tr>
-                                            <th>CPF</th>
                                             <th>NOME</th>
+                                            <th>CPF</th>
                                             <th>TELEFONE</th>
                                             <th>CONTATAR</th>
                                         </tr>
@@ -36,8 +36,8 @@
                                     <tbody>
                                         {% for membro in membros %}
                                             <tr>
-                                                <td><a href="{%url 'membro' 'alterar' %}?id={{membro.pk}}">{% if membro.CPF %} {{membro.CPF}} {% endif %}</a></td>
-                                                <td>{{membro.nome}}</td>
+                                                <td> <a href= "{% url 'membro' 'alterar' %}?id={{membro.pk}}"> {{ membro.nome }} </a> </td>
+                                                <td>{% if membro.CPF %} {{membro.CPF}} {% endif %}</a></td>
                                                 <td>{% if membro.celular %} {{membro.celular}} {% endif %}</td>
                                                 
                                                 <td id = 'tabela'>
