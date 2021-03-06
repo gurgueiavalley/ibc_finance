@@ -15,11 +15,17 @@ from itertools import chain                     # Juntar duas listas de queryset
 from reportlab.platypus import Table
 
 from django.core.files.storage import default_storage
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
+
 
 #pegando datas dos relatorios
 dates = []
 
 # Métodos Renderizados
+@login_required(login_url='/conta/login')
 def avulso(request, acao):
     if acao == 'alterar':
         entrada = EntradaAvulsa.objects.get(id = request.GET.get('id'))
@@ -71,6 +77,7 @@ def avulso(request, acao):
         return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioEntradaForm()})
     return render(request, 'financeiro/paginas/avulso/adicionar.html', {'formulario' : EntradaAvulsaForm()})
 
+@login_required(login_url='/conta/login')
 def categoria(request, acao):
     pagina = 0
 
@@ -90,6 +97,7 @@ def categoria(request, acao):
 
     return render(request, 'financeiro/paginas/categoria/adicionar.html', {'formulario' : CategoriaForm(), 'pagina' : pagina})
 
+@login_required(login_url='/conta/login')
 def catEntrada(request, acao):
     pagina = 0
 
@@ -109,6 +117,7 @@ def catEntrada(request, acao):
 
     return render(request, 'financeiro/paginas/catentrada/adicionar.html', {'formulario' : CategoriaForm(), 'pagina' : pagina})
 
+@login_required(login_url='/conta/login')
 def congregacao(request, acao):
     pagina = 0
 
@@ -127,6 +136,7 @@ def congregacao(request, acao):
 
     return render(request, 'financeiro/paginas/congregacao/adicionar.html', {'formulario' : CongregacaoForm(), 'pagina' : pagina})
 
+@login_required(login_url='/conta/login')
 def emissao(request, acao):
     if acao == 'alterar':
         entrada = EntradaMissao.objects.get(id = request.GET.get('id'))
@@ -174,6 +184,7 @@ def emissao(request, acao):
 
     return render(request, 'financeiro/paginas/emissao/adicionar.html', {'formulario' : EntradaMissaoForm()})
 
+@login_required(login_url='/conta/login')
 def empresa(request, acao):
     pagina = 0
 
@@ -199,6 +210,7 @@ def empresa(request, acao):
 
     return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : FornecedorForm(), 'pagina' : pagina})
 
+@login_required(login_url='/conta/login')
 def entrada(request, acao):
     if acao == 'alterar':
         entrada = Entrada.objects.get(id = request.GET.get('id'))
@@ -253,9 +265,11 @@ def entrada(request, acao):
         return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioEntradaForm()})
     return render(request, 'financeiro/paginas/entrada/adicionar.html', {'formulario' : EntradaForm()})
 
+@login_required(login_url='/conta/login')
 def index(request):
     return render(request, 'financeiro/index.html')
 
+@login_required(login_url='/conta/login')
 def membro(request, acao):
     if acao == 'deletar':
         membro = Membro.objects.get(id=request.GET['id'])
@@ -350,6 +364,88 @@ def membro(request, acao):
 
     return render(request, 'financeiro/paginas/membro/adicionar.html', {'formulario' : MembroForm(), 'pagina' : pagina})
 
+@login_required(login_url='/conta/login')
+def usuario(request, acao):
+    if acao == 'listar':
+        #Listando todos os usuarios
+        usuarios = User.objects.all()
+        return render(request, 'financeiro/paginas/usuario/tabela.html', {'usuarios': usuarios})
+    if acao == 'adicionar':
+        #Adiciondo uma conta de usuario
+        if request.method == 'POST':
+            formulario = UsuarioForm(request.POST)
+            if formulario.is_valid():
+                #Verificando se já existe um usuario cadastrado com o mesmo username
+                try:
+                    usuario = User.objects.get(username=request.POST['usuario'], email=request.POST['email'])
+                except ObjectDoesNotExist:
+                    usuario = User.objects.create_user(request.POST['usuario'], request.POST['email'], request.POST['password'])
+                    usuario.first_name = request.POST['nome']
+                    usuario.last_name = request.POST['sobrenome']
+                    if 'ativo' in request.POST:
+                        usuario.is_active = True
+                    else:
+                        usuario.is_active = False
+                    usuario.save()
+                    return redirect('usuario', acao='listar')
+                else:
+                    alert = 'USUARIO JÁ FOI CADASTRADO!'
+                    return render(request, 'financeiro/paginas/usuario/adicionar.html', {'formulario': UsuarioForm(), 'alert': alert})
+        
+        #Redirecionando para pagina de adição de usuario
+        return render(request, 'financeiro/paginas/usuario/adicionar.html', {'formulario': UsuarioForm()})
+
+    if acao == 'alterar':
+        usuario = User.objects.get(id=request.GET.get('id'))
+        
+        #Alterar situação do usuario (Ativar/ Desativar)
+        if request.method == 'POST':
+            if 'ativo' in request.POST:
+                usuario.is_active = True
+            else:
+                usuario.is_active = False
+            usuario.save()
+            return redirect('usuario', acao='listar')          
+
+        #redirecionando para pagina de visualização e alteração
+        else:
+            return render(request, 'financeiro/paginas/usuario/alterar.html', {'formulario': UsuarioForm(), 'usuario': usuario})
+
+    if acao == 'perfil':
+        usuario = User.objects.get(id=request.GET.get('id'))
+        
+        #Alterando dados do perfil do usuario
+        if request.method == 'POST':                
+            usuario.first_name = request.POST['nome']
+            usuario.last_name = request.POST['sobrenome']
+            usuario.email = request.POST['email']
+            usuario.username = request.POST['usuario']
+            if 'ativo' in request.POST:
+                usuario.is_active = True
+            else:
+                usuario.is_active = False
+            usuario.save()
+        
+        #redireciona para visualização e alteração dos dados do perfil
+        return render(request, 'financeiro/paginas/usuario/perfil.html', {'formulario': UsuarioForm(), 'usuario': usuario})
+
+    if acao == 'alterarSenha':
+        #Alterando senha do usuario
+        if request.method == "POST":
+            usuario = User.objects.get(id=request.GET.get('id'))
+            if request.POST['password1'] == request.POST['password2']:
+                usuario.set_password(request.POST['password1'])
+                usuario.save()
+                return render(request, 'financeiro/paginas/usuario/perfil.html', {'formulario': UsuarioForm(), 'usuario': usuario})
+            else:
+                alert = 'SENHAS NÃO CONFEREM!'
+                return render(request, 'financeiro/paginas/usuario/alterar_senha.html', {'alert': alert})
+        
+        #redirecionando para formulario de alteração de senha
+        return render(request, 'financeiro/paginas/usuario/alterar_senha.html')
+
+
+@login_required(login_url='/conta/login')
 def missao(request, acao):
     pagina = 0
 
@@ -382,6 +478,7 @@ def missao(request, acao):
 
     return render(request, 'financeiro/paginas/missao/adicionar.html', {'formulario' : MissaoForm(), 'pagina' : pagina})
 
+@login_required(login_url='/conta/login')
 def pagamento(request, acao):
     pagina = 0
 
@@ -399,6 +496,7 @@ def pagamento(request, acao):
 
     return render(request, 'financeiro/paginas/pagamento/adicionar.html', {'formulario' : TransacaoForm(), 'pagina' : pagina})
 
+@login_required(login_url='/conta/login')
 def saida(request, acao):
     if acao == 'alterar':
         saida = Saida.objects.get(id = request.GET.get('id'))
@@ -462,6 +560,27 @@ def saida(request, acao):
         return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioSaidaForm()})
     return render(request, 'financeiro/paginas/saida/adicionar.html', {'formulario' : SaidaForm()})
 
+def conta(request, acao):
+    if acao == 'login':
+        if request.method == 'POST':
+            user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return redirect('index')
+            else:
+                alert = 'USUARIO OU SENHA INCORRETOS!'
+                return render(request, 'financeiro/paginas/conta/login.html', {'alert': alert})  
+        return render(request, 'financeiro/paginas/conta/login.html')
+    if acao == 'logout':
+        logout(request)
+        return render(request, 'financeiro/paginas/conta/login.html')
+    if acao == 'recuperar':
+        if request.method == 'POST':
+            return  HttpResponse ('<div style="text-align: center; padding-top: 20%;"><h3>Em desenvolvimento, por favor aguarde! </h3></div>')
+        return render(request, 'financeiro/paginas/conta/recuperar.html')
+
+@login_required(login_url='/conta/login')
 def listar(request, tipo):
     if tipo == 'saídas':
         saidas = listaSaida(request)
@@ -490,6 +609,7 @@ def listar(request, tipo):
             if not hasattr(entrada, 'categoria'):
                 avulso.append(entrada)
         return render(request, 'financeiro/paginas/avulso/tabela.html', {'avulso' : avulso})
+
 # Métodos Auxiliares
 def cabecalhoRelatorio(pdf, data):              # Insere Cabeçalhos Relatórios
     pdf.drawImage('ibc_financeiro/static/imagens/logo.jpg', 10,758,height=60, width=60)
@@ -824,6 +944,7 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
             pdf.showPage()
     pdf.save()
 
+@login_required(login_url='/conta/login')
 def relatorio(request, tipo):
     if tipo == 'entrada':
         if request.method == 'POST':

@@ -248,3 +248,19 @@ class SaidaForm(forms.Form):
 
     deletar = forms.BooleanField(label = 'Deletar o Atual', required = False)
     deletar2 = forms.BooleanField(label = 'Deletar o Atual', required = False)
+
+
+class UsuarioForm(forms.Form):
+    nome = forms.CharField(label = 'Nome', help_text = 'shopping_bag', max_length = 50)
+    nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome do Usuario', 'autocomplete' : 'off'}
+
+    sobrenome = forms.CharField(label = 'Sobrenome', help_text = 'shopping_bag', max_length = 50)
+    sobrenome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Sobrenome do Usuario', 'autocomplete' : 'off'}
+
+    email = forms.EmailField(label = 'E-mail', help_text = 'mail', max_length = 45, required = False)
+    email.widget.attrs = {'class' : 'form-control', 'placeholder' : 'exemplo@exemplo.exemplo', 'autocomplete' : 'off', 'maxlength' : '50'}
+
+    usuario = forms.CharField(label = 'Usuario', help_text = 'shopping_bag', max_length = 50)
+    usuario.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Usuario Para Login', 'autocomplete' : 'off'}
+
+    ativo = forms.BooleanField(label = 'Ativo', required = False)

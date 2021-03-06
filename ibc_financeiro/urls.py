@@ -16,4 +16,6 @@ urlpatterns = [
     path('avulso/<acao>', avulso, name = 'avulso'),                         # Avulso
     path('emissao/<acao>', emissao, name = 'emissao'),                      # Entrada de Missão
     path('missao/<acao>', missao, name = 'missao'),                         # Missão
+    path('conta/<acao>', conta, name = 'conta'),              # Autenticação User
+    path('usuario/<acao>', usuario, name = 'usuario'),
 ]

@@ -1,0 +1,90 @@
+{% extends 'financeiro/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    {% block titulo %}
+        Alterar Senha | {{user.first_name}} {{user.last_name}}
+    {% endblock %}
+{% endblock %}
+
+{% block CSS %}
+    <link rel= 'stylesheet' href= 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.min.css'>
+    
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-datepicker/bootstrap-datepicker.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/waitme/waitMe.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-select/bootstrap-select.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/dropzone/dropzone.css' %}">
+
+    <link rel= 'stylesheet' href= "{% static 'css/paginas/saida/saida.css' %}">
+
+{% endblock %}
+
+{% block dinamico %}
+    <form method= 'POST' action= "{% url 'usuario' 'alterarSenha' %}?id={{user.id}}" id= 'formulario'>
+        {% csrf_token %}   
+        <div class= 'row clearfix'>
+            <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>   
+                <div class= 'card'>
+                    <div class= 'header'>
+                        <h2>
+                            Senha
+                            <small> Insira os dados para adicionar uma nova senha. Os dados com <b> * </b> são obrigatórios </small>
+                        </h2>
+                    </div>
+                    
+                    <div class= 'body'>
+                        <div class= 'row clearfix'>
+                            {% if alert %}
+                                <div style="background-color: red;" id="alert" class="alert alert alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                    {{ alert }}
+                                </div>
+                            {% endif %}
+                            <div class= 'col-md-6'>
+                                <strong> Nova Senha <b> * </b> </strong>
+                                <div class= 'input-group'>
+                                    <span class= 'input-group-addon'>
+                                        <i class= 'material-icons'>lock</i>
+                                    </span>
+
+                                    <div class= 'form-line'>
+                                        <input type="password" name="password1" minlength="8" id="id_password1" class="form-control" placeholder="DIGITE SUA NOVA SENHA" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class= 'col-md-6'>
+                                <strong> Confirmação de Senha <b> * </b> </strong>
+                                <div class= 'input-group'>
+                                    <span class= 'input-group-addon'>
+                                        <i class= 'material-icons'>lock</i>
+                                    </span>
+
+                                    <div class= 'form-line'>
+                                        <input type="password" name="password2" minlength="8" id="id_password2" class="form-control" placeholder="CONFIRME SUA NOVA SENHA" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class= 'btn btn-success btn-lg waves-effect'>
+            <i class= 'material-icons'> update </i>
+            <span> ALTERAR SENHA</span>
+        </button>
+    </form>
+{% endblock %}
+
+{% block JS %}
+    <script src= "{% static 'js/plugins/autosize/autosize.js' %}"> </script>
+    <script src= "{% static 'js/plugins/momentjs/moment.js' %}"> </script>
+    <script src= "{% static 'js/plugins/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.js' %}"> </script>
+    <script src= "{% static 'js/plugins/bootstrap-datepicker/bootstrap-datepicker.js' %}"> </script>
+{% endblock %}
