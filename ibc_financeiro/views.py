@@ -20,6 +20,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 
+from .functions.report import *
 
 #pegando datas dos relatorios
 dates = []
@@ -443,7 +444,6 @@ def usuario(request, acao):
         
         #redirecionando para formulario de alteração de senha
         return render(request, 'financeiro/paginas/usuario/alterar_senha.html')
-
 
 @login_required(login_url='/conta/login')
 def missao(request, acao):
@@ -944,6 +944,9 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
             pdf.showPage()
     pdf.save()
 
+    Chart.pie(saidas)
+    PDF.merge(PDF)
+
 @login_required(login_url='/conta/login')
 def relatorio(request, tipo):
     if tipo == 'entrada':
@@ -970,7 +973,9 @@ def relatorio(request, tipo):
     elif tipo == 'geral':
         if request.method == 'POST':
             gerarRelatorioGeral(request, listaEntrada(request), listaSaida(request), listaMissao(request))
-            return render(request, 'index.html', {'nome': 'relatorio_geral.pdf'})
+            
+            return render(request, 'index.html', {'nome': 'pdf/report/general.pdf'})
+        
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioGeralForm()})
 
 def listaEntrada(request):
