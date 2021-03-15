@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 import pandas
 from decimal import Decimal
 import os
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from reportlab.pdfgen import canvas
 from django.conf import settings
 from pathlib import Path
@@ -21,6 +21,8 @@ from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 
 from .functions.report import *
+
+from django.db.models import Sum
 
 #pegando datas dos relatorios
 dates = []
@@ -268,7 +270,63 @@ def entrada(request, acao):
 
 @login_required(login_url='/conta/login')
 def index(request):
-    return render(request, 'financeiro/index.html')
+    ofertasMembros, ofertasAvulsas, ofertasMissoes = [], [], []
+    hoje, antes = date.today(), date.today() - timedelta(days = 7)
+
+    eMembro = Entrada.objects.filter(data__range = [antes, hoje]).order_by('data')
+    eAvulsa = EntradaAvulsa.objects.filter(data__range = [antes, hoje]).order_by('data')
+    eMissao = EntradaMissao.objects.filter(data__range = [antes, hoje]).order_by('data')
+
+    for dia in range(0, 8):
+        total = 0
+        
+        for entrada in eMembro:    
+            if entrada.data == (hoje - timedelta(days = dia)):
+                total += int(entrada.valor)
+
+        ofertasMembros.append(total)
+
+    for dia in range(0, 8):
+        total = 0
+        
+        for entrada in eAvulsa:    
+            if entrada.data == (hoje - timedelta(days = dia)):
+                total += int(entrada.valor)
+
+        ofertasAvulsas.append(total)
+
+    for dia in range(0, 8):
+        total = 0
+        
+        for entrada in eMissao:    
+            if entrada.data == (hoje - timedelta(days = dia)):
+                total += int(entrada.valor)
+
+        ofertasMissoes.append(total)
+
+    totalEntradas = 0
+
+    totalEntradas += int(Entrada.objects.filter(data__range = [antes, hoje]).aggregate(Sum('valor'))['valor__sum'])
+    totalEntradas += int(EntradaAvulsa.objects.filter(data__range = [antes, hoje]).aggregate(Sum('valor'))['valor__sum'])
+    totalEntradas += int(EntradaMissao.objects.filter(data__range = [antes, hoje]).aggregate(Sum('valor'))['valor__sum'])
+
+    totalSaidas = int(Saida.objects.filter(data__range= [antes, hoje]).aggregate(Sum('valor'))['valor__sum'])
+
+    saidas = Saida.objects.all().order_by('-data')[:5]
+
+    dados = {
+        'membros' : len(Membro.objects.all()),
+        'congregacoes' : len(Congregacao.objects.all()),
+        'missoes' : len(Missao.objects.filter(andamento = True)),
+        'ofertasMembros' : ofertasMembros[::-1],
+        'ofertasAvulsas' : ofertasAvulsas[::-1],
+        'ofertasMissoes' : ofertasMissoes[::-1],
+        'totalEntradas': totalEntradas,
+        'totalSaidas' : totalSaidas,
+        'saidas' : saidas
+    }
+
+    return render(request, 'financeiro/index.html', dados)
 
 @login_required(login_url='/conta/login')
 def membro(request, acao):
