@@ -902,10 +902,10 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
         pdf.line(363, 700 - y, 550, 700 - y) 
         y += 20
         valor_entradas = 0                     
-    pdf.drawString(50, 700 - y, 'Ofertas Avulsas:......................................: ')
+    pdf.drawString(50, 700 - y, 'OFERTAS AVULSAS:......................................: ')
     pdf.drawString(365, 700 - y , " R$  "+str(valorEntradasAvulsa))
     pdf.line(363, 698 - y, 550, 698 - y)
-    pdf.drawString(50, 678 - y , 'Missões:......................................: ') 
+    pdf.drawString(50, 678 - y , 'MISSÕES:......................................: ') 
     pdf.drawString(365, 678 - y, " R$  "+str(valorMissao))
     pdf.line(363, 676 - y, 550, 676 - y)
     pdf.setFont('Times-Bold', 12)
@@ -983,7 +983,7 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     valorEntradas = 0
     for entrada in entradas:
         if hasattr(entrada, 'categoria'):
-            if entrada.categoria.nome == 'Dizimo':
+            if entrada.categoria.nome == 'DÍZIMO':
                 if y > 500:
                     y = 0
                     pdf.showPage()
