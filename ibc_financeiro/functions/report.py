@@ -45,6 +45,57 @@ class Chart():
 
         PDF.build([table])
 
+    def progress(pdf, meta, total, y):
+        pdf.drawString(100, y, 'Meta: R$ ' + '{:.2f}'.format(meta))
+
+        pdf.line(100, y - 5, 500, y - 5)
+
+        pdf.line(100, y - 5, 100, y - 25)
+
+        porcentagem = int((total * 100) / meta)
+        final = int((400 * porcentagem) / 100)
+
+        pdf.setStrokeColorRGB(0,1,0.3)
+
+        comeco = 101
+
+        for x in range(101, final + 99):
+            pdf.line(x, y - 5.5, x, y - 24.5)
+            pdf.line(x + 0.5, y - 5.5, x, y - 24.5)
+            comeco = x
+
+            if comeco == 499:
+                break
+
+        pdf.setStrokeColorRGB(1, 0, 0)
+
+        for x in range(comeco + 1, 500):
+            pdf.line(x, y - 5.5, x, y - 24.5)
+            pdf.line(x + 0.5, y - 5.5, x, y - 24.5)
+
+        pdf.setStrokeColorRGB(0, 0, 1)
+
+        comeco = 100
+
+        if meta < total:
+            for x in range(comeco + 1, 500):
+                pdf.line(x, y - 5.5, x, y - 24.5)
+                pdf.line(x + 0.5, y - 5.5, x, y - 24.5)
+           
+        pdf.setStrokeColorRGB(0,0,0)
+        
+        pdf.line(500, y - 5, 500, y - 25) 
+        pdf.line(100, y - 25, 500, y - 25)
+
+
+        pdf.drawString(100, y - 38, 'Alcançado: R$ ' + '{:.2f}'.format(total))
+
+        if meta > total:
+            pdf.drawString(383, y - 38, 'Restante: R$ ' + '{:.2f}'.format(meta - total))
+
+        else:
+            pdf.drawString(383, y - 38, 'Ultrapassado: R$ ' + '{:.2f}'.format(total - meta))
+
 class PDF():
     def merge(self):
         PDF = PdfFileMerger()

@@ -228,7 +228,7 @@ class SaidaForm(forms.Form):
     fornecedor = forms.ModelChoiceField(label = 'Fornecedor', help_text = 'store', queryset = Fornecedor.objects.all().order_by('nome'), empty_label = 'Nenhum selecionado')
     fornecedor.widget.attrs = {'class' : 'form-control'}
 
-    nome = forms.CharField(label = 'Nome', help_text = 'shopping_bag', max_length = 75)
+    nome = forms.CharField(label = 'Nome', help_text = 'shopping_bag', max_length = 35)
     nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome do produto ou serviço', 'autocomplete' : 'off'}
     
     descricao = forms.CharField(label = 'Descrição', help_text = 'short_text', required = False, max_length = 100)
