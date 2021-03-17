@@ -336,7 +336,8 @@ def membro(request, acao):
         membro = Membro.objects.get(id=request.GET['id'])
         if request.method == 'POST':
             membro.delete()
-            return redirect('listar', tipo='membros')
+            messages.success(request, "DELETADO COM SUCESSO!")
+            return redirect('/listar/membros')
         else:
             entradas = Entrada.objects.filter(membro_id=membro.id)
             return render(request, 'financeiro/paginas/membro/deletar.html', {'membro': membro,'entradas': entradas})
