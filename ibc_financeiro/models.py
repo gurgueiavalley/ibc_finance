@@ -15,6 +15,11 @@ class Categoria(models.Model):              # Categoria
     def __str__(self):      # Nome do objeto
         return self.nome    # Retorna o nome da categoria
 
+    def save(self, *args, **kwargs):
+        self.nome = self.nome.upper()
+
+        super(Categoria, self).save(*args, **kwargs)
+
 class Congregacao(models.Model):            # Congregação
     nome = models.CharField(max_length = 60, unique = True)         # Nome (máximo de 60 caracteres | único | obrigatório)
     
@@ -24,6 +29,11 @@ class Congregacao(models.Model):            # Congregação
 
     def __str__(self):      # Nome do objeto
         return self.nome    # Retorna o nome
+
+    def save(self, *args, **kwargs):
+        self.nome = self.nome.upper()
+
+        super(Congregacao, self).save(*args, **kwargs)
 
 class Entrada(models.Model):                # Entrada
     membro = models.ForeignKey('Membro', on_delete = models.PROTECT)                                                                                                                            # Membro que ofertou (relacionamento [1,n] | protegida de deleção | obrigatório)
@@ -48,6 +58,9 @@ class Entrada(models.Model):                # Entrada
 
         except:     # Caso de erro no teste
             pass    # Não faz nada
+
+        if self.anotacao:
+            self.anotacao = self.anotacao.upper()
 
         super(Entrada, self).save(*args, **kwargs)      # Continua a alteração no banco de dados
 
@@ -81,6 +94,9 @@ class EntradaAvulsa(models.Model):          # Entrada Avulsa
 
         except:     # Caso de erro no teste
             pass    # Não faz nada
+
+        if self.anotacao:
+            self.anotacao = self.anotacao.upper()
 
         super(EntradaAvulsa, self).save(*args, **kwargs)      # Continua a alteração no banco de dados
 
@@ -116,6 +132,9 @@ class EntradaMissao(models.Model):          # Entrada de Missão
         except:     # Caso de erro no teste
             pass    # Não faz nada
 
+        if self.anotacao:
+            self.anotacao = self.anotacao.upper()
+
         super(EntradaMissao, self).save(*args, **kwargs)      # Continua a alteração no banco de dados
 
     def delete(self, *args, **kwargs):      # Deletar os arquivos na deleção
@@ -136,6 +155,17 @@ class Fornecedor(models.Model):             # Fornecedor
     def __str__(self):      # Nome do objeto
         return self.nome    # Retorna o nome
 
+    def save(self, *args, **kwargs):
+        self.nome = self.nome.upper()
+
+        if self.descricao:
+            self.descricao = self.descricao.upper()
+
+        if self.endereco:
+            self.endereco = self.endereco.upper()
+
+        super(Fornecedor, self).save(*args, **kwargs)
+
 class Membro(models.Model):                 # Membro
     SEXOS = (       # Opções de sexo
         ('MASCULINO', 'MASCULINO'),     # Masculino
@@ -149,6 +179,14 @@ class Membro(models.Model):                 # Membro
     celular = models.CharField(max_length = 14, blank = True, null = True, unique = True, validators = [MinLengthValidator(14)])    # Telefone celular para contato (máximo de 14 caracteres | opcional | único | mínimo de 14 caracteres)
     email = models.EmailField(max_length = 50, blank = True, null = True, unique = True)                                            # E-mail para contato (máximo de 50 caracteres | opcional | único)
 
+    def save(self, *args, **kwargs):
+        self.nome = self.nome.upper()
+
+        if self.email:
+            self.email = self.email.lower()
+
+        super(Membro, self).save(*args, **kwargs)
+
     def __str__(self):      # Nome do objeto
         return self.nome    # Retorna o nome
 
@@ -160,6 +198,14 @@ class Missao(models.Model):                 # Missão
     inicio = models.DateField()                                                 # Data que iniciou ou vai iniciar (obrigatório)
     fim = models.DateField()                                                    # Data que finalizou ou vai finalizar (obrigatório)
     andamento = models.BooleanField()                                           # Está em andamento (obrigatório)
+
+    def save(self, *args, **kwargs):
+        self.nome = self.nome.upper()
+
+        if self.detalhe:
+            self.detalhe = self.detalhe.upper()
+
+        super(Missao, self).save(*args, **kwargs)
 
     class Meta:             # Valores de leitura
         verbose_name = 'missão'             # Nome da classe no singular
@@ -201,6 +247,11 @@ class Saida(models.Model):                  # Saída
         except:     # Caso de erro no teste
             pass    # Não faz nada
 
+        self.nome = self.nome.upper()
+
+        if self.descricao:
+            self.descricao = self.descricao.upper()
+
         super(Saida, self).save(*args, **kwargs)      # Continua a alteração no banco de dados
 
     def delete(self, *args, **kwargs):      # Deletar os arquivos na deleção
@@ -215,6 +266,11 @@ class Saida(models.Model):                  # Saída
 class Transacao(models.Model):              # Transação
     nome = models.CharField(max_length = 25, unique = True)     # Nome (máximo de 25 caracteres | único | obrigatório)
     
+    def save(self, *args, **kwargs):
+        self.nome = self.nome.upper()
+
+        super(Transacao, self).save(*args, **kwargs)
+
     class Meta:             # Valores de leitura
         verbose_name = 'transação'              # Nome da classe no singular
         verbose_name_plural = 'transações'      # Nome da classe no plural

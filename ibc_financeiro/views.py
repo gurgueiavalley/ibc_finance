@@ -716,7 +716,7 @@ def gerarRelatorio(request, dados, tipo):
             pdf.setFont('Helvetica', 10)
             pdf.line(585, 718 - y, 10, 718 - y)
             pdf.drawString(20, 700 - y, str(saida.data.strftime('%d/%m/%Y')))
-            pdf.drawString(100, 700 - y, str(saida.congregacao))
+            pdf.drawString(100, 700 - y, str(saida.congregacao)[0:35])
             pdf.drawString(330,700 - y, str(saida.categoria)[0:25])
             pdf.drawString(490,700 - y, str(saida.valor))
         
@@ -754,7 +754,7 @@ def gerarRelatorio(request, dados, tipo):
             pdf.setFont('Helvetica', 10)
             pdf.line(585, 718 - y, 10, 718 - y)
             pdf.drawString(20, 700 - y, str(entrada.data.strftime('%d/%m/%Y')))
-            pdf.drawString(100, 700 - y, str(entrada.congregacao))
+            pdf.drawString(100, 700 - y, str(entrada.congregacao)[0:35])
             if hasattr(entrada, 'categoria'):
                 pdf.drawString(330,700 - y, str(entrada.categoria)[0:25])
             else:
@@ -844,10 +844,13 @@ def gerarRelatorio(request, dados, tipo):
                         valorTotal += missoes.valor
                         meta = missoes.missao.meta
                         y += 30
+            
             if pagina:
-                progressoMissao(pdf, meta, valorTotal, 670 - y)
+                Chart.progress(pdf, meta, valorTotal, 670 - y)
+            
             else:
-                progressoMissao(pdf, meta, valorTotal, 600 - y)
+                Chart.progress(pdf, meta, valorTotal, 600 - y)
+
             valorTotal = 0
             meta = 0
             y += 150
@@ -1077,7 +1080,7 @@ def listaMissao(request):
 def listaSaida(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
     congregacoes = request.POST.getlist('congregacao')
-    categorias = request.POST.getlist('categoria')
+    categorias = request.POST.getlist('categoria_saida')
     pagamentos = request.POST.getlist('transacao')
     empresas = request.POST.getlist('fornecedor')
 
@@ -1088,37 +1091,3 @@ def listaSaida(request):
     saidas = saidas.filter(fornecedor__nome__in = empresas) if empresas != [] else saidas
 
     return saidas
-
-def progressoMissao(pdf, meta, total, y):
-    pdf.drawString(100, y, 'Meta: R$ ' + '{:.2f}'.format(meta))
-
-    pdf.line(100, y - 5, 500, y - 5)
-
-    pdf.line(100, y - 5, 100, y - 25)
-
-    porcentagem = int((total * 100) / meta)
-    final = int((400 * porcentagem) / 100)
-
-    
-    pdf.setStrokeColorRGB(0,1,0.3)
-
-    comeco = 101
-
-    for x in range(101, final + 99):
-        pdf.line(x, y - 5.5, x, y - 24.5)
-        pdf.line(x + 0.5, y - 5.5, x, y - 24.5)
-        comeco = x
-
-    pdf.setStrokeColorRGB(1, 0, 0)   
-
-    for x in range(comeco + 1, 500):
-        pdf.line(x, y - 5.5, x, y - 24.5)
-        pdf.line(x + 0.5, y - 5.5, x, y - 24.5)
-        
-    pdf.setStrokeColorRGB(0,0,0)
-    
-    pdf.line(500, y - 5, 500, y - 25) 
-    pdf.line(100, y - 25, 500, y - 25)
-
-    pdf.drawString(100, y - 38, 'Alcançado: R$ ' + '{:.2f}'.format(total))
-    pdf.drawString(383, y - 38, 'Restante: R$ ' + '{:.2f}'.format(meta - total))
