@@ -23,6 +23,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from .functions.report import *
 
 from django.db.models import Sum
+from django.urls import reverse
+from django.contrib import messages
 
 #pegando datas dos relatorios
 dates = []
@@ -446,7 +448,8 @@ def usuario(request, acao):
                     else:
                         usuario.is_active = False
                     usuario.save()
-                    return redirect('usuario', acao='listar')
+                    messages.success(request, "ADICIONADO COM SUCESSO!")
+                    return redirect('/usuario/listar')
                 else:
                     alert = 'USUARIO JÁ FOI CADASTRADO!'
                     return render(request, 'financeiro/paginas/usuario/adicionar.html', {'formulario': UsuarioForm(), 'alert': alert})
@@ -464,7 +467,8 @@ def usuario(request, acao):
             else:
                 usuario.is_active = False
             usuario.save()
-            return redirect('usuario', acao='listar')          
+            messages.success(request, "ALTERADO COM SUCESSO!")
+            return redirect('/usuario/listar')          
 
         #redirecionando para pagina de visualização e alteração
         else:
@@ -484,7 +488,7 @@ def usuario(request, acao):
             else:
                 usuario.is_active = False
             usuario.save()
-        
+            messages.success(request, "ALTERADO COM SUCESSO!")
         #redireciona para visualização e alteração dos dados do perfil
         return render(request, 'financeiro/paginas/usuario/perfil.html', {'formulario': UsuarioForm(), 'usuario': usuario})
 
@@ -495,6 +499,7 @@ def usuario(request, acao):
             if request.POST['password1'] == request.POST['password2']:
                 usuario.set_password(request.POST['password1'])
                 usuario.save()
+                messages.success(request, "ALTERADO COM SUCESSO!")
                 return render(request, 'financeiro/paginas/usuario/perfil.html', {'formulario': UsuarioForm(), 'usuario': usuario})
             else:
                 alert = 'SENHAS NÃO CONFEREM!'
