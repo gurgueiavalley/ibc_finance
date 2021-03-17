@@ -252,15 +252,15 @@ class SaidaForm(forms.Form):
 
 class UsuarioForm(forms.Form):
     nome = forms.CharField(label = 'Nome', help_text = 'shopping_bag', max_length = 50)
-    nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome do Usuario', 'autocomplete' : 'off'}
+    nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome do usuário', 'autocomplete' : 'off'}
 
     sobrenome = forms.CharField(label = 'Sobrenome', help_text = 'shopping_bag', max_length = 50)
-    sobrenome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Sobrenome do Usuario', 'autocomplete' : 'off'}
+    sobrenome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Sobrenome do usuário', 'autocomplete' : 'off'}
 
     email = forms.EmailField(label = 'E-mail', help_text = 'mail', max_length = 45, required = False)
     email.widget.attrs = {'class' : 'form-control', 'placeholder' : 'exemplo@exemplo.exemplo', 'autocomplete' : 'off', 'maxlength' : '50'}
 
     usuario = forms.CharField(label = 'Usuario', help_text = 'shopping_bag', max_length = 50)
-    usuario.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Usuario Para Login', 'autocomplete' : 'off'}
+    usuario.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Usuário para login', 'autocomplete' : 'off'}
 
     ativo = forms.BooleanField(label = 'Ativo', required = False)
