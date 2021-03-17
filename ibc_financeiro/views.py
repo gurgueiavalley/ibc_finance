@@ -72,7 +72,7 @@ def avulso(request, acao):
             if 'comprovante' in request.FILES:
                 entrada.comprovante = request.FILES['comprovante']
 
-            entrada.usuario = User.objects.get(id = 1)
+            entrada.usuario = User.objects.get(id = request.user.id)
 
             entrada.save()
     if acao == 'listar':
@@ -173,7 +173,7 @@ def emissao(request, acao):
             entrada = EntradaMissao()
             entrada.missao = Missao.objects.get(id = request.POST['missao'])
             entrada.transacao = Transacao.objects.get(id = request.POST['transacao'])
-            entrada.usuario = User.objects.get(id = 1)
+            entrada.usuario = User.objects.get(id = request.user.id)
             entrada.valor = request.POST['valor']
             entrada.data = convertDate(request.POST['data'])
 
@@ -260,7 +260,7 @@ def entrada(request, acao):
             if 'comprovante' in request.FILES:
                 entrada.comprovante = request.FILES['comprovante']
 
-            entrada.usuario = User.objects.get(id = 1)
+            entrada.usuario = User.objects.get(id = request.user.id)
 
             entrada.save()
     if acao == 'listar':
@@ -584,7 +584,7 @@ def saida(request, acao):
                 if('deletar2' in request.POST):
                     saida.nf = None
                 
-                saida.usuario = User.objects.get(id = 1)
+                saida.usuario = User.objects.get(id = request.user.id)
                 saida.save()
 
         return render(request, 'financeiro/paginas/saida/alterar.html', {'formulario': SaidaForm(), 'saida': saida})
@@ -610,7 +610,7 @@ def saida(request, acao):
             if('nota_fiscal' in request.FILES):
                 saida.nf = request.FILES['nota_fiscal']
             
-            saida.usuario = User.objects.get(id = 1)
+            saida.usuario = User.objects.get(id = request.user.id)
             saida.save()
 
     elif acao == 'listar':
