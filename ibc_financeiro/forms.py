@@ -107,7 +107,7 @@ class MembroForm(forms.Form):
     sexo = forms.ChoiceField(label = 'Sexo', help_text = 'male', choices = SEXOS, required = False)
     sexo.widget.attrs = {'class' : 'form-control'}
 
-    nascimento = forms.DateField(label = 'Data de Nascimento', help_text = 'event')
+    nascimento = forms.DateField(label = 'Data de Nascimento', help_text = 'event', required = False)
     nascimento.widget.attrs = {'class' : 'form-control datepicker', 'placeholder' : '__/__/____'}
 
     celular = forms.CharField(label = 'Celular', help_text = 'smartphone', max_length = 14, required = False)
