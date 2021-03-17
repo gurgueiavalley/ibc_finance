@@ -29,6 +29,7 @@ from django.contrib import messages
 #pegando datas dos relatorios
 dates = []
 
+
 # Métodos Renderizados
 @login_required(login_url='/conta/login')
 def avulso(request, acao):
@@ -54,6 +55,7 @@ def avulso(request, acao):
                     entrada.comprovante = None
 
                 entrada.save()
+                messages.success(request, "ALTERADO COM SUCESSO!")
 
         return render(request, 'financeiro/paginas/avulso/alterar.html', {'formulario' : EntradaAvulsaForm(), 'dados' : entrada})
     
@@ -77,10 +79,12 @@ def avulso(request, acao):
             entrada.usuario = User.objects.get(id = request.user.id)
 
             entrada.save()
+            messages.success(request, "ADICIONADO COM SUCESSO!")
     if acao == 'listar':
         tipo = 'avulso'
         return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioEntradaForm()})
     return render(request, 'financeiro/paginas/avulso/adicionar.html', {'formulario' : EntradaAvulsaForm()})
+
 
 @login_required(login_url='/conta/login')
 def categoria(request, acao):
@@ -102,6 +106,8 @@ def categoria(request, acao):
 
     return render(request, 'financeiro/paginas/categoria/adicionar.html', {'formulario' : CategoriaForm(), 'pagina' : pagina})
 
+
+
 @login_required(login_url='/conta/login')
 def catEntrada(request, acao):
     pagina = 0
@@ -122,6 +128,8 @@ def catEntrada(request, acao):
 
     return render(request, 'financeiro/paginas/catentrada/adicionar.html', {'formulario' : CategoriaForm(), 'pagina' : pagina})
 
+
+
 @login_required(login_url='/conta/login')
 def congregacao(request, acao):
     pagina = 0
@@ -140,6 +148,8 @@ def congregacao(request, acao):
             return render(request, 'financeiro/paginas/congregacao/adicionar.html', {'formulario' : CongregacaoForm(), 'pagina' : pagina, 'id' : congregacao.id, 'nome' : request.POST['nome']})
 
     return render(request, 'financeiro/paginas/congregacao/adicionar.html', {'formulario' : CongregacaoForm(), 'pagina' : pagina})
+
+
 
 @login_required(login_url='/conta/login')
 def emissao(request, acao):
@@ -165,7 +175,7 @@ def emissao(request, acao):
                     entrada.comprovante = None
 
                 entrada.save()
-
+                messages.success(request, "ALTERADO COM SUCESSO!")
         return render(request, 'financeiro/paginas/emissao/alterar.html', {'formulario' : EntradaMissaoForm(), 'dados' : entrada})
     
     if request.method == 'POST':
@@ -186,8 +196,11 @@ def emissao(request, acao):
                 entrada.comprovante = request.FILES['comprovante']
 
             entrada.save()
+            messages.success(request, "ADICIONADO COM SUCESSO!")
 
     return render(request, 'financeiro/paginas/emissao/adicionar.html', {'formulario' : EntradaMissaoForm()})
+
+
 
 @login_required(login_url='/conta/login')
 def empresa(request, acao):
@@ -215,6 +228,8 @@ def empresa(request, acao):
 
     return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : FornecedorForm(), 'pagina' : pagina})
 
+
+
 @login_required(login_url='/conta/login')
 def entrada(request, acao):
     if acao == 'alterar':
@@ -240,6 +255,7 @@ def entrada(request, acao):
                     entrada.comprovante = None
 
                 entrada.save()
+                messages.success(request, "ALTERADO COM SUCESSO!")
 
         return render(request, 'financeiro/paginas/entrada/alterar.html', {'formulario' : EntradaForm(), 'dados' : entrada})
     
@@ -265,10 +281,13 @@ def entrada(request, acao):
             entrada.usuario = User.objects.get(id = request.user.id)
 
             entrada.save()
+            messages.success(request, "ADICIONADO COM SUCESSO!")
     if acao == 'listar':
         tipo = 'entradas'
         return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioEntradaForm()})
     return render(request, 'financeiro/paginas/entrada/adicionar.html', {'formulario' : EntradaForm()})
+
+
 
 @login_required(login_url='/conta/login')
 def index(request):
@@ -330,6 +349,8 @@ def index(request):
 
     return render(request, 'financeiro/index.html', dados)
 
+
+
 @login_required(login_url='/conta/login')
 def membro(request, acao):
     if acao == 'deletar':
@@ -369,7 +390,7 @@ def membro(request, acao):
                     membro.save()
 
             os.remove(os.getcwd() + default_storage.url(nomeArquivo))
-        
+            messages.success(request, "IMPORTADO COM SUCESSO!")
             return render(request, 'financeiro/paginas/membro/tabela.html', {'membros' : Membro.objects.all().order_by('nome')})
 
         return render(request, 'financeiro/paginas/membro/importar.html')
@@ -388,7 +409,8 @@ def membro(request, acao):
                 membro.nascimento = convertDate(request.POST['nascimento'])
 
                 membro.save()
-            return redirect('listar', tipo='membros')
+            messages.success(request, "ALTERADO COM SUCESSO!")
+            return redirect('/listar/membros')
         
         else:
             return render(request, 'financeiro/paginas/membro/alterar.html', {'formulario': MembroForm(), 'membro': membro})
@@ -415,7 +437,7 @@ def membro(request, acao):
                 membro.nascimento = convertDate(request.POST['nascimento'])
 
             membro.save()
-
+            messages.success(request, "ADICIONADO COM SUCESSO!")
             pagina = 1
             
         return render(request, 'financeiro/paginas/membro/adicionar.html', {'formulario' : MembroForm(), 'pagina' : pagina, 'id' : membro.id, 'nome' : membro.nome})
@@ -423,8 +445,9 @@ def membro(request, acao):
     if 'pop' in request.GET:
         return render(request, 'financeiro/paginas/membro/adicionar.html', {'formulario' : MembroForm(), 'pagina' : pagina, 'pop' : 'yes'})
         
-
     return render(request, 'financeiro/paginas/membro/adicionar.html', {'formulario' : MembroForm(), 'pagina' : pagina})
+
+
 
 @login_required(login_url='/conta/login')
 def usuario(request, acao):
@@ -509,6 +532,8 @@ def usuario(request, acao):
         #redirecionando para formulario de alteração de senha
         return render(request, 'financeiro/paginas/usuario/alterar_senha.html')
 
+
+
 @login_required(login_url='/conta/login')
 def missao(request, acao):
     pagina = 0
@@ -542,6 +567,8 @@ def missao(request, acao):
 
     return render(request, 'financeiro/paginas/missao/adicionar.html', {'formulario' : MissaoForm(), 'pagina' : pagina})
 
+
+
 @login_required(login_url='/conta/login')
 def pagamento(request, acao):
     pagina = 0
@@ -559,6 +586,8 @@ def pagamento(request, acao):
         return render(request, 'financeiro/paginas/pagamento/adicionar.html', {'formulario' : TransacaoForm(), 'pagina' : pagina, 'id' : transacao.id, 'nome' : transacao.nome})
 
     return render(request, 'financeiro/paginas/pagamento/adicionar.html', {'formulario' : TransacaoForm(), 'pagina' : pagina})
+
+
 
 @login_required(login_url='/conta/login')
 def saida(request, acao):
@@ -592,7 +621,7 @@ def saida(request, acao):
                 
                 saida.usuario = User.objects.get(id = request.user.id)
                 saida.save()
-
+                messages.success(request, "ALTERADO COM SUCESSO!")
         return render(request, 'financeiro/paginas/saida/alterar.html', {'formulario': SaidaForm(), 'saida': saida})
 
 
@@ -618,11 +647,14 @@ def saida(request, acao):
             
             saida.usuario = User.objects.get(id = request.user.id)
             saida.save()
+            messages.success(request, "ADICIONADO COM SUCESSO!")
 
     elif acao == 'listar':
         tipo = 'saídas'
         return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioSaidaForm()})
     return render(request, 'financeiro/paginas/saida/adicionar.html', {'formulario' : SaidaForm()})
+
+
 
 def conta(request, acao):
     if acao == 'login':
@@ -643,6 +675,8 @@ def conta(request, acao):
         if request.method == 'POST':
             return  HttpResponse ('<div style="text-align: center; padding-top: 20%;"><h3>Em desenvolvimento, por favor aguarde! </h3></div>')
         return render(request, 'financeiro/paginas/conta/recuperar.html')
+
+
 
 @login_required(login_url='/conta/login')
 def listar(request, tipo):
@@ -674,6 +708,8 @@ def listar(request, tipo):
                 avulso.append(entrada)
         return render(request, 'financeiro/paginas/avulso/tabela.html', {'avulso' : avulso})
 
+
+
 # Métodos Auxiliares
 def cabecalhoRelatorio(pdf, data):              # Insere Cabeçalhos Relatórios
     pdf.drawImage('ibc_financeiro/static/imagens/logo.jpg', 10,758,height=60, width=60)
@@ -683,11 +719,17 @@ def cabecalhoRelatorio(pdf, data):              # Insere Cabeçalhos Relatórios
     pdf.drawString(240,770,"Relatório Financeiro")
     pdf.drawString(430,740,"Data: " + data)
 
+
+
 def convertDate(date):                          # Converte formato da data
     return datetime.strptime(date, '%d/%m/%Y').date()
 
+
+
 def getData():
     return date.today().strftime('%d/%m/%Y')
+
+
 
 def gerarRelatorio(request, dados, tipo):
     valorTotal = 0
@@ -856,7 +898,9 @@ def gerarRelatorio(request, dados, tipo):
             meta = 0
             y += 150
         pdf.save()
-    
+
+
+
 def gerarRelatorioGeral(request, entradas, saidas, missoes):
     data = str(getData())
     
@@ -1014,6 +1058,8 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     Chart.pie(saidas)
     PDF.merge(PDF)
 
+
+
 @login_required(login_url='/conta/login')
 def relatorio(request, tipo):
     if tipo == 'entrada':
@@ -1045,6 +1091,8 @@ def relatorio(request, tipo):
         
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioGeralForm()})
 
+
+
 def listaEntrada(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
     dates.append([convertDate(request.POST['inicio']), convertDate(request.POST['fim'])])
@@ -1067,6 +1115,8 @@ def listaEntrada(request):
 
     return entradas
 
+
+
 def listaMissao(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
     congregacoes = request.POST.getlist('congregacao')
@@ -1077,6 +1127,8 @@ def listaMissao(request):
     entradas = entradas if missoes == [] else entradas.filter(missao__nome__in = missoes)
 
     return entradas
+
+
 
 def listaSaida(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
