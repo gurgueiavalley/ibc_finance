@@ -353,17 +353,7 @@ def index(request):
 
 @login_required(login_url='/conta/login')
 def membro(request, acao):
-    if acao == 'deletar':
-        membro = Membro.objects.get(id=request.GET['id'])
-        if request.method == 'POST':
-            membro.delete()
-            messages.success(request, "DELETADO COM SUCESSO!")
-            return redirect('/listar/membros')
-        else:
-            entradas = Entrada.objects.filter(membro_id=membro.id)
-            return render(request, 'financeiro/paginas/membro/deletar.html', {'membro': membro,'entradas': entradas})
-
-    if acao == 'importar':
+    if acao == 'importar':            # Importar
         if request.method == 'POST':
             arquivo = request.FILES['file']
 
@@ -394,6 +384,16 @@ def membro(request, acao):
             return render(request, 'financeiro/paginas/membro/tabela.html', {'membros' : Membro.objects.all().order_by('nome')})
 
         return render(request, 'financeiro/paginas/membro/importar.html')
+
+    if acao == 'deletar':
+        membro = Membro.objects.get(id=request.GET['id'])
+        if request.method == 'POST':
+            membro.delete()
+            messages.success(request, "DELETADO COM SUCESSO!")
+            return redirect('/listar/membros')
+        else:
+            entradas = Entrada.objects.filter(membro_id=membro.id)
+            return render(request, 'financeiro/paginas/membro/deletar.html', {'membro': membro,'entradas': entradas})
     
     elif acao == 'alterar':
         membro = Membro.objects.get(id = request.GET.get('id'))
