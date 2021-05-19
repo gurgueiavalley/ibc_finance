@@ -45,17 +45,40 @@
                         <img src= "{% static 'imagens/logo.jpg' %}" width= '48' height= '48' alt= 'User'>
                     </div>
 
-                    <div class="info-container">
-                        <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><strong>{{user.first_name}} {{user.last_name}}</strong></div>
-                        <div class="email">{{user.email}}</div>
-                        <div class="btn-group user-helper-dropdown">
-                            <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
-                            <ul class="dropdown-menu pull-right">
-                                <li><a href="{% url 'usuario' 'perfil' %}?id={{user.id}}"><i class="material-icons">person</i>Perfil</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="{% url 'usuario' 'listar' %}"><i class="material-icons">group</i>Usuarios</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="{% url 'conta' 'logout' %}"><i class="material-icons">input</i>Sair</a></li>
+                    <div class= 'info-container'>
+                        <div class= 'name' data-toggle= 'dropdown' aria-haspopup= 'true' aria-expanded= 'false'>
+                            <strong> {{ user.first_name }} {{ user.last_name }} </strong>
+                        </div>
+
+                        <div class= 'email'> {{ user.email }} </div>
+
+                        <div class= 'btn-group user-helper-dropdown'>
+                            <i class= 'material-icons' data-toggle= 'dropdown' aria-haspopup= 'true' aria-expanded= 'true'>
+                                keyboard_arrow_down
+                            </i>
+
+                            <ul class= 'dropdown-menu pull-right'>
+                                <li>        <!-- Perfil -->
+                                    <a href= "{% url 'usuario' 'perfil' %}">
+                                        <i class= 'material-icons'> person </i> Perfil
+                                    </a>
+                                </li>
+
+                                <li role= 'separator' class= 'divider'> </li>
+
+                                <li>        <!-- Usuários -->
+                                    <a href= "{% url 'usuario' 'listar' %}">
+                                        <i class= 'material-icons'> group </i> Usuários
+                                    </a>
+                                </li>
+                                
+                                <li role= 'separator' class= 'divider'> </li>
+                                
+                                <li>        <!-- Sair -->
+                                    <a href= "{% url 'conta' 'logout' %}">
+                                        <i class= 'material-icons'> input </i> Sair
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>

@@ -447,8 +447,6 @@ def membro(request, acao):
         
     return render(request, 'financeiro/paginas/membro/adicionar.html', {'formulario' : MembroForm(), 'pagina' : pagina})
 
-
-
 @login_required(login_url='/conta/login')
 def usuario(request, acao):
     if acao == 'listar':
@@ -481,8 +479,8 @@ def usuario(request, acao):
         #Redirecionando para pagina de adição de usuario
         return render(request, 'financeiro/paginas/usuario/adicionar.html', {'formulario': UsuarioForm()})
 
-    if acao == 'alterar':
-        usuario = User.objects.get(id=request.GET.get('id'))
+    elif acao == 'alterar':
+        usuario = User.objects.get(id = request.user.id)
         
         #Alterar situação do usuario (Ativar/ Desativar)
         if request.method == 'POST':
@@ -498,8 +496,8 @@ def usuario(request, acao):
         else:
             return render(request, 'financeiro/paginas/usuario/alterar.html', {'formulario': UsuarioForm(), 'usuario': usuario})
 
-    if acao == 'perfil':
-        usuario = User.objects.get(id=request.GET.get('id'))
+    elif acao == 'perfil':
+        usuario = User.objects.get(id = request.user.id)
         
         #Alterando dados do perfil do usuario
         if request.method == 'POST':                
@@ -513,13 +511,14 @@ def usuario(request, acao):
                 usuario.is_active = False
             usuario.save()
             messages.success(request, "ALTERADO COM SUCESSO!")
-        #redireciona para visualização e alteração dos dados do perfil
+        
+        # Redireciona para visualização e alteração dos dados do perfil
         return render(request, 'financeiro/paginas/usuario/perfil.html', {'formulario': UsuarioForm(), 'usuario': usuario})
 
-    if acao == 'alterarSenha':
-        #Alterando senha do usuario
-        if request.method == "POST":
-            usuario = User.objects.get(id=request.GET.get('id'))
+    elif acao == 'alterarSenha':
+        if request.method == 'POST':        # Alterando senha do usuário
+            usuario = User.objects.get(id = request.user.id)
+            
             if request.POST['password1'] == request.POST['password2']:
                 usuario.set_password(request.POST['password1'])
                 usuario.save()
@@ -531,8 +530,6 @@ def usuario(request, acao):
         
         #redirecionando para formulario de alteração de senha
         return render(request, 'financeiro/paginas/usuario/alterar_senha.html')
-
-
 
 @login_required(login_url='/conta/login')
 def missao(request, acao):

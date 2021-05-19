@@ -44,7 +44,8 @@
             </div>
         {% endfor %}
     {% endif %}
-    <form method= 'POST' action= "{% url 'usuario' 'perfil' %}?id={{usuario.id}}" id= 'formulario'>
+    
+    <form method= 'POST' action= "{% url 'usuario' 'perfil' %}" id= 'formulario'>
         {% csrf_token %}   
         <div class= 'row clearfix'>
             <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>   
@@ -134,8 +135,9 @@
                             <div class="form-line">
                                 <input type="password" name="password" minlength="8" id="id_password" class="form-control" placeholder="*************" disabled>
                             </div>
-                            <div style="background-color: #2b982b;" class="btn btn btn-lg waves-effect">
-                                <a style="color: white;" href="{% url 'usuario' 'alterarSenha' %}?id={{usuario.id}}">ALTERAR SENHA</a>
+
+                            <div style= 'background-color: #2b982b' class= 'btn btn btn-lg waves-effect'>
+                                <a style= 'color: white' href= "{% url 'usuario' 'alterarSenha' %}"> ALTERAR SENHA </a>
                             </div>
                         </div>
                     </div>
