@@ -287,9 +287,7 @@ def entrada(request, acao):
         return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioEntradaForm()})
     return render(request, 'financeiro/paginas/entrada/adicionar.html', {'formulario' : EntradaForm()})
 
-
-
-@login_required(login_url='/conta/login')
+@login_required(login_url = '/conta/login')
 def index(request):
     ofertasMembros, ofertasAvulsas, ofertasMissoes = [], [], []
     hoje, antes = date.today(), date.today() - timedelta(days = 7)
@@ -325,13 +323,11 @@ def index(request):
 
         ofertasMissoes.append(total)
 
-    totalEntradas = 0
+    totalEntradas = int(Entrada.objects.filter(data__range = [antes, hoje]).aggregate(Sum('valor'))['valor__sum'] or 0)
+    totalEntradas += int(EntradaAvulsa.objects.filter(data__range = [antes, hoje]).aggregate(Sum('valor'))['valor__sum'] or 0)
+    totalEntradas += int(EntradaMissao.objects.filter(data__range = [antes, hoje]).aggregate(Sum('valor'))['valor__sum'] or 0)
 
-    totalEntradas += int(Entrada.objects.filter(data__range = [antes, hoje]).aggregate(Sum('valor'))['valor__sum'])
-    totalEntradas += int(EntradaAvulsa.objects.filter(data__range = [antes, hoje]).aggregate(Sum('valor'))['valor__sum'])
-    totalEntradas += int(EntradaMissao.objects.filter(data__range = [antes, hoje]).aggregate(Sum('valor'))['valor__sum'])
-
-    totalSaidas = int(Saida.objects.filter(data__range= [antes, hoje]).aggregate(Sum('valor'))['valor__sum'])
+    totalSaidas = int(Saida.objects.filter(data__range= [antes, hoje]).aggregate(Sum('valor'))['valor__sum'] or 0)
 
     saidas = Saida.objects.all().order_by('-data')[:5]
 
@@ -348,8 +344,6 @@ def index(request):
     }
 
     return render(request, 'financeiro/index.html', dados)
-
-
 
 @login_required(login_url='/conta/login')
 def membro(request, acao):
