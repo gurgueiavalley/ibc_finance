@@ -3,13 +3,11 @@ from reportlab.lib.pagesizes                import A4
 from reportlab.graphics.charts.piecharts    import Pie
 from reportlab.graphics.shapes              import Drawing, String
 
-from PyPDF2                                 import PdfFileMerger
-
-import os
+from .pdf import PDF
 
 class Chart():
     def pie(saidas):
-        archive = 'media/financeiro/report/chart.pdf'
+        archive = 'ibc_financeiro/static/chart.pdf'
 
         PDF = SimpleDocTemplate(archive, pagesize = A4)
 
@@ -96,22 +94,20 @@ class Chart():
         else:
             pdf.drawString(383, y - 38, 'Ultrapassado: R$ ' + '{:.2f}'.format(total - meta))
 
-class PDF():
-    def merge(self):
-        PDF = PdfFileMerger()
-        
-        report = 'ibc_financeiro/static/relatorio_geral.pdf'
-        chart = 'media/financeiro/report/chart.pdf'
+class Report():
+    def receipt(movements, old, new):
+        receipts = []
 
-        PDF.append(report)
-        PDF.append(chart)
-        
-        PDF.write('ibc_financeiro/static/pdf/report/general.pdf')
-        
-        PDF.close()
+        for movement in movements:
+            if str(movement.comprovante) != '':
+                receipts.append('media/' + str(movement.comprovante))
+                
+        receipt = 'ibc_financeiro/static/receipt.pdf'
 
-        self.delete(report)
-        self.delete(chart)
+        PDF.convert(receipts, receipt)
+        PDF.merge([old, receipt], new)
+        PDF.delete([old, receipt])
 
-    def delete(directory):
-        os.remove(directory)
+# pdf. set_font ( "Arial" , tamanho = 12 ) 
+# pdf. ln ( 85 )   # move 85 para baixo 
+# pdf. célula ( 200 , 10 , txt = "{}" . formato ( caminho_da_imagem ) , ln = 1 )

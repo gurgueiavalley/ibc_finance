@@ -21,6 +21,7 @@ from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 
 from .functions.report import *
+from .functions.pdf     import PDF
 
 from django.db.models import Sum
 from django.urls import reverse
@@ -699,33 +700,77 @@ def listar(request, tipo):
                 avulso.append(entrada)
         return render(request, 'financeiro/paginas/avulso/tabela.html', {'avulso' : avulso})
 
+def cabecalhoRelatorio(pdf, data):
+    pdf.drawImage('ibc_financeiro/static/imagens/logo.jpg', 10, 758, height = 60, width = 60)
 
-
-# Métodos Auxiliares
-def cabecalhoRelatorio(pdf, data):              # Insere Cabeçalhos Relatórios
-    pdf.drawImage('ibc_financeiro/static/imagens/logo.jpg', 10,758,height=60, width=60)
     pdf.setFont('Times-Bold', 12)
-    pdf.drawString(200,800,"IGREJA BATISTA DE CORRENTE")
-    pdf.drawString(182,785,"Departamento de Administração e Finanças")
-    pdf.drawString(240,770,"Relatório Financeiro")
-    pdf.drawString(430,740,"Data: " + data)
-
-
+    
+    pdf.drawString(200, 800, 'IGREJA BATISTA DE CORRENTE')
+    pdf.drawString(182, 785, 'Departamento de Administração e Finanças')
+    pdf.drawString(240, 770, 'Relatório Financeiro')
+    
+    pdf.drawString(430, 740, 'Data: ' + data)
 
 def convertDate(date):                          # Converte formato da data
     return datetime.strptime(date, '%d/%m/%Y').date()
 
-
-
 def getData():
     return date.today().strftime('%d/%m/%Y')
 
-
-
 def gerarRelatorio(request, dados, tipo):
-    valorTotal = 0
-    y = 0
+    valorTotal, y = 0, 0
     
+    if tipo == 'entrada':
+        directory = 'ibc_financeiro/static/entrada.pdf'
+
+        pdf = canvas.Canvas(directory)
+        pdf.setTitle('Relatório de Entradas')
+
+        cabecalhoRelatorio(pdf, str(getData()))
+
+        pdf.drawString(278, 755, 'Entradas')
+        pdf.line(275, 752, 330, 752)
+
+        pdf.drawString(20, 700, 'Data')
+        pdf.drawString(100, 700, 'Congregação')
+        pdf.drawString(330, 700, 'Categoria')
+        pdf.drawString(490, 700, 'Valor')
+
+        pdf.setFont('Helvetica', 10)
+
+        for entrada in dados:
+            y = y + 30
+
+            if(y > 580):
+                y = 0
+
+                pdf.showPage()
+
+            pdf.line(585, 718 - y, 10, 718 - y)
+
+            pdf.drawString(20, 700 - y, str(entrada.data.strftime('%d/%m/%Y')))
+            pdf.drawString(100, 700 - y, str(entrada.congregacao)[0:35])
+
+            if hasattr(entrada, 'categoria'):
+                pdf.drawString(330, 700 - y, str(entrada.categoria)[0:25])
+
+            else:
+                pdf.drawString(330, 700 - y, 'AVULSA')
+
+            pdf.drawString(490, 700 - y, 'R$ ' + str(entrada.valor))
+        
+            valorTotal += entrada.valor
+        
+        pdf.line(585, 690 - y, 10, 690 - y)
+
+        pdf.setFont('Times-Bold', 12)
+
+        pdf.drawString(400, 650 - y, 'Valor Total: R$ ' + str(valorTotal))
+
+        pdf.save()
+
+        Report.receipt(dados, directory, 'ibc_financeiro/static/pdf/report/entry.pdf')
+
     if tipo == 'saída':
         caminho = "ibc_financeiro/static/relatorio_saida.pdf"
         pdf = canvas.Canvas(caminho)
@@ -768,47 +813,7 @@ def gerarRelatorio(request, dados, tipo):
                 pdf.drawImage(arquivo, 200, 250, width= 200, height= 400)
                 pdf.showPage()
         pdf.save()
-    elif tipo == 'entrada':
-        caminho = "ibc_financeiro/static/relatorio_entrada.pdf"
-        pdf = canvas.Canvas(caminho)
-        pdf.setTitle("Relatório de Entradas")
-        cabecalhoRelatorio(pdf, str(getData()))
-        pdf.drawString(20, 700, "Data ")
-        pdf.drawString(100, 700, "Congregação ")
-        pdf.drawString(330,700,"Categoria ")
-        pdf.drawString(490,700,"Valor ")
-        pdf.drawString(278,755,"Entradas")
-        pdf.line(275, 752, 330, 752)
-        pdf.setFont('Helvetica', 10)
-        for entrada in dados:
-            y = y + 30
-            if(y > 580):
-                y = 0
-                pdf.showPage()
-            pdf.setFont('Helvetica', 10)
-            pdf.line(585, 718 - y, 10, 718 - y)
-            pdf.drawString(20, 700 - y, str(entrada.data.strftime('%d/%m/%Y')))
-            pdf.drawString(100, 700 - y, str(entrada.congregacao)[0:35])
-            if hasattr(entrada, 'categoria'):
-                pdf.drawString(330,700 - y, str(entrada.categoria)[0:25])
-            else:
-                pdf.drawString(330,700 - y, "Avulsa")
-            pdf.drawString(490,700 - y, str(entrada.valor))
-        
-            valorTotal = valorTotal + entrada.valor
-        pdf.line(585, 690 - y, 10, 690 - y)
-        pdf.setFont('Times-Bold', 12)
-        pdf.drawString(400,650 - y,"Valor Total: "+" R$ "+str(valorTotal))
-
-        pdf.showPage()
-        for entrada in dados:
-            if str(entrada.comprovante) != "":
-                if entrada.anotacao != None:    
-                    pdf.drawString(20, 780, str(entrada.anotacao))
-                arquivo = "media/" + str(entrada.comprovante)
-                pdf.drawImage(arquivo, 200, 250, width= 200, height= 400)
-                pdf.showPage()
-        pdf.save()
+    
     if tipo == 'missão':
         valorTotal = 0
         meta = 0
@@ -889,8 +894,6 @@ def gerarRelatorio(request, dados, tipo):
             meta = 0
             y += 150
         pdf.save()
-
-
 
 def gerarRelatorioGeral(request, entradas, saidas, missoes):
     data = str(getData())
@@ -1047,16 +1050,22 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     pdf.save()
 
     Chart.pie(saidas)
-    PDF.merge(PDF)
 
+    directories = [
+        'ibc_financeiro/static/relatorio_geral.pdf',
+        'ibc_financeiro/static/chart.pdf'
+    ]
 
+    PDF.merge(directories, 'ibc_financeiro/static/pdf/report/general.pdf')
+    PDF.delete(directories)
 
-@login_required(login_url='/conta/login')
+@login_required(login_url = '/conta/login')
 def relatorio(request, tipo):
     if tipo == 'entrada':
         if request.method == 'POST':
             gerarRelatorio(request, listaEntrada(request), tipo)
-            return render(request, 'index.html', {'nome': 'relatorio_entrada.pdf'})
+
+            return render(request, 'index.html', {'nome': 'pdf/report/entry.pdf'})
 
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioEntradaForm()})
 
@@ -1081,8 +1090,6 @@ def relatorio(request, tipo):
             return render(request, 'index.html', {'nome': 'pdf/report/general.pdf'})
         
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioGeralForm()})
-
-
 
 def listaEntrada(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
