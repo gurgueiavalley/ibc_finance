@@ -55,6 +55,7 @@
             </div>
         {% endfor %}
     {% endif %}
+    
     <form method= 'POST' action= "{% url 'entrada' 'alterar' %}?id={{dados.id}}" enctype= 'multipart/form-data' id= 'formulario'>
         {% csrf_token %}
         

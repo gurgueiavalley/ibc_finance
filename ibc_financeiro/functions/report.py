@@ -3,7 +3,7 @@ from reportlab.lib.pagesizes                import A4
 from reportlab.graphics.charts.piecharts    import Pie
 from reportlab.graphics.shapes              import Drawing, String
 
-from .pdf import PDF
+from .file import *
 
 class Chart():
     def pie(saidas):
@@ -96,17 +96,29 @@ class Chart():
 
 class Report():
     def receipt(movements, old, new):
-        receipts = []
+        receipts, remove, receipt = [], [old], ''
 
         for movement in movements:
-            if str(movement.comprovante) != '':
-                receipts.append('media/' + str(movement.comprovante))
-                
-        receipt = 'ibc_financeiro/static/receipt.pdf'
+            directory = str(movement.comprovante)
 
-        PDF.convert(receipts, receipt)
+            if directory != '':
+                if directory[-4:] == '.pdf':
+                    images = PDF.toPNG('media/' + directory)
+
+                    receipts += images
+                    remove += images
+                
+                else:
+                    receipts.append('media/' + directory)
+
+        if receipts != []:
+            receipt = 'ibc_financeiro/static/receipt.pdf'
+            PDF.toPDF(receipts, receipt)
+            remove.append(receipt)
+        
         PDF.merge([old, receipt], new)
-        PDF.delete([old, receipt])
+        
+        File.delete(remove)
 
 # pdf. set_font ( "Arial" , tamanho = 12 ) 
 # pdf. ln ( 85 )   # move 85 para baixo 

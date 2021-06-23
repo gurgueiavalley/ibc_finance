@@ -21,7 +21,7 @@ from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 
 from .functions.report import *
-from .functions.pdf     import PDF
+from .functions.file    import PDF
 
 from django.db.models import Sum
 from django.urls import reverse
