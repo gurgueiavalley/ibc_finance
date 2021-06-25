@@ -17,6 +17,17 @@ class File():
                 pass
 
 class PDF():
+    def cover(pdf):
+        pdf.add_page()
+        
+        pdf.set_font('Helvetica', 'B', 36)
+        pdf.cell(0, 250, 'Anexos', align = 'C')
+        
+        pdf.ln(10)
+        
+        pdf.set_font('', size = 16)
+        pdf.cell(0, 250, 'Comprovantes', align = 'C')
+
     def merge(pdfs, final):
         pdf = PdfFileMerger()
 
@@ -29,6 +40,8 @@ class PDF():
 
     def toPDF(images, final):
         pdf = FPDF()
+        
+        PDF.cover(pdf)
 
         for image in images:
             pdf.add_page()
@@ -44,10 +57,12 @@ class PDF():
         pdf.output(final)
 
     def toPNG(pdf):
-        archive, images = fitz.open(pdf), []
-
         folder = pdf.replace('.pdf', '')
-        os.mkdir(folder)
+
+        if not os.path.isdir(folder):
+            os.mkdir(folder)
+        
+        archive, images = fitz.open(pdf), []
         
         for page in range(archive.page_count):
             image = folder + '/' + str(page) + '.png'

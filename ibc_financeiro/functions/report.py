@@ -119,7 +119,3 @@ class Report():
         PDF.merge([old, receipt], new)
         
         File.delete(remove)
-
-# pdf. set_font ( "Arial" , tamanho = 12 ) 
-# pdf. ln ( 85 )   # move 85 para baixo 
-# pdf. célula ( 200 , 10 , txt = "{}" . formato ( caminho_da_imagem ) , ln = 1 )
