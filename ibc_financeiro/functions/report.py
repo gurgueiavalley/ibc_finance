@@ -96,7 +96,7 @@ class Chart():
 
 class Report():
     def receipt(movements, old, new):
-        receipts, remove, receipt = [], [old], ''
+        receipts, remove, receipt, number = [], [old], '', 1
 
         for movement in movements:
             directory = str(movement.comprovante)
@@ -105,11 +105,23 @@ class Report():
                 if directory[-4:] == '.pdf':
                     images = PDF.toPNG('media/' + directory)
 
-                    receipts += images
+                    for image in images:
+                        receipts.append({
+                            'number' : number,
+                            'image' : image,
+                            'movement' : movement
+                        })
+
                     remove += images
                 
                 else:
-                    receipts.append('media/' + directory)
+                    receipts.append({
+                        'number' : number,
+                        'image' : 'media/' + directory,
+                        'movement' : movement
+                    })
+
+            number += 1
 
         if receipts != []:
             receipt = 'ibc_financeiro/static/receipt.pdf'
