@@ -40,7 +40,10 @@ class PDF():
 
         else:
             pdf.cell(width, height, 'Tipo')
-            pdf.cell(width, height, 'Método')
+            pdf.cell(width + 5, height, 'Método')
+
+            if hasattr(movement, 'nome'):
+                pdf.cell(width, height, 'Saída')
 
         pdf.ln(height)
         pdf.set_font('', '', 14)
@@ -51,7 +54,10 @@ class PDF():
 
         else:
             pdf.cell(width, height, 'Comprovante')
-            pdf.cell(width, height, movement.transacao.nome.title())
+            pdf.cell(width + 5, height, movement.transacao.nome.title())
+
+            if hasattr(movement, 'nome'):
+                pdf.cell(width, height, movement.nome.title()[:30])
 
     def header(pdf, category):
         pdf.set_text_color(200)

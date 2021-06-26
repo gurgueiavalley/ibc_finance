@@ -21,7 +21,7 @@ from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 
 from .functions.report import *
-from .functions.file    import PDF
+from .functions.file    import *
 
 from django.db.models import Sum
 from django.urls import reverse
@@ -718,7 +718,7 @@ def getData():
     return date.today().strftime('%d/%m/%Y')
 
 def gerarRelatorio(request, dados, tipo):
-    valorTotal, y = 0, 0
+    total, y = 0, 0
     
     if tipo == 'entrada':
         directory = 'ibc_financeiro/static/entrada.pdf'
@@ -759,60 +759,61 @@ def gerarRelatorio(request, dados, tipo):
 
             pdf.drawString(490, 700 - y, 'R$ ' + str(entrada.valor))
         
-            valorTotal += entrada.valor
+            total += entrada.valor
         
         pdf.line(585, 690 - y, 10, 690 - y)
 
         pdf.setFont('Times-Bold', 12)
 
-        pdf.drawString(400, 650 - y, 'Valor Total: R$ ' + str(valorTotal))
+        pdf.drawString(400, 650 - y, 'Valor Total: R$ ' + str(total))
 
         pdf.save()
 
         Report.receipt(dados, directory, 'ibc_financeiro/static/pdf/report/entry.pdf')
 
-    if tipo == 'saída':
-        caminho = "ibc_financeiro/static/relatorio_saida.pdf"
-        pdf = canvas.Canvas(caminho)
-
-        pdf.setTitle("Relatório de Saidas")
+    if tipo == 'saida':
+        directory = 'ibc_financeiro/static/saida.pdf'
+        
+        pdf = canvas.Canvas(directory)
+        pdf.setTitle('Relatório de Saidas')
         
         cabecalhoRelatorio(pdf, str(getData()))
-        pdf.drawString(20, 700, "Data ")
-        pdf.drawString(100, 700, "Congregação ")
-        pdf.drawString(330,700,"Categoria ")
-        pdf.drawString(490,700,"Valor ")
-        pdf.drawString(278,755,"Saídas")
+        pdf.drawString(278, 755, 'Saídas')
         pdf.line(275, 752, 315, 752)
+
+        pdf.drawString(20, 700, 'Data ')
+        pdf.drawString(100, 700, 'Congregação ')
+        pdf.drawString(330, 700, 'Categoria ')
+        pdf.drawString(490, 700, 'Valor ')
         
         pdf.setFont('Helvetica', 10)
-        #Listando todas as saidas
+
         for saida in dados:
             y = y + 30
+
             if(y > 580):
                 y = 0
+
                 pdf.showPage()
-            pdf.setFont('Helvetica', 10)
+            
             pdf.line(585, 718 - y, 10, 718 - y)
+
             pdf.drawString(20, 700 - y, str(saida.data.strftime('%d/%m/%Y')))
             pdf.drawString(100, 700 - y, str(saida.congregacao)[0:35])
-            pdf.drawString(330,700 - y, str(saida.categoria)[0:25])
-            pdf.drawString(490,700 - y, str(saida.valor))
+            pdf.drawString(330, 700 - y, str(saida.categoria)[0:25])
+            pdf.drawString(490, 700 - y, 'R$ ' + str(saida.valor))
         
-            valorTotal = valorTotal + saida.valor
+            total += + saida.valor
+        
         pdf.line(585, 690 - y, 10, 690 - y)
+
         pdf.setFont('Times-Bold', 12)
-        pdf.drawString(400,650 - y,"Valor Total: "+" R$ "+str(valorTotal))
-        pdf.showPage()
-        #Adicionando os comprovantes
-        for saida in dados:
-            if str(saida.comprovante) != "":
-                if saida.descricao != None:    
-                    pdf.drawString(20, 780, str(saida.descricao))
-                arquivo = "media/"+str(saida.comprovante)
-                pdf.drawImage(arquivo, 200, 250, width= 200, height= 400)
-                pdf.showPage()
+
+        pdf.drawString(400, 650 - y, 'Valor Total: ' + 'R$ ' + str(total))
+        
         pdf.save()
+
+        Report.receipt(dados, directory, 'ibc_financeiro/static/pdf/report/exit.pdf')
     
     if tipo == 'missão':
         valorTotal = 0
@@ -1039,25 +1040,20 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     pdf.rect(20, 645 - y, height=20, width=400)
     pdf.drawString(435, 650 - y, 'R$  '+str(valorEntradas))
     pdf.rect(420, 645 - y, height=20, width=152)
-    pdf.showPage()
-    #Adicionando os comprovantes
-    for saida in saidas:
-        if saida.comprovante != "":
-            pdf.drawString(20, 780, str(saida.nome))
-            arquivo = "media/"+str(saida.comprovante)
-            pdf.drawImage(arquivo, 150, 250, width= 250, height= 400)
-            pdf.showPage()
+    
     pdf.save()
+
+    Report.receipt(saidas, caminho, 'ibc_financeiro/static/general.pdf')
 
     Chart.pie(saidas)
 
     directories = [
-        'ibc_financeiro/static/relatorio_geral.pdf',
+        'ibc_financeiro/static/general.pdf',
         'ibc_financeiro/static/chart.pdf'
     ]
 
     PDF.merge(directories, 'ibc_financeiro/static/pdf/report/general.pdf')
-    PDF.delete(directories)
+    File.delete(directories)
 
 @login_required(login_url = '/conta/login')
 def relatorio(request, tipo):
@@ -1069,11 +1065,11 @@ def relatorio(request, tipo):
 
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioEntradaForm()})
 
-    elif tipo == 'saída':
+    elif tipo == 'saida':
         if request.method == 'POST':
             gerarRelatorio(request, listaSaida(request), tipo)
 
-            return render(request, 'index.html', {'nome': 'relatorio_saida.pdf'})
+            return render(request, 'index.html', {'nome': 'pdf/report/exit.pdf'})
 
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioSaidaForm()})
 

@@ -241,14 +241,13 @@ class SaidaForm(forms.Form):
     data.widget.attrs = {'class' : 'form-control datepicker', 'placeholder' : 'Data que foi realizado o pagamento', 'format' : '%d/%m/%Y'}
 
     comprovante = forms.FileField(label = 'Comprovante', help_text = 'receipt', required = False)
-    comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png'}
+    comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png, .pdf'}
 
     nota_fiscal = forms.FileField(label = 'Nota Fiscal', help_text = 'sticky_note_2', required = False)
     nota_fiscal.widget.attrs = {'accept' : '.jpg, .jpeg, .png'}
 
     deletar = forms.BooleanField(label = 'Deletar o Atual', required = False)
     deletar2 = forms.BooleanField(label = 'Deletar o Atual', required = False)
-
 
 class UsuarioForm(forms.Form):
     nome = forms.CharField(label = 'Nome', help_text = 'shopping_bag', max_length = 50)
