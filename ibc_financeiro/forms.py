@@ -66,7 +66,7 @@ class EntradaAvulsaForm(forms.Form):
     data.widget.attrs = {'class' : 'form-control datepicker', 'placeholder' : 'Data que foi recebido a entrada'}
 
     comprovante = forms.FileField(label = 'Comprovante', help_text = 'receipt', required = False)
-    comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png'}
+    comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png, .pdf'}
 
     deletar = forms.BooleanField(label = 'Deletar o Atual', required = False)
 

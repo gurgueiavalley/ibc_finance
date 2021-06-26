@@ -3,7 +3,8 @@ from reportlab.lib.pagesizes                import A4
 from reportlab.graphics.charts.piecharts    import Pie
 from reportlab.graphics.shapes              import Drawing, String
 
-from .file import *
+from .file      import *
+from itertools  import chain
 
 class Chart():
     def pie(saidas):
@@ -96,9 +97,36 @@ class Chart():
 
 class Report():
     def receipt(movements, old, new):
-        receipts, remove, receipt, number = [], [old], '', 1
+        receipts, remove, numbers, membros, avulsas, entrances, categories = [], [old], {}, [], [], [], []
+        receipt, number = '', 0
 
         for movement in movements:
+            index = movement.categoria.nome if hasattr(movement, 'categoria') else 'avulsa'
+            index += str(movement.id)
+
+            number += 1
+            numbers[index] = number
+
+        for movement in movements:
+            membros.append(movement) if hasattr(movement, 'categoria') else avulsas.append(movement)
+
+        for entry in membros:
+            category = entry.categoria.nome
+
+            if category not in categories:
+                categories.append(category)
+
+        for category in categories:
+            for entry in membros:
+                if entry.categoria.nome == category:
+                    entrances.append(entry)
+
+        movements = list(chain(entrances, avulsas))
+
+        for movement in movements:
+            index = movement.categoria.nome if hasattr(movement, 'categoria') else 'avulsa'
+            index += str(movement.id)
+            
             directory = str(movement.comprovante)
 
             if directory != '':
@@ -107,7 +135,7 @@ class Report():
 
                     for image in images:
                         receipts.append({
-                            'number' : number,
+                            'number' : numbers[index],
                             'image' : image,
                             'movement' : movement
                         })
@@ -116,12 +144,10 @@ class Report():
                 
                 else:
                     receipts.append({
-                        'number' : number,
+                        'number' : numbers[index],
                         'image' : 'media/' + directory,
                         'movement' : movement
                     })
-
-            number += 1
 
         if receipts != []:
             receipt = 'ibc_financeiro/static/receipt.pdf'

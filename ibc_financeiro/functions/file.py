@@ -30,8 +30,6 @@ class PDF():
 
     def footer(pdf, numberes, movement):        
         width, height = 40, 7
-
-        pdf.set_text_color(200)
         
         pdf.ln(265)
         pdf.set_font('', 'B', 16)
@@ -55,6 +53,11 @@ class PDF():
             pdf.cell(width, height, 'Comprovante')
             pdf.cell(width, height, movement.transacao.nome.title())
 
+    def header(pdf, category):
+        pdf.set_text_color(200)
+        pdf.set_font('', 'B', 30)
+        pdf.cell(0, 13, category.title()[:30], align = 'C')
+
     def merge(pdfs, final):
         pdf = PdfFileMerger()
 
@@ -71,10 +74,17 @@ class PDF():
         
         PDF.cover(pdf)
 
-        number, part = 0, 1
-
+        number, part, categories = 0, 1, []
+        
         for d in data:
             pdf.add_page()
+
+            category = d['movement'].categoria.nome if hasattr(d['movement'], 'categoria') else 'Avulsa'
+
+            if category not in categories:
+                categories.append(category)
+
+                PDF.header(pdf, category)
 
             width, height = Image.open(d['image']).size
 
@@ -84,7 +94,7 @@ class PDF():
             else:
                 pdf.image(d['image'], x = 15, y = 30, h = 235)
 
-            if d['number'] > number:
+            if d['number'] != number:
                 PDF.footer(pdf, {
                     'line' : str(d['number']),
                     'part' : None
