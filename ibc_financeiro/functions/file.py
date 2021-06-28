@@ -33,6 +33,7 @@ class PDF():
         pdf.set_font('', 'B', 16)
         width, height = 40, 7
 
+        pdf.cell(width - 10, height, 'Página')
         pdf.cell(width - 10, height, 'Linha')
 
         if numberes['part'] != None:
@@ -48,7 +49,12 @@ class PDF():
         pdf.ln(height)
         pdf.set_font('', '', 14)
         
-        pdf.cell(width - 10, height, str(numberes['line']))
+        line = numberes['line']
+        page = 1 if line < 20 else int((line / 20) + 1)
+        line = line if line < 20 else (20 - ((20 * page) - line)) + 1
+
+        pdf.cell(width - 10, height, str(page))
+        pdf.cell(width - 10, height, str(line))
 
         if numberes['part'] != None:
             pdf.cell(width, height, numberes['part'])
