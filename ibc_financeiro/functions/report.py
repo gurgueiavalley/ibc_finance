@@ -3,7 +3,7 @@ from reportlab.lib.pagesizes                import A4
 from reportlab.graphics.charts.piecharts    import Pie
 from reportlab.graphics.shapes              import Drawing, String
 
-from .file      import *
+from .file      import PDF, File
 from itertools  import chain
 
 class Chart():
@@ -96,64 +96,62 @@ class Chart():
             pdf.drawString(383, y - 38, 'Ultrapassado: R$ ' + '{:.2f}'.format(total - meta))
 
 class Report():
-    def receipt(movements, old, new):
-        receipts, remove, numbers, membros, avulsas, entrances, categories = [], [old], {}, [], [], [], []
-        receipt, number = '', 0
+    def receipt(movements, old, new, name):
+        line, lines = 1, {}
+        movements1, movements2 = [], []
 
         for movement in movements:
-            index = movement.categoria.nome if hasattr(movement, 'categoria') else 'avulsa'
-            index += str(movement.id)
+            index = '{}:{}'.format(movement.__class__.__name__, str(movement.id))
+            lines[index] = line
+            line += 1
 
-            number += 1
-            numbers[index] = number
+            movements1.append(movement) if hasattr(movement, 'categoria') else movements2.append(movement)
 
-        for movement in movements:
-            membros.append(movement) if hasattr(movement, 'categoria') else avulsas.append(movement)
+        categories = []
 
-        for entry in membros:
-            category = entry.categoria.nome
+        for movement in movements1:
+            category = movement.categoria.nome
+            categories.append(category) if category not in categories else None
 
-            if category not in categories:
-                categories.append(category)
+        movements = []
 
         for category in categories:
-            for entry in membros:
-                if entry.categoria.nome == category:
-                    entrances.append(entry)
+            for movement in movements1:
+                movements.append(movement) if movement.categoria.nome == category else None
 
-        movements = list(chain(entrances, avulsas))
+        movements = list(chain(movements, movements2))
+
+        receipts, delete = [], [old]
 
         for movement in movements:
-            index = movement.categoria.nome if hasattr(movement, 'categoria') else 'avulsa'
-            index += str(movement.id)
-            
-            directory = str(movement.comprovante)
+            directory = 'media/' + str(movement.comprovante)
 
-            if directory != '':
+            if directory != 'media/':
+                images = []
+
                 if directory[-4:] == '.pdf':
-                    images = PDF.toPNG('media/' + directory)
+                    images = PDF.toPNG(directory)
+                    delete += images
 
-                    for image in images:
-                        receipts.append({
-                            'number' : numbers[index],
-                            'image' : image,
-                            'movement' : movement
-                        })
-
-                    remove += images
-                
                 else:
+                    images = [directory]
+
+                index = '{}:{}'.format(movement.__class__.__name__, str(movement.id))
+
+                for image in images:
                     receipts.append({
-                        'number' : numbers[index],
-                        'image' : 'media/' + directory,
-                        'movement' : movement
+                        'directory' : image,
+                        'line'      : lines[index],
+                        'movement'  : movement
                     })
+                
+        receipt = ''
 
         if receipts != []:
             receipt = 'ibc_financeiro/static/receipt.pdf'
-            PDF.toPDF(receipts, receipt)
-            remove.append(receipt)
+            PDF.imageToPDF(receipts, receipt)
+            delete += [receipt]
         
-        PDF.merge([old, receipt], new, 'Relatório de Entradas')
+        PDF.merge([old, receipt], new, name)
         
-        File.delete(remove)
+        File.delete(delete)

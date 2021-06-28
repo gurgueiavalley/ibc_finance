@@ -736,8 +736,6 @@ def gerarRelatorio(request, dados, tipo):
         pdf.drawString(330, 700, 'Categoria')
         pdf.drawString(490, 700, 'Valor')
 
-        pdf.setFont('Helvetica', 10)
-
         for entrada in dados:
             y = y + 30
 
@@ -745,7 +743,8 @@ def gerarRelatorio(request, dados, tipo):
                 y = 0
 
                 pdf.showPage()
-                pdf.setFont('Helvetica', 10)
+
+            pdf.setFont('Helvetica', 10)
 
             pdf.line(585, 718 - y, 10, 718 - y)
 
@@ -770,7 +769,7 @@ def gerarRelatorio(request, dados, tipo):
 
         pdf.save()
 
-        Report.receipt(dados, directory, 'ibc_financeiro/static/pdf/report/entry.pdf')
+        Report.receipt(dados, directory, 'ibc_financeiro/static/pdf/report/entry.pdf', 'Relatório de Entradas')
 
     if tipo == 'saida':
         directory = 'ibc_financeiro/static/saida.pdf'
@@ -786,8 +785,6 @@ def gerarRelatorio(request, dados, tipo):
         pdf.drawString(100, 700, 'Congregação ')
         pdf.drawString(330, 700, 'Categoria ')
         pdf.drawString(490, 700, 'Valor ')
-        
-        pdf.setFont('Helvetica', 10)
 
         for saida in dados:
             y = y + 30
@@ -796,7 +793,8 @@ def gerarRelatorio(request, dados, tipo):
                 y = 0
 
                 pdf.showPage()
-                pdf.setFont('Helvetica', 10)
+            
+            pdf.setFont('Helvetica', 10)
             
             pdf.line(585, 718 - y, 10, 718 - y)
 

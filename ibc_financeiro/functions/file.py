@@ -1,8 +1,8 @@
 import os
 import fitz
 
-from PyPDF2 import PdfFileMerger
 from fpdf   import FPDF
+from PyPDF2 import PdfFileMerger
 
 from PIL import Image
 
@@ -19,57 +19,98 @@ class File():
 class PDF():
     def cover(pdf):
         pdf.add_page()
-        
+
         pdf.ln(125)
         pdf.set_font('Helvetica', 'B', 36)
         pdf.cell(0, 12, 'Anexos', align = 'C')
         
         pdf.ln(12)
-        pdf.set_font('', size = 16)
-        pdf.cell(0, 7, 'Comprovantes', align = 'C')
+        pdf.set_font('', size = 15)
+        pdf.cell(0, 7, 'Comprovantes e Notas Fiscais', align = 'C')
 
-    def footer(pdf, numberes, movement):        
+    def footer(pdf, data):        
         pdf.ln(265)
         pdf.set_font('', 'B', 16)
-        width, height = 40, 7
+        
+        width, height = 30, 7
 
-        pdf.cell(width - 10, height, 'Página')
-        pdf.cell(width - 10, height, 'Linha')
+        pdf.cell(width, height, 'Página')
+        pdf.cell(width, height, 'Linha')
 
-        if numberes['part'] != None:
-            pdf.cell(width - 10, height, 'Parte')   
+        movement = data['movement']
+
+        if 'part' in data:
+            pdf.cell(width, height, 'Parte')   
 
         else:
-            pdf.cell(width, height, 'Tipo')
-            pdf.cell(width + 5, height, 'Método')
+            pdf.cell(width + 10, height, 'Tipo')
+            pdf.cell(width + 15, height, 'Método')
+            pdf.cell(width + 10, height, 'Saída') if hasattr(movement, 'nome') else None
 
-            if hasattr(movement, 'nome'):
-                pdf.cell(width, height, 'Saída')
-
-        pdf.ln(height)
-        pdf.set_font('', '', 14)
-        
-        line = numberes['line']
+        line = data['line']
         page = 1 if line < 20 else int((line / 20) + 1)
         line = line if line < 20 else (20 - ((20 * page) - line)) + 1
 
-        pdf.cell(width - 10, height, str(page))
-        pdf.cell(width - 10, height, str(line))
+        pdf.ln(height)
+        pdf.set_font('', '', 14)
 
-        if numberes['part'] != None:
-            pdf.cell(width, height, numberes['part'])
+        pdf.cell(width, height, str(page))
+        pdf.cell(width, height, str(line))
+
+        if 'part' in data:
+            pdf.cell(width + 10, height, data['part'])
 
         else:
-            pdf.cell(width, height, 'Comprovante')
-            pdf.cell(width + 5, height, movement.transacao.nome.title())
-
-            if hasattr(movement, 'nome'):
-                pdf.cell(width, height, movement.nome.title()[:30])
+            pdf.cell(width + 10, height, 'Comprovante')
+            pdf.cell(width + 15, height, movement.transacao.nome.title())
+            pdf.cell(width + 10, height, movement.nome.title()[:30]) if hasattr(movement, 'nome') else None
 
     def header(pdf, category):
         pdf.set_text_color(200)
         pdf.set_font('', 'B', 30)
+
         pdf.cell(0, 13, category.title()[:30], align = 'C')
+    
+    def imageToPDF(images, directory):
+        pdf = FPDF()
+        pdf.set_auto_page_break(auto = False)
+        
+        PDF.cover(pdf)
+
+        categories, l, part = [], 0, 1
+        
+        for image in images:
+            pdf.add_page()
+
+            movement = image['movement']
+            category = movement.categoria.nome if hasattr(movement, 'categoria') else 'Avulsa'
+
+            if category not in categories:
+                categories += [category]
+
+                PDF.header(pdf, category)
+
+            img = image['directory']
+            width, height = Image.open(img).size
+            pdf.image(img, 13, 50, 170) if width >= height else pdf.image(img, 13, 30, h = 235)
+
+            line = image['line']
+            data = {
+                'line'      : line,
+                'movement'  : movement
+            }
+
+            if line != l:
+                l = line
+                part = 1
+
+            else:
+                part += 1
+                data['part'] = str(part)
+
+            PDF.footer(pdf, data)
+
+        pdf.output(directory)
 
     def merge(pdfs, final, name):
         pdf = PdfFileMerger()
@@ -81,51 +122,6 @@ class PDF():
 
         pdf.write(final)
         pdf.close()
-
-    def toPDF(data, final):
-        pdf = FPDF()
-        pdf.set_auto_page_break(auto = False)
-        
-        PDF.cover(pdf)
-
-        number, part, categories = 0, 1, []
-        
-        for d in data:
-            pdf.add_page()
-
-            category = d['movement'].categoria.nome if hasattr(d['movement'], 'categoria') else 'Avulsa'
-
-            if category not in categories:
-                categories.append(category)
-
-                PDF.header(pdf, category)
-
-            width, height = Image.open(d['image']).size
-
-            if width >= height:
-                pdf.image(d['image'], x = 20, y = 50, w = 170)
-
-            else:
-                pdf.image(d['image'], x = 13, y = 30, h = 235)
-
-            if d['number'] != number:
-                PDF.footer(pdf, {
-                    'line' : d['number'],
-                    'part' : None
-                }, d['movement'])
-                
-                number = d['number']
-                part = 1
-
-            else:
-                part += 1
-
-                PDF.footer(pdf, {
-                    'line' : d['number'],
-                    'part' : str(part)
-                }, d['movement'])
-
-        pdf.output(final)
 
     def toPNG(pdf):
         folder = pdf.replace('.pdf', '')
