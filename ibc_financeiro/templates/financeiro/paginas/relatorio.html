@@ -4,7 +4,7 @@
 
 {% block title %}
     {% block titulo %}
-        Relatório de {{ title|title  }}
+        Relatório {{ title|title }}
     {% endblock %}
 {% endblock %}
 
@@ -17,119 +17,125 @@
 {% block dinamico %}
     <div class= 'row clearfix'>
         <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>
-            <form method= 'POST' action= "{% url 'relatorio' title %}">
-                {% csrf_token %}
+            {% if nome %}
+                <iframe src= "{% static nome %}"> </iframe>
+                
+            {% else %}
+                <form method= 'POST' action= "{% url 'relatorio' title %}">
+                    {% csrf_token %}
 
-                <!-- Filtros -->
-                <div class= 'card'>
-                    <div class= 'body'>
-                        <div class= 'header' id= 'botao'>                   <!-- Botão -->
-                            <h2>
-                                Filtros
-                                <small> Adicionar filtros para gerar um relátorio mais refinado </small>
-                            </h2>
+                    <!-- Filtros -->
+                    <div class= 'card'>
+                        <div class= 'body'>
+                            <div class= 'header' id= 'botao'>                   <!-- Botão -->
+                                <h2>
+                                    Filtros
+                                    <small> Adicionar filtros para gerar um relátorio mais refinado </small>
+                                </h2>
 
-                            <ul class= 'header-dropdown m-r--5'>
-                                <i class= 'material-icons' id= 'adicionar'> add_circle </i>
-                                <i class= 'material-icons' id= 'deletar' style= 'display: none'> delete </i>
-                            </ul>
-                        </div>
-                        
-                        <div style= 'display: none' id= 'filtros'>          <!-- Campos -->
-                            <br>
+                                <ul class= 'header-dropdown m-r--5'>
+                                    <i class= 'material-icons' id= 'adicionar'> add_circle </i>
+                                    <i class= 'material-icons' id= 'deletar' style= 'display: none'> delete </i>
+                                </ul>
+                            </div>
+                            
+                            <div style= 'display: none' id= 'filtros'>          <!-- Campos -->
+                                <br>
 
-                            <div class= 'row clearfix'>
-                                {% if title != 'missão' %}
-                                    {% for campo in formulario.visible_fields|slice:'2:6'%}
-                                        <div  {% if title == 'missão' %} class= 'col-sm-4' {% else %} class= 'col-sm-3' {% endif %}>
+                                <div class= 'row clearfix'>
+                                    {% if title != 'missão' %}
+                                        {% for campo in formulario.visible_fields|slice:'2:6'%}
+                                            <div  {% if title == 'missão' %} class= 'col-sm-4' {% else %} class= 'col-sm-3' {% endif %}>
 
-                                            <div class= 'form-group'>
-                                                <div class= 'form-line'>
-                                                    <h3 class= 'card-inside-title'> {{ campo.label }} </h3>
-                                                    {{ campo }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-
-                                {% else %}
-                                    {% for campo in formulario.visible_fields|slice:'2:4'%}
-                                        <div class= 'col-sm-4'>
-                                            <div class= 'form-group'>
-                                                <div class= 'form-line'>
-                                                    <h3 class= 'card-inside-title'> {{ campo.label }} </h3>
-                                                    {{ campo }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                {% endif %}
-
-                                {% if formulario.andamento %}
-                                    <div class= 'col-sm-4'>
-                                        <div class= 'form-group'>
-                                                <h3 class= 'card-inside-title'> {{ formulario.andamento.label }} </h3>
-                                                
-                                                <div class="demo-switch">
-                                                    <div class="switch">
-                                                        <label> NÃO {{ formulario.andamento }} <span class="lever switch-col-blue"> </span> SIM </label>
+                                                <div class= 'form-group'>
+                                                    <div class= 'form-line'>
+                                                        <h3 class= 'card-inside-title'> {{ campo.label }} </h3>
+                                                        {{ campo }}
                                                     </div>
                                                 </div>
-
                                             </div>
+                                        {% endfor %}
+
+                                    {% else %}
+                                        {% for campo in formulario.visible_fields|slice:'2:4'%}
+                                            <div class= 'col-sm-4'>
+                                                <div class= 'form-group'>
+                                                    <div class= 'form-line'>
+                                                        <h3 class= 'card-inside-title'> {{ campo.label }} </h3>
+                                                        {{ campo }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+
+                                    {% if formulario.andamento %}
+                                        <div class= 'col-sm-4'>
+                                            <div class= 'form-group'>
+                                                    <h3 class= 'card-inside-title'> {{ formulario.andamento.label }} </h3>
+                                                    
+                                                    <div class="demo-switch">
+                                                        <div class="switch">
+                                                            <label> NÃO {{ formulario.andamento }} <span class="lever switch-col-blue"> </span> SIM </label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                {% if title == 'geral' %}
+                                    <div class= 'row clearfix'>
+                                        {% for campo in formulario.visible_fields|slice:'6:8' %}
+                                            <div class= 'col-sm-6'>
+                                                <div class= 'form-group'>
+                                                    <div class= 'form-line'>
+                                                        <h3 class= 'card-inside-title'> {{ campo.label }} </h3>
+                                                        {{ campo }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
                                     </div>
                                 {% endif %}
                             </div>
+                        </div>
+                    </div>
 
-                            {% if title == 'geral' %}
-                                <div class= 'row clearfix'>
-                                    {% for campo in formulario.visible_fields|slice:'6:8' %}
-                                        <div class= 'col-sm-6'>
-                                            <div class= 'form-group'>
-                                                <div class= 'form-line'>
-                                                    <h3 class= 'card-inside-title'> {{ campo.label }} </h3>
-                                                    {{ campo }}
-                                                </div>
-                                            </div>
+                    <!-- Datas -->
+                    <div class= 'card datas'>
+                        <div class= 'body'>
+                            <div class= 'header'>
+                                <h2>
+                                    Período
+                                    <small> Informe o intervalo entre as datas que deseja ver os dados no relatório </small>
+                                </h2>
+                            </div>
+                            
+                            <br>
+                            
+                            <div class= 'col-xs-12'>
+                                <div class= 'input-daterange input-group' id= 'bs_datepicker_range_container'>
+                                    {% for campo in formulario.visible_fields|slice:'0:2' %}
+                                        <span class= 'input-group-addon'> {{ campo.label }} </span>
+
+                                        <div class= 'form-line'>
+                                            {{ campo }}
                                         </div>
                                     {% endfor %}
                                 </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Datas -->
-                <div class= 'card datas'>
-                    <div class= 'body'>
-                        <div class= 'header'>
-                            <h2>
-                                Período
-                                <small> Informe o intervalo entre as datas que deseja ver os dados no relatório </small>
-                            </h2>
-                        </div>
-                        
-                        <br>
-                        
-                        <div class= 'col-xs-12'>
-                            <div class= 'input-daterange input-group' id= 'bs_datepicker_range_container'>
-                                {% for campo in formulario.visible_fields|slice:'0:2' %}
-                                    <span class= 'input-group-addon'> {{ campo.label }} </span>
-
-                                    <div class= 'form-line'>
-                                        {{ campo }}
-                                    </div>
-                                {% endfor %}
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <button class= 'btn btn-primary btn-lg waves-effect'>
-                    <i class= 'material-icons'> text_snippet </i>
-                    <span> GERAR RELATÓRIO </span>
-                </button>
-            </form>
+                    <button class= 'btn btn-primary btn-lg waves-effect'>
+                        <i class= 'material-icons'> text_snippet </i>
+                        <span> GERAR RELATÓRIO </span>
+                    </button>
+                </form>
+
+            {% endif %}
         </div>
     </div>
 {% endblock %}

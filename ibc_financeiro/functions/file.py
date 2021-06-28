@@ -29,10 +29,10 @@ class PDF():
         pdf.cell(0, 7, 'Comprovantes', align = 'C')
 
     def footer(pdf, numberes, movement):        
-        width, height = 40, 7
-        
         pdf.ln(265)
         pdf.set_font('', 'B', 16)
+        width, height = 40, 7
+
         pdf.cell(width - 10, height, 'Linha')
 
         if numberes['part'] != None:
@@ -47,7 +47,8 @@ class PDF():
 
         pdf.ln(height)
         pdf.set_font('', '', 14)
-        pdf.cell(width - 10, height, numberes['line'])
+        
+        pdf.cell(width - 10, height, str(numberes['line']))
 
         if numberes['part'] != None:
             pdf.cell(width, height, numberes['part'])
@@ -64,8 +65,9 @@ class PDF():
         pdf.set_font('', 'B', 30)
         pdf.cell(0, 13, category.title()[:30], align = 'C')
 
-    def merge(pdfs, final):
+    def merge(pdfs, final, name):
         pdf = PdfFileMerger()
+        pdf.addMetadata({'/Title' : name})
 
         for p in pdfs:
             if p != '':
@@ -98,11 +100,11 @@ class PDF():
                 pdf.image(d['image'], x = 20, y = 50, w = 170)
 
             else:
-                pdf.image(d['image'], x = 15, y = 30, h = 235)
+                pdf.image(d['image'], x = 13, y = 30, h = 235)
 
             if d['number'] != number:
                 PDF.footer(pdf, {
-                    'line' : str(d['number']),
+                    'line' : d['number'],
                     'part' : None
                 }, d['movement'])
                 
@@ -113,7 +115,7 @@ class PDF():
                 part += 1
 
                 PDF.footer(pdf, {
-                    'line' : str(d['number']),
+                    'line' : d['number'],
                     'part' : str(part)
                 }, d['movement'])
 

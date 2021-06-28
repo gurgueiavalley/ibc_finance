@@ -745,6 +745,7 @@ def gerarRelatorio(request, dados, tipo):
                 y = 0
 
                 pdf.showPage()
+                pdf.setFont('Helvetica', 10)
 
             pdf.line(585, 718 - y, 10, 718 - y)
 
@@ -795,6 +796,7 @@ def gerarRelatorio(request, dados, tipo):
                 y = 0
 
                 pdf.showPage()
+                pdf.setFont('Helvetica', 10)
             
             pdf.line(585, 718 - y, 10, 718 - y)
 
@@ -1061,7 +1063,7 @@ def relatorio(request, tipo):
         if request.method == 'POST':
             gerarRelatorio(request, listaEntrada(request), tipo)
 
-            return render(request, 'index.html', {'nome': 'pdf/report/entry.pdf'})
+            return render(request, 'financeiro/paginas/relatorio.html', {'nome': 'pdf/report/entry.pdf', 'title' : 'de ' + tipo})
 
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioEntradaForm()})
 
@@ -1069,21 +1071,21 @@ def relatorio(request, tipo):
         if request.method == 'POST':
             gerarRelatorio(request, listaSaida(request), tipo)
 
-            return render(request, 'index.html', {'nome': 'pdf/report/exit.pdf'})
+            return render(request, 'financeiro/paginas/relatorio.html', {'nome': 'pdf/report/exit.pdf', 'title' : 'de ' + tipo})
 
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioSaidaForm()})
 
     elif tipo == 'missão':
         if request.method == 'POST':
             gerarRelatorio(request, listaMissao(request), tipo)
-            return render(request, 'index.html', {'nome': 'relatorio_missões.pdf'})
+            return render(request, 'financeiro/paginas/relatorio.html', {'nome': 'relatorio_missões.pdf', 'title' : 'de ' + tipo})
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioMissaoForm()})
 
     elif tipo == 'geral':
         if request.method == 'POST':
             gerarRelatorioGeral(request, listaEntrada(request), listaSaida(request), listaMissao(request))
             
-            return render(request, 'index.html', {'nome': 'pdf/report/general.pdf'})
+            return render(request, 'financeiro/paginas/relatorio.html', {'nome': 'pdf/report/general.pdf', 'title' : tipo})
         
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioGeralForm()})
 

@@ -154,6 +154,6 @@ class Report():
             PDF.toPDF(receipts, receipt)
             remove.append(receipt)
         
-        PDF.merge([old, receipt], new)
+        PDF.merge([old, receipt], new, 'Relatório de Entradas')
         
         File.delete(remove)
