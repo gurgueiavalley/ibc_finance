@@ -701,35 +701,32 @@ def listar(request, tipo):
         return render(request, 'financeiro/paginas/avulso/tabela.html', {'avulso' : avulso})
 
 def cabecalhoRelatorio(pdf, data):
-    pdf.drawImage('ibc_financeiro/static/imagens/logo.jpg', 10, 758, height = 60, width = 60)
+    pdf.drawImage('ibc_financeiro/static/imagens/logo.jpg', 10, 758, 60, 60)
 
     pdf.setFont('Times-Bold', 12)
     
     pdf.drawString(200, 800, 'IGREJA BATISTA DE CORRENTE')
     pdf.drawString(182, 785, 'Departamento de Administração e Finanças')
     pdf.drawString(240, 770, 'Relatório Financeiro')
-    
-    pdf.drawString(430, 740, 'Data: ' + data)
+    pdf.drawString(278, 755, data['title'])
+    pdf.line(275, 752, data['x'], 752)
+
+    pdf.drawString(430, 740, 'Data: ' + str(date.today().strftime('%d/%m/%Y')))
 
 def convertDate(date):                          # Converte formato da data
     return datetime.strptime(date, '%d/%m/%Y').date()
 
-def getData():
-    return date.today().strftime('%d/%m/%Y')
-
 def gerarRelatorio(request, dados, tipo):
-    total, y = 0, 0
+    y, total = 0, 0
     
     if tipo == 'entrada':
         directory = 'ibc_financeiro/static/entrada.pdf'
-
         pdf = canvas.Canvas(directory)
-        pdf.setTitle('Relatório de Entradas')
 
-        cabecalhoRelatorio(pdf, str(getData()))
-
-        pdf.drawString(278, 755, 'Entradas')
-        pdf.line(275, 752, 330, 752)
+        cabecalhoRelatorio(pdf, {
+            'title' : 'Entradas',
+            'x' : 330
+        })
 
         pdf.drawString(20, 700, 'Data')
         pdf.drawString(100, 700, 'Congregação')
@@ -749,14 +746,8 @@ def gerarRelatorio(request, dados, tipo):
             pdf.line(585, 718 - y, 10, 718 - y)
 
             pdf.drawString(20, 700 - y, str(entrada.data.strftime('%d/%m/%Y')))
-            pdf.drawString(100, 700 - y, str(entrada.congregacao)[0:35])
-
-            if hasattr(entrada, 'categoria'):
-                pdf.drawString(330, 700 - y, str(entrada.categoria)[0:25])
-
-            else:
-                pdf.drawString(330, 700 - y, 'AVULSA')
-
+            pdf.drawString(100, 700 - y, str(entrada.congregacao)[:35])
+            pdf.drawString(330, 700 - y, str(entrada.categoria)[:25] if hasattr(entrada, 'categoria') else 'AVULSA')
             pdf.drawString(490, 700 - y, 'R$ ' + str(entrada.valor))
         
             total += entrada.valor
@@ -764,8 +755,7 @@ def gerarRelatorio(request, dados, tipo):
         pdf.line(585, 690 - y, 10, 690 - y)
 
         pdf.setFont('Times-Bold', 12)
-
-        pdf.drawString(400, 650 - y, 'Valor Total: R$ ' + str(total))
+        pdf.drawString(400, 650 - y, 'Total: R$ ' + str(total))
 
         pdf.save()
 
@@ -773,18 +763,17 @@ def gerarRelatorio(request, dados, tipo):
 
     if tipo == 'saida':
         directory = 'ibc_financeiro/static/saida.pdf'
-        
         pdf = canvas.Canvas(directory)
-        pdf.setTitle('Relatório de Saidas')
         
-        cabecalhoRelatorio(pdf, str(getData()))
-        pdf.drawString(278, 755, 'Saídas')
-        pdf.line(275, 752, 315, 752)
+        cabecalhoRelatorio(pdf, {
+            'title' : 'Saídas',
+            'x' : 315
+        })
 
-        pdf.drawString(20, 700, 'Data ')
-        pdf.drawString(100, 700, 'Congregação ')
-        pdf.drawString(330, 700, 'Categoria ')
-        pdf.drawString(490, 700, 'Valor ')
+        pdf.drawString(20, 700, 'Data')
+        pdf.drawString(100, 700, 'Congregação')
+        pdf.drawString(330, 700, 'Categoria')
+        pdf.drawString(490, 700, 'Valor')
 
         for saida in dados:
             y = y + 30
@@ -799,21 +788,20 @@ def gerarRelatorio(request, dados, tipo):
             pdf.line(585, 718 - y, 10, 718 - y)
 
             pdf.drawString(20, 700 - y, str(saida.data.strftime('%d/%m/%Y')))
-            pdf.drawString(100, 700 - y, str(saida.congregacao)[0:35])
-            pdf.drawString(330, 700 - y, str(saida.categoria)[0:25])
+            pdf.drawString(100, 700 - y, str(saida.congregacao)[:35])
+            pdf.drawString(330, 700 - y, str(saida.categoria)[:25])
             pdf.drawString(490, 700 - y, 'R$ ' + str(saida.valor))
         
-            total += + saida.valor
+            total += saida.valor
         
         pdf.line(585, 690 - y, 10, 690 - y)
 
         pdf.setFont('Times-Bold', 12)
-
-        pdf.drawString(400, 650 - y, 'Valor Total: ' + 'R$ ' + str(total))
+        pdf.drawString(400, 650 - y, 'Total: R$ ' + str(total))
         
         pdf.save()
 
-        Report.receipt(dados, directory, 'ibc_financeiro/static/pdf/report/exit.pdf')
+        Report.receipt(dados, directory, 'ibc_financeiro/static/pdf/report/exit.pdf', 'Relatório de Saídas')
     
     if tipo == 'missão':
         valorTotal = 0

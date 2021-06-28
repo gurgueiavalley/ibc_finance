@@ -63,7 +63,7 @@ class PDF():
         else:
             pdf.cell(width + 10, height, 'Comprovante')
             pdf.cell(width + 15, height, movement.transacao.nome.title())
-            pdf.cell(width + 10, height, movement.nome.title()[:30]) if hasattr(movement, 'nome') else None
+            pdf.cell(width + 10, height, movement.nome.title()[:17]) if hasattr(movement, 'nome') else None
 
     def header(pdf, category):
         pdf.set_text_color(200)
@@ -92,7 +92,7 @@ class PDF():
 
             img = image['directory']
             width, height = Image.open(img).size
-            pdf.image(img, 13, 50, 170) if width >= height else pdf.image(img, 13, 30, h = 235)
+            pdf.image(img, 13, 50, 170) if width >= height else pdf.image(img, 10, 30, h = 230)
 
             line = image['line']
             data = {
