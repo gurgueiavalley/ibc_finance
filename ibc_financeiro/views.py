@@ -803,86 +803,96 @@ def gerarRelatorio(request, dados, tipo):
 
         Report.receipt(dados, directory, 'ibc_financeiro/static/pdf/report/exit.pdf', 'Relatório de Saídas')
     
-    if tipo == 'missão':
-        valorTotal = 0
-        meta = 0
-        y = 0
-        pagina = False
-        nomes_missoes = []
-        for missoes in dados:
-            if missoes.missao.nome not in nomes_missoes:
-                nomes_missoes.append(missoes.missao.nome)
+    if tipo == 'missao':
+        missions = []
 
-        caminho = "ibc_financeiro/static/relatorio_missões.pdf"
-        pdf = canvas.Canvas(caminho)
-        pdf.setTitle("Relatório de Missões")
-        pdf.drawImage('ibc_financeiro/static/imagens/logo.jpg', 10,758,height=50, width=60)
-        cabecalhoRelatorio(pdf, str(getData()))
-        pdf.drawString(275,755,"Missões")
-        pdf.line(272, 752, 317, 752)
+        for entry in dados:
+            mission = entry.missao.nome
+            missions.append(mission) if mission not in missions else None
+
+        directory = 'ibc_financeiro/static/missoes.pdf'
+        pdf = canvas.Canvas(directory)
+
+        cabecalhoRelatorio(pdf, {
+            'title' : 'Missões',
+            'x' : 317
+        })
         
-        for item in nomes_missoes:
-            if pagina == False and y > 450:
-                y = 0
+        page = False
+
+        for mission in missions:
+            if page == False and y > 450:
+                y, page = 0, True
+
                 pdf.showPage()
-                pagina = True
-            if pagina:
+
+            pdf.setFont('Times-Bold', 12)
+
+            positionY = 750
+
+            if page:
                 if y > 550:
                     y = 0
+                    
                     pdf.showPage()
-                pdf.setFont('Times-Bold', 12)
-                pdf.drawString(25, 750 - y, item)
+                    pdf.setFont('Times-Bold', 12)
 
-                pdf.rect(100, 695 - y, 200, 30)
-                pdf.drawString(105, 700 - y, "Data")
-                pdf.rect(300, 695 - y, 200, 30)
-                pdf.drawString(305, 700 - y, "Valor")
-            else:    
-                pdf.setFont('Times-Bold', 12)
-                pdf.drawString(25, 685 - y, item)
+            else:
+                positionY -= 65
 
-                pdf.rect(100, 630 - y, 200, 30)
-                pdf.drawString(105, 635 - y, "Data")
-                pdf.rect(300, 630 - y, 200, 30)
-                pdf.drawString(305, 635 - y, "Valor")
-            for missoes in dados:
-                if missoes.missao.nome == item:        
-                    if pagina == False and y > 450:
-                        y = 0
+            pdf.drawString(25, positionY - y, mission)
+                
+            positionY -= 50
+            pdf.drawString(105, positionY - y, 'Data')
+            pdf.drawString(305, positionY - y, 'Valor')
+            
+            positionY -= 5
+            pdf.rect(100, positionY - y, 200, 30)
+            pdf.rect(300, positionY - y, 200, 30)
+
+            goal = 0
+
+            for entry in dados:
+                if entry.missao.nome == mission:
+                    if page == False and y > 450:
+                        y, page = 0, True
+
                         pdf.showPage()
-                        pagina = True
-                    if pagina:
+
+                    pdf.setFont('Helvetica', 10)
+
+                    positionY = 665
+
+                    if page:
                         if y > 550:
                             y = 0
+                            
                             pdf.showPage()
-                        pdf.setFont('Helvetica', 10)
-                        pdf.rect(100, 665 - y, 200, 30)
-                        pdf.drawString(105, 670 - y, str(missoes.data.strftime('%d/%m/%Y')))
-                        pdf.rect(300, 665 - y, 200, 30)
-                        pdf.drawString(305, 670 - y, "R$  "+str(missoes.valor))
-                        valorTotal += missoes.valor
-                        meta = missoes.missao.meta
-                        y += 30            
-                    else:    
-                        pdf.setFont('Helvetica', 10)
-                        pdf.rect(100, 600 - y, 200, 30)
-                        pdf.drawString(105, 605 - y, str(missoes.data.strftime('%d/%m/%Y')))
-                        pdf.rect(300, 600 - y, 200, 30)
-                        pdf.drawString(305, 605 - y, "R$  "+str(missoes.valor))
-                        valorTotal += missoes.valor
-                        meta = missoes.missao.meta
-                        y += 30
-            
-            if pagina:
-                Chart.progress(pdf, meta, valorTotal, 670 - y)
-            
-            else:
-                Chart.progress(pdf, meta, valorTotal, 600 - y)
+                            pdf.setFont('Helvetica', 10)
 
-            valorTotal = 0
-            meta = 0
+                    else:
+                        positionY -= 65
+
+                    pdf.rect(100, positionY - y, 200, 30)
+                    pdf.rect(300, positionY - y, 200, 30)
+
+                    positionY += 5
+                    pdf.drawString(105, positionY - y, str(entry.data.strftime('%d/%m/%Y')))
+                    pdf.drawString(305, positionY - y, 'R$ ' + str(entry.valor))
+
+                    total += entry.valor
+                    y += 30
+
+                    goal = entry.missao.meta
+            
+            Chart.progress(pdf, goal, total, (670 if page else 600) - y)
+            
+            total = 0
             y += 150
+
         pdf.save()
+
+        Report.receipt(dados, directory, 'ibc_financeiro/static/pdf/report/missions.pdf', 'Relatório de Missões')
 
 def gerarRelatorioGeral(request, entradas, saidas, missoes):
     data = str(getData())
@@ -1061,10 +1071,12 @@ def relatorio(request, tipo):
 
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioSaidaForm()})
 
-    elif tipo == 'missão':
+    elif tipo == 'missao':
         if request.method == 'POST':
             gerarRelatorio(request, listaMissao(request), tipo)
-            return render(request, 'financeiro/paginas/relatorio.html', {'nome': 'relatorio_missões.pdf', 'title' : 'de ' + tipo})
+            
+            return render(request, 'financeiro/paginas/relatorio.html', {'nome': 'pdf/report/missions.pdf', 'title' : 'de ' + tipo})
+        
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioMissaoForm()})
 
     elif tipo == 'geral':

@@ -34,10 +34,12 @@ class PDF():
         
         width, height = 30, 7
 
-        pdf.cell(width, height, 'Página')
-        pdf.cell(width, height, 'Linha')
-
         movement = data['movement']
+        className = movement.__class__.__name__
+
+        if className != 'EntradaMissao':
+            pdf.cell(width, height, 'Página')
+            pdf.cell(width, height, 'Linha')
 
         if 'part' in data:
             pdf.cell(width, height, 'Parte')   
@@ -45,17 +47,19 @@ class PDF():
         else:
             pdf.cell(width + 10, height, 'Tipo')
             pdf.cell(width + 15, height, 'Método')
-            pdf.cell(width + 10, height, 'Saída') if hasattr(movement, 'nome') else None
-
-        line = data['line']
-        page = 1 if line < 20 else int((line / 20) + 1)
-        line = line if line < 20 else (20 - ((20 * page) - line)) + 1
+            pdf.cell(width + 10, height, 'Saída')   if hasattr(movement, 'nome')    else None
+            pdf.cell(width, height, 'Missão')       if className == 'EntradaMissao' else None
 
         pdf.ln(height)
         pdf.set_font('', '', 14)
+        
+        if className != 'EntradaMissao':
+            line = data['line']
+            page = 1 if line < 20 else int((line / 20) + 1)
+            line = line if line < 20 else (20 - ((20 * page) - line)) + 1
 
-        pdf.cell(width, height, str(page))
-        pdf.cell(width, height, str(line))
+            pdf.cell(width, height, str(page))
+            pdf.cell(width, height, str(line))
 
         if 'part' in data:
             pdf.cell(width + 10, height, data['part'])
@@ -63,10 +67,10 @@ class PDF():
         else:
             pdf.cell(width + 10, height, 'Comprovante')
             pdf.cell(width + 15, height, movement.transacao.nome.title())
-            pdf.cell(width + 10, height, movement.nome.title()[:17]) if hasattr(movement, 'nome') else None
+            pdf.cell(width + 10, height, movement.nome.title()[:17])    if hasattr(movement, 'nome')    else None
+            pdf.cell(width, height, movement.missao.nome.title()[:37])  if className == 'EntradaMissao' else None
 
     def header(pdf, category):
-        pdf.set_text_color(200)
         pdf.set_font('', 'B', 30)
 
         pdf.cell(0, 13, category.title()[:30], align = 'C')
@@ -81,14 +85,17 @@ class PDF():
         
         for image in images:
             pdf.add_page()
+            pdf.set_text_color(200)
 
             movement = image['movement']
-            category = movement.categoria.nome if hasattr(movement, 'categoria') else 'Avulsa'
+            
+            if movement.__class__.__name__ != 'EntradaMissao':
+                category = movement.categoria.nome if hasattr(movement, 'categoria') else 'Avulsa'
 
-            if category not in categories:
-                categories += [category]
+                if category not in categories:
+                    categories += [category]
 
-                PDF.header(pdf, category)
+                    PDF.header(pdf, category)
 
             img = image['directory']
             width, height = Image.open(img).size

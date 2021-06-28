@@ -87,7 +87,7 @@ class EntradaMissaoForm(forms.Form):
     anotacao.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Detalhe ou descrição breve da entrada', 'autocomplete' : 'off', 'maxlenght' : '100'}
 
     comprovante = forms.FileField(label = 'Comprovante', help_text = 'receipt', required = False)
-    comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png'}
+    comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png, .pdf'}
 
     deletar = forms.BooleanField(label = 'Deletar o Atual', required = False)
    
