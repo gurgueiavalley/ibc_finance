@@ -124,27 +124,28 @@ class Report():
         receipts, delete = [], [old]
 
         for movement in movements:
-            directory = 'media/' + str(movement.comprovante)
+            documents = ['media/' + str(movement.comprovante)]
+            documents.append('media/' + str(movement.nf)) if hasattr(movement, 'nf') else None
 
-            if directory != 'media/':
-                images = []
+            for index in range(len(documents)):
+                if documents[index] != 'media/':
+                    images = []
 
-                if directory[-4:] == '.pdf':
-                    images = PDF.toPNG(directory)
-                    delete += images
+                    if documents[index][-4:] == '.pdf':
+                        images = PDF.toPNG(documents[index])
+                        delete += images
 
-                else:
-                    images = [directory]
+                    else:
+                        images = [documents[index]]
 
-                index = '{}:{}'.format(movement.__class__.__name__, str(movement.id))
-
-                for image in images:
-                    receipts.append({
-                        'directory' : image,
-                        'line'      : lines[index],
-                        'movement'  : movement
-                    })
-                
+                    for image in images:
+                        receipts.append({
+                            'directory' : image,
+                            'line'      : lines['{}:{}'.format(movement.__class__.__name__, str(movement.id))],
+                            'type'      : 'Nota Fiscal' if index == 1 else 'Comprovante',
+                            'movement'  : movement
+                        })
+                    
         receipt = ''
 
         if receipts != []:

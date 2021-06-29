@@ -40,11 +40,12 @@ class PDF():
 
         movement = data['movement']
 
+        pdf.cell(width + 10, height, 'Tipo')
+
         if 'part' in data:
             pdf.cell(width, height, 'Parte')   
 
         else:
-            pdf.cell(width + 10, height, 'Tipo')
             pdf.cell(width + 15, height, 'Método')
             pdf.cell(width + 10, height, 'Saída') if hasattr(movement, 'nome') else None
             
@@ -65,11 +66,12 @@ class PDF():
                 
             pdf.cell(width, height, str(line))
 
+        pdf.cell(width + 10, height, data['type'])
+
         if 'part' in data:
             pdf.cell(width + 10, height, data['part'])
 
         else:
-            pdf.cell(width + 10, height, 'Comprovante')
             pdf.cell(width + 15, height, movement.transacao.nome.title())
             pdf.cell(width + 10, height, movement.nome.title()[:(32 if 'page' in options else 17)]) if hasattr(movement, 'nome') else None
             
@@ -87,7 +89,7 @@ class PDF():
         
         PDF.cover(pdf)
 
-        categories, l, part = [], 0, 1
+        categories, typeR, l, part = [], '', 0, 1
         
         for image in images:
             pdf.add_page()
@@ -107,15 +109,15 @@ class PDF():
             width, height = Image.open(img).size
             pdf.image(img, 13, 50, 170) if width >= height else pdf.image(img, 10, 30, h = 230)
 
-            line = image['line']
+            line, typeReceipt = image['line'], image['type']
             data = {
                 'line'      : line,
+                'type'      : typeReceipt,
                 'movement'  : movement
             }
-
-            if line != l:
-                l = line
-                part = 1
+ 
+            if typeReceipt != typeR or line != l:
+                typeR, l, part = typeReceipt, line, 1
 
             else:
                 part += 1

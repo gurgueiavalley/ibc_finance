@@ -244,7 +244,7 @@ class SaidaForm(forms.Form):
     comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png, .pdf'}
 
     nota_fiscal = forms.FileField(label = 'Nota Fiscal', help_text = 'sticky_note_2', required = False)
-    nota_fiscal.widget.attrs = {'accept' : '.jpg, .jpeg, .png'}
+    nota_fiscal.widget.attrs = {'accept' : '.jpg, .jpeg, .png, .pdf'}
 
     deletar = forms.BooleanField(label = 'Deletar o Atual', required = False)
     deletar2 = forms.BooleanField(label = 'Deletar o Atual', required = False)
