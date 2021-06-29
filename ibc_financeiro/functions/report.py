@@ -96,7 +96,7 @@ class Chart():
             pdf.drawString(383, y - 38, 'Ultrapassado: R$ ' + '{:.2f}'.format(total - meta))
 
 class Report():
-    def receipt(movements, old, new, name):
+    def receipt(movements, old, new, name, options = {}):
         line, lines = 1, {}
         movements1, movements2 = [], []
 
@@ -149,7 +149,7 @@ class Report():
 
         if receipts != []:
             receipt = 'ibc_financeiro/static/receipt.pdf'
-            PDF.imageToPDF(receipts, receipt)
+            PDF.imageToPDF(receipts, receipt, options)
             delete += [receipt]
         
         PDF.merge([old, receipt], new, name)

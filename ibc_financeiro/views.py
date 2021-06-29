@@ -27,11 +27,6 @@ from django.db.models import Sum
 from django.urls import reverse
 from django.contrib import messages
 
-#pegando datas dos relatorios
-dates = []
-
-
-# Métodos Renderizados
 @login_required(login_url='/conta/login')
 def avulso(request, acao):
     if acao == 'alterar':
@@ -86,7 +81,6 @@ def avulso(request, acao):
         return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioEntradaForm()})
     return render(request, 'financeiro/paginas/avulso/adicionar.html', {'formulario' : EntradaAvulsaForm()})
 
-
 @login_required(login_url='/conta/login')
 def categoria(request, acao):
     pagina = 0
@@ -106,8 +100,6 @@ def categoria(request, acao):
         return render(request, 'financeiro/paginas/categoria/adicionar.html', {'formulario' : CategoriaForm(), 'pagina' : pagina, 'id' : categoria.id, 'nome' : categoria.nome})
 
     return render(request, 'financeiro/paginas/categoria/adicionar.html', {'formulario' : CategoriaForm(), 'pagina' : pagina})
-
-
 
 @login_required(login_url='/conta/login')
 def catEntrada(request, acao):
@@ -129,8 +121,6 @@ def catEntrada(request, acao):
 
     return render(request, 'financeiro/paginas/catentrada/adicionar.html', {'formulario' : CategoriaForm(), 'pagina' : pagina})
 
-
-
 @login_required(login_url='/conta/login')
 def congregacao(request, acao):
     pagina = 0
@@ -149,8 +139,6 @@ def congregacao(request, acao):
             return render(request, 'financeiro/paginas/congregacao/adicionar.html', {'formulario' : CongregacaoForm(), 'pagina' : pagina, 'id' : congregacao.id, 'nome' : request.POST['nome']})
 
     return render(request, 'financeiro/paginas/congregacao/adicionar.html', {'formulario' : CongregacaoForm(), 'pagina' : pagina})
-
-
 
 @login_required(login_url='/conta/login')
 def emissao(request, acao):
@@ -201,8 +189,6 @@ def emissao(request, acao):
 
     return render(request, 'financeiro/paginas/emissao/adicionar.html', {'formulario' : EntradaMissaoForm()})
 
-
-
 @login_required(login_url='/conta/login')
 def empresa(request, acao):
     pagina = 0
@@ -228,8 +214,6 @@ def empresa(request, acao):
             return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : FornecedorForm(), 'pagina' : pagina, 'id' : fornecedor.id, 'nome' : fornecedor.nome})
 
     return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : FornecedorForm(), 'pagina' : pagina})
-
-
 
 @login_required(login_url='/conta/login')
 def entrada(request, acao):
@@ -559,8 +543,6 @@ def missao(request, acao):
 
     return render(request, 'financeiro/paginas/missao/adicionar.html', {'formulario' : MissaoForm(), 'pagina' : pagina})
 
-
-
 @login_required(login_url='/conta/login')
 def pagamento(request, acao):
     pagina = 0
@@ -578,8 +560,6 @@ def pagamento(request, acao):
         return render(request, 'financeiro/paginas/pagamento/adicionar.html', {'formulario' : TransacaoForm(), 'pagina' : pagina, 'id' : transacao.id, 'nome' : transacao.nome})
 
     return render(request, 'financeiro/paginas/pagamento/adicionar.html', {'formulario' : TransacaoForm(), 'pagina' : pagina})
-
-
 
 @login_required(login_url='/conta/login')
 def saida(request, acao):
@@ -646,8 +626,6 @@ def saida(request, acao):
         return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioSaidaForm()})
     return render(request, 'financeiro/paginas/saida/adicionar.html', {'formulario' : SaidaForm()})
 
-
-
 def conta(request, acao):
     if acao == 'login':
         if request.method == 'POST':
@@ -667,8 +645,6 @@ def conta(request, acao):
         if request.method == 'POST':
             return  HttpResponse ('<div style="text-align: center; padding-top: 20%;"><h3>Em desenvolvimento, por favor aguarde! </h3></div>')
         return render(request, 'financeiro/paginas/conta/recuperar.html')
-
-
 
 @login_required(login_url='/conta/login')
 def listar(request, tipo):
@@ -708,12 +684,13 @@ def cabecalhoRelatorio(pdf, data):
     pdf.drawString(200, 800, 'IGREJA BATISTA DE CORRENTE')
     pdf.drawString(182, 785, 'Departamento de Administração e Finanças')
     pdf.drawString(240, 770, 'Relatório Financeiro')
-    pdf.drawString(278, 755, data['title'])
-    pdf.line(275, 752, data['x'], 752)
+
+    pdf.drawString(data['x2'] if 'x2' in data else 278, 755, data['title'])
+    pdf.line(data['x3'] if 'x3' in data else 275, 752, data['x'], 752)
 
     pdf.drawString(430, 740, 'Data: ' + str(date.today().strftime('%d/%m/%Y')))
 
-def convertDate(date):                          # Converte formato da data
+def convertDate(date):
     return datetime.strptime(date, '%d/%m/%Y').date()
 
 def gerarRelatorio(request, dados, tipo):
@@ -892,166 +869,200 @@ def gerarRelatorio(request, dados, tipo):
 
         pdf.save()
 
-        Report.receipt(dados, directory, 'ibc_financeiro/static/pdf/report/missions.pdf', 'Relatório de Missões')
+        Report.receipt(dados, directory, 'ibc_financeiro/static/pdf/report/missions.pdf', 'Relatório de Missões', {'pageLine' : ''})
 
 def gerarRelatorioGeral(request, entradas, saidas, missoes):
-    data = str(getData())
-    
-    valorEntradasAvulsa = 0
-    valorMissao = 0
-    valorTotalEntradas = 0
-    valorTotalSaidas = 0
-    
-    categorias_entradas = []
-    valor_entradas = 0
+    directory = 'ibc_financeiro/static/general.pdf'
+    pdf = canvas.Canvas(directory)
 
-    #Pegando as categorias
-    for entrada in entradas:
-        if hasattr(entrada, 'categoria'):
-            if entrada.categoria.nome not in categorias_entradas:
-                categorias_entradas.append(entrada.categoria.nome)
+    cabecalhoRelatorio(pdf, {
+        'title' : 'Recebimentos',
+        'x'     : 335,
+        'x2'    : 260,
+        'x3'    : 257
+    })
+    
+    categories, single = [], 0
+
+    for entry in entradas:
+        if hasattr(entry, 'categoria'):
+            category = entry.categoria.nome
+            categories.append(category) if category not in categories else None
+
         else:
-            valorEntradasAvulsa += entrada.valor
+            single += entry.valor
     
-    for missao in missoes:
-        valorMissao += missao.valor
-    valorTotalEntradas += valorEntradasAvulsa + valorMissao
+    mission = 0
 
-    y = 0
-    pagina = False
+    for m in missoes:
+        mission += m.valor
     
-    caminho = "ibc_financeiro/static/relatorio_geral.pdf"
-    pdf = canvas.Canvas(caminho)
-    pdf.setTitle("Relatório Geral")
-    cabecalhoRelatorio(pdf, data)
-    pdf.drawString(260,755,"Recebimentos")
-    pdf.line(257, 752, 335, 752)
-    pdf.setFont('Helvetica', 10)
+    entrys, y, points = single + mission, 0, ''
 
-    #Adicionando categorias dinamicas
-    for item in categorias_entradas:
-        for entrada in entradas:
-            if hasattr(entrada, 'categoria'):    
-                if entrada.categoria.nome == item:
-                    valor_entradas += entrada.valor
-        valorTotalEntradas += valor_entradas
-        pdf.drawString(50, 700 - y, item[0:30]+':......................................: ')
-        pdf.drawString(365, 702 -y , " R$  "+str(valor_entradas))
-        pdf.line(363, 700 - y, 550, 700 - y) 
+    for repeat in range(100):
+        points += '.'
+
+    for category in categories:
+        entrance = 0
+
+        for entry in entradas:
+            if hasattr(entry, 'categoria'):    
+                entrance += entry.valor if entry.categoria.nome == category else 0
+        
+        entrys += entrance
+        
+        pdf.setFont('Helvetica', 10)
+
+        pdf.drawString(50, 700 - y, category[:30] + points)
+        pdf.drawString(365, 702 - y, 'R$ ' + str(entrance))
+        pdf.line(363, 700.7 - y, 550, 700.7 - y) 
+        
         y += 20
-        valor_entradas = 0                     
-    pdf.drawString(50, 700 - y, 'OFERTAS AVULSAS:......................................: ')
-    pdf.drawString(365, 700 - y , " R$  "+str(valorEntradasAvulsa))
-    pdf.line(363, 698 - y, 550, 698 - y)
-    pdf.drawString(50, 678 - y , 'MISSÕES:......................................: ') 
-    pdf.drawString(365, 678 - y, " R$  "+str(valorMissao))
-    pdf.line(363, 676 - y, 550, 676 - y)
+    
+    pdf.drawString(50, 700 - y, 'OFERTAS AVULSAS' + points)
+    pdf.drawString(365, 702 - y , 'R$ ' + str(single))
+    pdf.line(363, 700.5 - y, 550, 700.5 - y)
+
+    pdf.drawString(50, 678 - y , 'MISSÕES' + points) 
+    pdf.drawString(365, 680 - y, 'R$ ' + str(mission))
+    pdf.line(363, 678.5 - y, 550, 678.5 - y)
+
     pdf.setFont('Times-Bold', 12)
-    pdf.drawString(245, 642 - y, 'Total de Entradas: R$  ')
-    pdf.drawString(365, 642 - y, str(valorTotalEntradas))
+    pdf.drawString(320, 642 - y, 'Total:')
     pdf.line(363, 640 - y, 550, 640 - y)
+
     pdf.drawString(260, 600 - y, 'Pagamentos')
     pdf.line(257, 598 - y, 325, 598 - y)
-    pdf.setFont('Helvetica', 10)
-    
-    #Adicionando Saidas
-    for saida in range(1,len(saidas)+1): 
-        y = y + 30
-        valorTotalSaidas = valorTotalSaidas + saidas[saida - 1].valor
 
-        if pagina == False and y > 450:
-            y = 0
+    pdf.setFont('Helvetica', 10)
+    pdf.drawString(365, 642 - y, 'R$ ' + str(entrys))
+
+    exits, page = 0, False
+
+    for index in range(1, len(saidas) + 1): 
+        y += 30
+        exits += saidas[index - 1].valor
+
+        if page == False and y > 450:
+            y, page = 0, True
+
             pdf.showPage()
-            pagina = True
-        if pagina == True:
+
+        positionY = 750
+
+        if page == True:
             if y > 600:
                 y = 0
-                pdf.showPage()    
-            pdf.setFont('Helvetica', 10)       
-            pdf.drawString(50, 750 - y, str(saida)+' º - '+str(saidas[saida - 1]))
-            pdf.line(70, 748 - y, 343, 748 -y)
-            pdf.drawString(345, 748 - y, ' R$')
-            pdf.drawString(365, 750 - y, str(saidas[saida - 1].valor))
-            pdf.line(363, 748 - y, 550, 748 - y)
-        else:
-            pdf.setFont('Helvetica', 10)       
-            pdf.drawString(50, 580 - y, str(saida)+' º - '+str(saidas[saida - 1]))
-            pdf.line(70, 578 - y, 343, 578 -y)
-            pdf.drawString(345, 578 - y, ' R$')
-            pdf.drawString(365, 580 - y, str(saidas[saida - 1].valor))
-            pdf.line(363, 578 - y, 550, 578 - y)
 
-    if pagina == True:
+                pdf.showPage()
+
+        else:
+            positionY = 580
+
+        pdf.setFont('Helvetica', 10)
+
+        pdf.drawString(40, positionY - y, str(index) + 'º')
+
+        pdf.drawString(68, positionY - y, str(saidas[index - 1]))
+        pdf.line(68, (positionY - 2) - y, 343, (positionY - 2) - y)
+        
+        pdf.drawString(350, positionY - y, 'R$ ' + str(saidas[index - 1].valor))
+        pdf.line(350, (positionY - 2) - y, 500, (positionY - 2) - y)
+
+    positionY = 720
+
+    if page == True:
         if y > 600:
             y = 0
+
             pdf.showPage()
-        pdf.setFont('Times-Bold', 12)
-        pdf.drawString(265, 720 - y, 'Total de Saída: R$  ')
-        pdf.drawString(365, 720 - y, str(valorTotalSaidas))
-        pdf.line(363, 718 - y, 550, 718 - y)
-        pdf.drawString(276, 698 - y, 'A Depositar: R$  ')
-        pdf.line(363, 698 - y, 550, 698 - y)
+
     else:
-        pdf.setFont('Times-Bold', 12)
-        pdf.drawString(265, 555 - y, 'Total de Saída: R$  ')
-        pdf.drawString(365, 557 - y, str(valorTotalSaidas))
-        pdf.line(363, 555 - y, 550, 555 - y)
-        pdf.drawString(276, 535 - y, 'A Depositar: R$  ')
-        pdf.line(363, 535 - y, 550, 535 - y)
-    pdf.drawString(20, 80, 'Conferido por: ')
-    pdf.line(0, 60, 200, 60)
-    pdf.line(210, 60, 400, 60)
-    pdf.line(410, 60, 600, 60)
+        positionY = 555
+
+    pdf.setFont('Times-Bold', 12)
+    pdf.drawString(303, positionY - y, 'Total:')
+
+    pdf.setFont('Helvetica', 10)
+    pdf.drawString(350, positionY - y, 'R$ ' + str(exits))
+    pdf.line(350, (positionY - 2) - y, 500, (positionY - 2) - y)
+
+    positionY -= 25
+    pdf.setFont('Times-Bold', 12)
+    pdf.drawString(280, positionY - y, 'Depositar:')
+    pdf.line(350, positionY - y, 500, positionY - y)
+    
+    positionY = 50
+
+    pdf.drawString(20, positionY + 50, 'Conferido por')
+    
+    pdf.line(20,  positionY, 200, positionY)
+    pdf.line(210, positionY, 400, positionY)
+    pdf.line(410, positionY, 575, positionY)
+
     pdf.showPage()
 
-    #Adicionando Pagina de Dizimos 
     pdf.setFont('Times-Bold', 14)
     pdf.drawString(180, 750, 'IGREJA BATISTA DE CORRENTE')
-    pdf.rect(20, 745, height=20, width=553)
+    pdf.rect(20, 745, 553, 20)
+
     pdf.setFont('Helvetica', 10)
     pdf.drawString(230, 720, 'CONTROLE DE DÍZIMOS')
-    pdf.drawString(219, 700, 'De: '+str(dates[0][0].strftime('%d/%m/%Y'))+' Até: '+str(dates[0][1].strftime('%d/%m/%Y')))
+    pdf.drawString(219, 705, 'De: {} Até: {}'.format(request.POST['inicio'], request.POST['fim']))
 
     pdf.setFont('Helvetica-Bold', 10)
+
     pdf.drawString(180, 650, 'RELAÇÃO NOMINAL')
-    pdf.rect(20, 645, height=20, width=400)
+    pdf.rect(20, 645, 400, 20)
+    
     pdf.drawString(435, 650, 'VALOR')
-    pdf.rect(420, 645, height=20, width=152)
-    y = 0
-    valorEntradas = 0
-    for entrada in entradas:
-        if hasattr(entrada, 'categoria'):
-            if entrada.categoria.nome == 'DÍZIMO':
+    pdf.rect(420, 645, 152, 20)
+
+    y, entrance = 0, 0
+    
+    for entry in entradas:
+        if hasattr(entry, 'categoria'):
+            if entry.categoria.nome == 'DÍZIMO':
                 if y > 500:
                     y = 0
+                    
                     pdf.showPage()
+
                 y += 20
-                valorEntradas += entrada.valor
+                entrance += entry.valor
+
                 pdf.setFont('Helvetica', 10)
-                pdf.drawString(35, 650 - y, str(entrada.membro.nome))
-                pdf.rect(20, 645 - y, height=20, width=400)
-                pdf.drawString(435, 650 - y, 'R$  '+str(entrada.valor))
-                pdf.rect(420, 645 - y, height=20, width=152)
+
+                pdf.drawString(35, 650 - y, str(entry.membro.nome))
+                pdf.rect(20, 645 - y, 400, 20)
+                
+                pdf.drawString(435, 650 - y, 'R$ ' + str(entry.valor))
+                pdf.rect(420, 645 - y, 152, 20)
+    
     y += 20
+
     pdf.setFont('Helvetica-Bold', 10)
     pdf.drawString(370, 650 - y, 'TOTAL')
-    pdf.rect(20, 645 - y, height=20, width=400)
-    pdf.drawString(435, 650 - y, 'R$  '+str(valorEntradas))
-    pdf.rect(420, 645 - y, height=20, width=152)
+    pdf.rect(20, 645 - y, 400, 20)
+
+    pdf.setFont('Helvetica', 10)
+    pdf.drawString(435, 650 - y, 'R$ ' + str(entrance))
+    pdf.rect(420, 645 - y, 152, 20)
     
     pdf.save()
-
-    Report.receipt(saidas, caminho, 'ibc_financeiro/static/general.pdf')
 
     Chart.pie(saidas)
 
     directories = [
-        'ibc_financeiro/static/general.pdf',
+        directory,
         'ibc_financeiro/static/chart.pdf'
     ]
 
-    PDF.merge(directories, 'ibc_financeiro/static/pdf/report/general.pdf')
+    PDF.merge(directories, 'ibc_financeiro/static/general2.pdf')
+
     File.delete(directories)
+
+    Report.receipt(saidas, 'ibc_financeiro/static/general2.pdf', 'ibc_financeiro/static/pdf/report/general.pdf', 'Relatório Geral', {'page' : ''})
 
 @login_required(login_url = '/conta/login')
 def relatorio(request, tipo):
@@ -1089,7 +1100,6 @@ def relatorio(request, tipo):
 
 def listaEntrada(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
-    dates.append([convertDate(request.POST['inicio']), convertDate(request.POST['fim'])])
     congregacoes = request.POST.getlist('congregacao')
     categorias = request.POST.getlist('categoria_entrada')
     formas = request.POST.getlist('transacao')
@@ -1109,8 +1119,6 @@ def listaEntrada(request):
 
     return entradas
 
-
-
 def listaMissao(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
     congregacoes = request.POST.getlist('congregacao')
@@ -1121,8 +1129,6 @@ def listaMissao(request):
     entradas = entradas if missoes == [] else entradas.filter(missao__nome__in = missoes)
 
     return entradas
-
-
 
 def listaSaida(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
