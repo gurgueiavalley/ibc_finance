@@ -84,153 +84,15 @@
                     </div>
                 </div>
 
-                <div class= 'menu'>             <!-- Menu -->
-                    <ul class= 'list'>
-                        <li class="header">MENU DE NAVEGAÇÃO</li>                      
+                {% include './base/partes/menu.html' %}
 
-                        <li>            <!-- Entrada -->
-                            <a href= 'javascript:void(0)' class= 'menu-toggle'>
-                                <i class= 'material-icons'> attach_money </i>
-                                <span> Entradas </span>
-                            </a>
-
-                            <ul class= 'ml-menu'>
-                                <li>
-                                    <a href= 'javascript:void(0)' class= 'menu-toggle'>
-                                        <span> Adicionar </span>
-                                    </a>
-
-                                    <ul class= 'ml-menu'>
-                                        <li>
-                                            <a href= "{% url 'entrada' 'adicionar' %}">
-                                                <span> Ofertas de Membros </span>
-                                            </a>
-                                        </li>
-
-                                        <li>
-                                            <a href= "{% url 'avulso' 'adicionar' %}">
-                                                <span> Ofertas Avulsas </span>
-                                            </a>
-                                        </li>
-                                        
-                                        <li>
-                                            <a href= "{% url 'emissao' 'adicionar' %}">
-                                                <span> Ofertas de Missões </span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                
-                                <li>
-                                    <a href= 'javascript:void(0)' class= 'menu-toggle'>
-                                        <span> Listar </span>
-                                    </a>
-
-                                    <ul class= 'ml-menu'>
-                                        <li>
-                                            <a href= "{% url 'entrada' 'listar' %}">
-                                                <span> Ofertas de Membros </span>
-                                            </a>
-                                        </li>
-
-                                        <li>
-                                            <a href= "{% url 'avulso' 'listar' %}">
-                                                <span> Ofertas Avulsas </span>
-                                            </a>
-                                        </li>
-                                        
-                                        <li>
-                                            <a href= "{% url 'emissao' 'listar' %}">
-                                                <span> Ofertas de Missões </span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li>            <!-- Saída -->
-                            <a href= 'javascript:void(0)' class= 'menu-toggle'>
-                                <i class= 'material-icons'> money_off </i>
-                                <span> Saídas </span>
-                            </a>
-
-                            <ul class= 'ml-menu'>
-                                <li> <a href= "{% url 'saida' 'adicionar' %}"> Adicionar </a> </li>
-                                 <li> <a href= "{% url 'saida' 'listar' %}"> Listar </a> </li>
-                            </ul>
-                        </li>  
-
-                        <li>            <!-- Membros -->
-                            <a href= 'javascript:void(0)' class= 'menu-toggle'>
-                                <i class= 'material-icons'> group </i>
-                                <span> Membros </span>
-                            </a>
-
-                            <ul class= 'ml-menu'>
-                                <li> <a href= "{% url 'membro' 'adicionar' %}"> Adicionar </a> </li>
-                                <li> <a href= "{% url 'membro' 'importar' %}"> Importar </a> </li>
-                                <li> <a href= "{% url 'listar' 'membros' %}"> Listar </a> </li>
-                            </ul>
-                        </li>
-
-                        <li>            <!-- Relatório -->
-                            <a href= 'javascript:void(0)' class= 'menu-toggle'>
-                                <i class= 'material-icons'> text_snippet </i>
-                                <span> Relatórios </span>
-                            </a>
-
-                            <ul class= 'ml-menu'>
-                                <li> <a href= "{% url 'relatorio' 'entrada' %}"> Entrada </a> </li>
-                                <li> <a href= "{% url 'relatorio' 'saida' %}"> Saída </a> </li>
-                                <li> <a href= "{% url 'relatorio' 'missao' %}"> Missão </a> </li>
-                                <li> <a href= "{% url 'relatorio' 'geral' %}"> Geral </a> </li>
-                            </ul>
-                        </li>
-
-                        <li>            <!-- Missões -->
-                            <a href= 'javascript:void(0)' class= 'menu-toggle'>
-                                <i class= 'material-icons'> feedback </i>
-                                <span> Missões </span>
-                            </a>
-
-                            <ul class= 'ml-menu'>
-                                <li> <a href= "{% url 'missao' 'adicionar' %}"> Adicionar </a> </li>
-                                <li> <a href= "{% url 'missao' 'listar' %}"> Listar </a> </li>
-                            </ul>
-                        </li>
-                        <li>            <!-- Congregações -->
-                            <a href= 'javascript:void(0)' class= 'menu-toggle'>
-                                <i class= 'material-icons'> location_city </i>
-                                <span> Congregações </span>
-                            </a>
-
-                            <ul class= 'ml-menu'>
-                                <li> <a href= "{% url 'congregacao' 'adicionar' %}"> Adicionar </a> </li>
-                                <li> <a href= "{% url 'congregacao' 'listar' %}"> Listar </a> </li>
-                            </ul>
-                        </li>
-
-                        <li>            <!-- Fornecedores -->
-                            <a href= 'javascript:void(0)' class= 'menu-toggle'>
-                                <i class= 'material-icons'> shopping_cart </i>
-                                <span> Fornecedores </span>
-                            </a>
-
-                            <ul class= 'ml-menu'>
-                                <li> <a href= "{% url 'empresa' 'adicionar' %}"> Adicionar </a> </li>
-                                <li> <a href= "{% url 'empresa' 'listar' %}"> Listar </a> </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="legal">
+                <div class= 'legal'>
                     <div class="copyright">
                         &copy; 2020 - <script>document.write(new Date().getFullYear());</script> <a href="https://github.com/gurgueiavalley">Gurgueia Valley</a>.
                     </div>
-                    <div class="version">
-                        <b>Version: </b> 1.0.0
+
+                    <div class= 'version'>
+                        <strong> Versão: </strong> 1.1.4
                     </div>
                 </div>
             </aside>
