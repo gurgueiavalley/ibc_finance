@@ -89,12 +89,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.kinghost.net'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'senhas@financeiro.ibcorrente.com.br'
-EMAIL_HOST_PASSWORD = 'Password'
+EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'senhas@financeiro.ibcorrente.com.br'
 SERVER_EMAIL = 'senhas@financeiro.ibcorrente.com.br'
