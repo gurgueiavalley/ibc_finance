@@ -29,7 +29,7 @@ section .form-control .btn:not(.btn-link):not(.btn-circle){
     margin-top: 5px;
 }
 
-.header{
+.header:not(li){
     padding-bottom: 15px !important;
 }
 
