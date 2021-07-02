@@ -80,21 +80,33 @@
                                 </div>
                             </div>
                             
-                            {% for campo in formulario.visible_fields|slice:'1:3' %}
-                                <div class= 'col-md-6'>
-                                    <strong> {{ campo.label }} <b> * </b> </strong>
+                            <div class= 'col-md-6'>
+                                <strong> {{ formulario.nome.label }} <b> * </b> </strong>
 
-                                    <div class= 'input-group'>
-                                        <span class= 'input-group-addon'>
-                                            <i class= 'material-icons'> {{ campo.help_text }} </i>
-                                        </span>
+                                <div class= 'input-group'>
+                                    <span class= 'input-group-addon'>
+                                        <i class= 'material-icons'> {{ formulario.nome.help_text }} </i>
+                                    </span>
 
-                                        <div class= 'form-line'>
-                                            {{ campo }}
-                                        </div>
+                                    <div class= 'form-line'>
+                                        {{ formulario.nome }}
                                     </div>
                                 </div>
-                            {% endfor %}
+                            </div>
+
+                            <div class= 'col-md-6'>
+                                <strong> {{ formulario.detalhe.label }} </strong>
+
+                                <div class= 'input-group'>
+                                    <span class= 'input-group-addon'>
+                                        <i class= 'material-icons'> {{ formulario.detalhe.help_text }} </i>
+                                    </span>
+
+                                    <div class= 'form-line'>
+                                        {{ formulario.detalhe }}
+                                    </div>
+                                </div>
+                            </div>
 
                             {% for campo in formulario.visible_fields|slice:'3:5' %}
                                 <div class= 'col-md-6'>

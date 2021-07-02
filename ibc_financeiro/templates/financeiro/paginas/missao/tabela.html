@@ -15,19 +15,22 @@
 {% block dinamico %}
     <div class= 'row clearfix'>
         <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>
-            <div class="container-fluid">
-            <!-- Basic Examples -->
-            {% if messages %}
-                {% for success in messages %}
-                    <br>
-                    <div style="background-color: green;" id="alert" class="alert alert alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                        {{ success }}
-                    </div>
-                {% endfor %}
-            {% endif %}
+            <div class="container-fluid">          
+                {% if messages %}
+                    {% for success in messages %}
+                        <br>
+                        
+                        <div style="background-color: green;" id="alert" class="alert alert alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            
+                            {{ success }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
             <div class="row clearfix">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
@@ -36,33 +39,24 @@
                                 <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                     <thead>
                                         <tr>
-                                            <th>NOME</th>
-                                            <th>META</th>
-                                            <th>CONGREGAÇÃO</th>
-                                            <th>DATA INICIO</th>
-                                            <th>DATA FIM</th>
-                                            <th>ANDAMENTO</th> 
+                                            <th> NOME </th>
+                                            <th> META </th>
+                                            <th> CONGREGAÇÃO </th>
+                                            <th> INICIO </th>
+                                            <th> FIM </th>
+                                            <th> ANDAMENTO </th>
                                         </tr>
                                     </thead>
+
                                     <tbody>
                                         {% for missao in missoes %}
                                             <tr>
-                                                <td>
-                                                    <a href= "{% url 'missao' 'alterar' %}?id={{missao.id}}">
-                                                        {{ missao.nome }}
-                                                    </a>
-                                                </td> 
-                                                <td>{{missao.meta}}</td>
-                                                <td>{{missao.congregacao}}</td>
-                                                <td>{{missao.inicio}}</td>
-                                                <td>{{missao.fim}}</td>
-                                                <td id = "tabela">
-                                                    {% if missao.andamento %}
-                                                        <i class="material-icons" id="iconTrue">check_circle<i/>
-                                                    {% else %}
-                                                        <i class="material-icons" id="iconFalse">cancel<i/>
-                                                    {% endif %}    
-                                                </td>
+                                                <td> <a href= "{% url 'missao' 'alterar' %}?id={{ missao.id }}"> {{ missao.nome }} </a> </td>
+                                                <td> R$ {{ missao.meta }} </td>
+                                                <td> {{ missao.congregacao }} </td>
+                                                <td> {{ missao.inicio }} </td>
+                                                <td> {{ missao.fim }} </td>
+                                                <td id= 'tabela'> <i class= 'material-icons' id= {% if missao.andamento %} 'iconTrue'> check_circle {% else %} 'iconFalse'> cancel {% endif %} </i> </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -72,7 +66,6 @@
                     </div>
                 </div>
             </div>
-            <!-- #END# Basic Examples -->
         </div>
     </div>
 {% endblock %}
