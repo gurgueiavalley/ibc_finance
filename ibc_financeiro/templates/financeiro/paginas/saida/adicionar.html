@@ -141,7 +141,7 @@
     <script>
         const adicionar = (classe) => {
             if(classe == 'Congregação')
-                window.open("{% url 'congregacao' 'adicionar' %}", '', 'popup')
+                window.open("{% url 'congregacao' 'adicionar' %}?pop=on", '', 'popup')
             
             else if(classe == 'Categoria')
                 window.open("{% url 'categoria' 'adicionar' %}", '', 'popup')
@@ -150,7 +150,7 @@
                 window.open("{% url 'pagamento' 'adicionar' %}", '', 'popup')
             
             else if(classe == 'Fornecedor')
-                window.open("{% url 'empresa' 'adicionar' %}", '', 'popup')
+                window.open("{% url 'empresa' 'adicionar' %}?pop=on", '', 'popup')
         }
     </script>
 {% endblock %}

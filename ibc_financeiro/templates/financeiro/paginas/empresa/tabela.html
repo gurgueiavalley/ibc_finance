@@ -4,7 +4,7 @@
 
 {% block title %}
     {% block titulo %}
-        Missões
+        Fornecedores
     {% endblock %}
 {% endblock %}
 
@@ -36,33 +36,23 @@
                                 <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                     <thead>
                                         <tr>
+                                            <th>CPF/CNPJ</th>
                                             <th>NOME</th>
-                                            <th>META</th>
-                                            <th>CONGREGAÇÃO</th>
-                                            <th>DATA INICIO</th>
-                                            <th>DATA FIM</th>
-                                            <th>ANDAMENTO</th> 
+                                            <th>DESCRIÇÃO</th>
+                                            <th>ENDEREÇO</th>   
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for missao in missoes %}
+                                        {% for empresa in empresas %}
                                             <tr>
                                                 <td>
-                                                    <a href= "{% url 'missao' 'alterar' %}?id={{missao.id}}">
-                                                        {{ missao.nome }}
+                                                    <a href= "{% url 'empresa' 'alterar' %}?id={{empresa.id}}">
+                                                        {{ empresa.documento }}
                                                     </a>
-                                                </td> 
-                                                <td>{{missao.meta}}</td>
-                                                <td>{{missao.congregacao}}</td>
-                                                <td>{{missao.inicio}}</td>
-                                                <td>{{missao.fim}}</td>
-                                                <td id = "tabela">
-                                                    {% if missao.andamento %}
-                                                        <i class="material-icons" id="iconTrue">check_circle<i/>
-                                                    {% else %}
-                                                        <i class="material-icons" id="iconFalse">cancel<i/>
-                                                    {% endif %}    
                                                 </td>
+                                                <td>{{empresa.nome}}</td>
+                                                <td>{{empresa.descricao}}</td>  
+                                                <td>{{empresa.endereco}}</td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -80,6 +70,6 @@
 {% block JS %}    
     <script src="{% static 'js/base/jquery.min.js' %}"></script>
     <script src="{% static 'js/paginas/jquery-datatable.js' %}"></script>
-    <script src="{% static 'js/paginas/missao/tabela_missao.js' %}"></script>
-    <script src="{% static 'js/paginas/missao/tabela_missao.bootstrap.js' %}"></script>
+    <script src="{% static 'js/paginas/empresa/tabela_empresa.js' %}"></script>
+    <script src="{% static 'js/paginas/empresa/tabela_empresa.bootstrap.js' %}"></script>
 {% endblock %}

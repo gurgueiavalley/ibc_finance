@@ -132,6 +132,20 @@ def catEntrada(request, acao):
 
 @login_required(login_url='/conta/login')
 def congregacao(request, acao):
+    if acao == "listar":
+        congregacoes = Congregacao.objects.all()
+        return render(request, 'financeiro/paginas/congregacao/tabela.html', {'congregacoes':congregacoes})
+    
+    if acao == "alterar":
+        congregacao = Congregacao.objects.get(id = request.GET.get('id'))
+
+        if request.method == 'POST':
+            congregacao.nome = request.POST['nome']
+            congregacao.save()
+            messages.success(request, 'ALTERADO COM SUCESSO!')
+            return redirect('/congregacao/listar')
+        return render(request, 'financeiro/paginas/congregacao/alterar.html', {'formulario': CongregacaoForm(), 'congregacao': congregacao})
+
     pagina = 0
 
     congregacao = Congregacao()
@@ -146,13 +160,21 @@ def congregacao(request, acao):
             pagina = 1
 
             return render(request, 'financeiro/paginas/congregacao/adicionar.html', {'formulario' : CongregacaoForm(), 'pagina' : pagina, 'id' : congregacao.id, 'nome' : request.POST['nome']})
+    
 
-    return render(request, 'financeiro/paginas/congregacao/adicionar.html', {'formulario' : CongregacaoForm(), 'pagina' : pagina})
+    if 'pop' in request.GET:
+        return render(request, 'financeiro/paginas/congregacao/adicionar.html', {'formulario' : CongregacaoForm(),'pagina' : pagina, 'pop' : 'yes'})
 
+    return render(request, 'financeiro/paginas/congregacao/adicionar.html', {'formulario' : CongregacaoForm(),'pagina' : pagina})
 
 
 @login_required(login_url='/conta/login')
 def emissao(request, acao):
+    if acao == 'listar':
+        tipo = 'emissao'
+        return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioMissaoForm()})
+    
+    
     if acao == 'alterar':
         entrada = EntradaMissao.objects.get(id = request.GET.get('id'))
         
@@ -178,6 +200,7 @@ def emissao(request, acao):
                 messages.success(request, "ALTERADO COM SUCESSO!")
         return render(request, 'financeiro/paginas/emissao/alterar.html', {'formulario' : EntradaMissaoForm(), 'dados' : entrada})
     
+
     if request.method == 'POST':
         formulario = EntradaMissaoForm(request.POST)
 
@@ -204,6 +227,29 @@ def emissao(request, acao):
 
 @login_required(login_url='/conta/login')
 def empresa(request, acao):
+    if acao == 'alterar':
+        empresa = Fornecedor.objects.get(id = request.GET.get('id'))
+
+        if request.method == 'POST':
+            empresa.documento = request.POST['documento']
+            empresa.nome = request.POST['nome']
+
+            if 'descricao' in request.POST:
+                empresa.descricao = request.POST['descricao']
+            
+            if 'endereco' in request.POST:
+                empresa.endereco = request.POST['endereco']
+
+            empresa.save()
+            messages.success(request, "ALTERADO COM SUCESSO!")
+
+            return redirect('/empresa/listar')
+        return render(request, 'financeiro/paginas/empresa/alterar.html', {'formulario': FornecedorForm(), 'empresa': empresa})
+
+    if acao == 'listar':
+        empresas = Fornecedor.objects.all()
+        return render(request, 'financeiro/paginas/empresa/tabela.html', {'empresas': empresas})
+    
     pagina = 0
 
     if request.method == 'POST':
@@ -225,6 +271,9 @@ def empresa(request, acao):
             pagina = 1
             
             return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : FornecedorForm(), 'pagina' : pagina, 'id' : fornecedor.id, 'nome' : fornecedor.nome})
+    
+    if 'pop' in request.GET:
+        return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : FornecedorForm(), 'pagina' : pagina, 'pop' : 'yes'})
 
     return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : FornecedorForm(), 'pagina' : pagina})
 
@@ -536,6 +585,31 @@ def missao(request, acao):
     pagina = 0
 
     missao = Missao()
+    
+    if acao == "listar":
+        missoes = Missao.objects.all()
+        return render(request, 'financeiro/paginas/missao/tabela.html', {'missoes': missoes})
+
+    if acao == "alterar":
+        missao = Missao.objects.get(id = request.GET.get('id'))
+        if request.method == "POST":
+            formulario = MissaoForm(request.POST)
+            if formulario.is_valid():
+                missao.congregacao = Congregacao.objects.get(id = request.POST['congregacao'])
+                missao.nome = request.POST['nome']
+                missao.detalhe = request.POST['detalhe']
+                missao.inicio = convertDate(request.POST['inicio'])
+                missao.fim = convertDate(request.POST['fim'])
+                missao.meta = request.POST['meta']
+                if 'andamento' in request.POST:
+                    missao.andamento = True
+                else:
+                    missao.andamento = False
+
+                missao.save()
+            messages.success(request, "ALTERADO COM SUCESSO!")
+            return redirect('/missao/listar')
+        return render(request, 'financeiro/paginas/missao/alterar.html', {'formulario': MissaoForm(),'missao': missao})
 
     if request.method == 'POST':
         formulario = MissaoForm(request.POST)
@@ -554,16 +628,16 @@ def missao(request, acao):
 
             missao.save()
 
+            messages.success(request, "ADICIONADO COM SUCESSO!")
+            
             pagina = 1
 
             return render(request, 'financeiro/paginas/missao/adicionar.html', {'formulario' : MissaoForm(), 'pagina' : pagina, 'id' : missao.id, 'nome' : request.POST['nome']})
 
-    if acao == 'listar':
-        tipo = 'missao'
-        return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioMissaoForm()})
+    if 'pop' in request.GET:
+        return render(request, 'financeiro/paginas/missao/adicionar.html', {'formulario' : MissaoForm(), 'pagina' : pagina, 'pop' : 'yes'})
 
     return render(request, 'financeiro/paginas/missao/adicionar.html', {'formulario' : MissaoForm(), 'pagina' : pagina})
-
 
 
 @login_required(login_url='/conta/login')
@@ -689,9 +763,9 @@ def listar(request, tipo):
                 entradas.append(entrada)
         return render(request, 'financeiro/paginas/entrada/tabela.html', {'entradas' : entradas})
 
-    elif tipo == 'missao':
+    elif tipo == 'emissao':
         missoes = listaMissao(request)
-        return render(request, 'financeiro/paginas/missao/tabela.html', {'missoes' : missoes})
+        return render(request, 'financeiro/paginas/emissao/tabela.html', {'missoes' : missoes})
 
     elif tipo == 'membros':
         membros = Membro.objects.all()

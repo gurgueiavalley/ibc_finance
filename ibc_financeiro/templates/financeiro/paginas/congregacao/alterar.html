@@ -1,4 +1,4 @@
-﻿{% extends 'financeiro/base.html' %}
+{% extends 'financeiro/base.html' %}
 
 {% load static %}
 
@@ -33,7 +33,7 @@
 {% endblock %}
 
 {% block dinamico %}
-    <form method= 'POST' action= "{% url 'congregacao' 'adicionar' %}" id= 'formulario'>
+    <form method= 'POST' action= "{% url 'congregacao' 'alterar' %}?id={{congregacao.id}}" id= 'formulario'>
         {% csrf_token %}
         
         <div class= 'row clearfix'>
@@ -42,7 +42,7 @@
                     <div class= 'header'>
                         <h2>
                             Dados
-                            <small> Insira os dados para adicionar uma nova congregação. Os dados com <b> * </b> são obrigatórios </small>
+                            <small> Insira os dados para alterar uma congregação. Os dados com <b> * </b> são obrigatórios </small>
                         </h2>
                     </div>
                     
@@ -70,8 +70,8 @@
         </div>
 
         <button class= 'btn btn-success btn-lg waves-effect'>
-            <i class= 'material-icons'> add </i>
-            <span> ADICIONAR </span>
+            <i class= 'material-icons'> update </i>
+            <span> ALTERAR </span>
         </button>
     </form>
 {% endblock %}
@@ -85,7 +85,9 @@
     <script src= 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/pt-br.min.js'> </script>
 
     <script src= "{% static 'js/paginas/saida/saida.js' %}"> </script>
-
+    <script>
+        $('#id_nome').val('{{congregacao.nome}}')
+    </script>
     <script>
         if({{ pagina }} == 1){
             {% if id %}

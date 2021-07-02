@@ -1,10 +1,10 @@
-﻿{% extends 'financeiro/base.html' %}
+{% extends 'financeiro/base.html' %}
 
 {% load static %}
 
 {% block title %}
     {% block titulo %}
-        Adicionar uma Missão
+        Alterar uma Missão
     {% endblock %}
 {% endblock %}
 
@@ -33,19 +33,7 @@
 {% endblock %}
 
 {% block dinamico %}
-    {% if messages %}
-        {% for success in messages %}
-            <br>
-            <div style="background-color: green;" id="alert" class="alert alert alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-                {{ success }}
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    <form method= 'POST' action= "{% url 'missao' 'adicionar' %}" id= 'formulario'>
+    <form method= 'POST' action= "{% url 'missao' 'alterar' %}?id={{missao.id}}" id= 'formulario'>
         {% csrf_token %}
         
         <div class= 'row clearfix'>
@@ -54,7 +42,7 @@
                     <div class= 'header'>
                         <h2>
                             Dados
-                            <small> Insira os dados para adicionar uma nova congregação. Os dados com <b> * </b> são obrigatórios </small>
+                            <small> Insira os dados para alterar uma missao. Os dados com <b> * </b> são obrigatórios </small>
                         </h2>
                     </div>
                     
@@ -112,7 +100,7 @@
                                 </div>
                             {% endfor %}
 
-                            <div class= 'col-md-12'>
+                            <div class= 'col-md-6'>
                                 <strong> {{ formulario.meta.label }} <b> * </b> </strong>
 
                                 <div class= 'input-group'>
@@ -125,6 +113,16 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class= 'col-md-6'>
+                                <strong> Andamento </b> </strong>
+
+                                <div class="body">
+                                    <div class="demo-checkbox">
+                                        <input type="checkbox" name="andamento" id="md_checkbox_27" value="true" class="filled-in chk-col-green">
+                                        <label for="md_checkbox_27"></label>
+                                    </div>  
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -132,8 +130,8 @@
         </div>
 
         <button class= 'btn btn-success btn-lg waves-effect'>
-            <i class= 'material-icons'> add </i>
-            <span> ADICIONAR </span>
+            <i class= 'material-icons'> update </i>
+            <span> ALTERAR </span>
         </button>
     </form>
 {% endblock %}
@@ -148,48 +146,24 @@
 
     <script src= "{% static 'js/paginas/saida/saida.js' %}"> </script>
 
+    {% comment %} Preenchendo os campos do formulario {% endcomment %}
     <script>
-        if({{ pagina }} == 1){
-            {% if id %}
-                $(window.opener.document).find('#id_missao').append($('<option>', {
-                    value: {{ id }},
-                    text: '{{ nome }}'
-                }))
-                
-                const span = document.createElement('span')
-                span.classList.add('text')
-                span.innerText = '{{ nome }}'
+    
+        $("#id_congregacao").val('{{missao.congregacao.id}}');
+        
+        $("#id_nome").val("{{missao.nome}}");
+        
+        $("#id_meta").val(parseFloat({{ missao.meta }}));
 
-                const a = document.createElement('a')
-                a.appendChild(span)
+        $("#id_detalhe").val('{{missao.detalhe}}');
+        
+        $('#id_inicio').val('{{missao.inicio.day}}/{{missao.inicio.month}}/{{missao.inicio.year}}')
+        
+        $('#id_fim').val('{{missao.fim.day}}/{{missao.fim.month}}/{{missao.fim.year}}')
 
-                const li = document.createElement('li')
-                li.setAttribute('data-original-index', String($(window.opener.document).find('#id_missao').parent().find('ul')[0].children.length))
-                li.appendChild(a)
-
-                $(window.opener.document).find('#id_missao').parent().find('ul')[0].appendChild(li)
-
-                $(window.opener.document).find('#id_missao').parent().find('button').find('span')[0].innerText = '{{ nome }}'
-
-                $(window.opener.document).find('#id_missao').parent().find('div ul li').last().find('span').click(() => {
-                    $('#id_missao').parent().find('div ul li').last().addClass('selected')
-                })
-                
-                $(window.opener.document).find('#id_missao').parent().find('div ul li').last().find('span').click()
-
-                window.close()
-            {% endif %}
-        }
-    </script>
-
-    <script>
-        const adicionar = () => {
-            window.open("{% url 'congregacao' 'adicionar' %}?pop=on", '', 'popup')
-        }
-    </script>
-
-    <script>
-        document.querySelectorAll('b')[8].classList.add('oculto')
-        document.querySelectorAll('b')[11].classList.remove('oculto')
+        {% if missao.andamento %}
+            document.getElementById('md_checkbox_27').checked = true
+        {% endif %}
+        
     </script>
 {% endblock %} 

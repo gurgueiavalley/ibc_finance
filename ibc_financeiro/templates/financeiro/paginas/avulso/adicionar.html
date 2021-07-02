@@ -19,11 +19,17 @@
 
     <link rel= 'stylesheet' href= "{% static 'css/paginas/saida/saida.css' %}">
 
-    <style>
-        .card .body .col-md-12{
-            margin-bottom: 0 !important;
-        }
-    </style>
+    {% if pop %}
+        <style>
+            .navbar, #leftsidebar{
+                display: none;
+            }
+
+            .content{
+                margin: 20px !important;
+            }
+        </style>
+    {% endif %}
 {% endblock %}
 
 {% block dinamico %}
@@ -189,7 +195,7 @@
     <script>
         const adicionar = (classe) => {
             if(classe == 'Congregação')
-                window.open("{% url 'congregacao' 'adicionar' %}", '', 'popup')
+                window.open("{% url 'congregacao' 'adicionar' %}?pop=on", '', 'popup')
             
             else if(classe == 'Categoria')
                 window.open("{% url 'catentrada' 'adicionar' %}", '', 'popup')

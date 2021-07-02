@@ -11363,7 +11363,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sEmptyTable": "Nenhuma Missão Encontrada",
+			"sEmptyTable": "Nenhum Fornecedor Encontrado",
 	
 	
 			/**
@@ -11395,7 +11395,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sInfo": "Exibindo _END_ de _TOTAL_ Missões",
+			"sInfo": "Exibindo _END_ de _TOTAL_ Fornecedores",
 	
 	
 			/**
@@ -11416,7 +11416,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sInfoEmpty": "Exibindo 0 de 0 Missões",
+			"sInfoEmpty": "Exibindo 0 de 0 Fornecedores",
 	
 	
 			/**
@@ -11556,7 +11556,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sLengthMenu": "Exibir _MENU_ Missões",
+			"sLengthMenu": "Exibir _MENU_ Fornecedores",
 	
 	
 			/**
@@ -11694,7 +11694,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sZeroRecords": "Nenhuma Missão Encontrada!"
+			"sZeroRecords": "Nenhum Fornecedor Encontrado!"
 		},
 	
 	

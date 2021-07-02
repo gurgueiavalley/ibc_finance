@@ -1,10 +1,10 @@
-﻿{% extends 'financeiro/base.html' %}
+{% extends 'financeiro/base.html' %}
 
 {% load static %}
 
 {% block title %}
     {% block titulo %}
-        Adicionar uma Missão
+        Alterar um Fornecedor
     {% endblock %}
 {% endblock %}
 
@@ -33,19 +33,7 @@
 {% endblock %}
 
 {% block dinamico %}
-    {% if messages %}
-        {% for success in messages %}
-            <br>
-            <div style="background-color: green;" id="alert" class="alert alert alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-                {{ success }}
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    <form method= 'POST' action= "{% url 'missao' 'adicionar' %}" id= 'formulario'>
+    <form method= 'POST' action= "{% url 'empresa' 'alterar' %}?id={{empresa.id}}" id= 'formulario'>
         {% csrf_token %}
         
         <div class= 'row clearfix'>
@@ -54,33 +42,13 @@
                     <div class= 'header'>
                         <h2>
                             Dados
-                            <small> Insira os dados para adicionar uma nova congregação. Os dados com <b> * </b> são obrigatórios </small>
+                            <small> Insira os dados para alterar uma empresa. Os dados com <b> * </b> são obrigatórios </small>
                         </h2>
                     </div>
                     
                     <div class= 'body'>
                         <div class= 'row clearfix'>
-                            <div class= 'col-md-12'>
-                                <div class= 'col-md-10 titulo'>
-                                    <strong> {{ formulario.congregacao.label }} <b> * </b> </strong>
-                                </div>
-                                
-                                <div class= 'col-md-2 text-right titulo'>
-                                    <i class= 'material-icons adicionar' onclick= 'adicionar()'> add </i>
-                                </div>
-
-                                <div class= 'input-group'>
-                                    <span class= 'input-group-addon'>
-                                        <i class= 'material-icons'> {{ formulario.congregacao.help_text }} </i>
-                                    </span>
-
-                                    <div class= 'form-line'>
-                                        {{ formulario.congregacao }}
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            {% for campo in formulario.visible_fields|slice:'1:3' %}
+                            {% for campo in formulario.visible_fields|slice:'0:2' %}
                                 <div class= 'col-md-6'>
                                     <strong> {{ campo.label }} <b> * </b> </strong>
 
@@ -95,10 +63,24 @@
                                     </div>
                                 </div>
                             {% endfor %}
+
+                            <div class= 'col-md-12'>
+                                <strong> {{ formulario.descricao.label }} </strong>
+
+                                <div class= 'input-group'>
+                                    <span class= 'input-group-addon'>
+                                        <i class= 'material-icons'> {{ formulario.descricao.help_text }} </i>
+                                    </span>
+
+                                    <div class= 'form-line'>
+                                        {{ formulario.descricao }}
+                                    </div>
+                                </div>
+                            </div>
 
                             {% for campo in formulario.visible_fields|slice:'3:5' %}
-                                <div class= 'col-md-6'>
-                                    <strong> {{ campo.label }} <b> * </b> </strong>
+                                <div class= 'col-md-12'>
+                                    <strong> {{ campo.label }} </strong>
 
                                     <div class= 'input-group'>
                                         <span class= 'input-group-addon'>
@@ -111,20 +93,6 @@
                                     </div>
                                 </div>
                             {% endfor %}
-
-                            <div class= 'col-md-12'>
-                                <strong> {{ formulario.meta.label }} <b> * </b> </strong>
-
-                                <div class= 'input-group'>
-                                    <span class= 'input-group-addon'>
-                                        <i class= 'material-icons'> {{ formulario.meta.help_text }} </i>
-                                    </span>
-
-                                    <div class= 'form-line'>
-                                        {{ formulario.meta }}
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -132,8 +100,8 @@
         </div>
 
         <button class= 'btn btn-success btn-lg waves-effect'>
-            <i class= 'material-icons'> add </i>
-            <span> ADICIONAR </span>
+            <i class= 'material-icons'> update </i>
+            <span> ALTERAR </span>
         </button>
     </form>
 {% endblock %}
@@ -146,12 +114,20 @@
 
     <script src= 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/pt-br.min.js'> </script>
 
-    <script src= "{% static 'js/paginas/saida/saida.js' %}"> </script>
+    {% comment %} <script src= "{% static 'js/paginas/saida/saida.js' %}"> </script> {% endcomment %}
+
+    <script>
+        $('#id_documento').val('{{empresa.documento}}')
+        $('#id_nome').val('{{empresa.nome}}')
+        $('#id_descricao').val('{{empresa.descricao}}')
+        $('#id_endereco').val('{{empresa.endereco}}')
+    </script>
+
 
     <script>
         if({{ pagina }} == 1){
             {% if id %}
-                $(window.opener.document).find('#id_missao').append($('<option>', {
+                $(window.opener.document).find('#id_fornecedor').append($('<option>', {
                     value: {{ id }},
                     text: '{{ nome }}'
                 }))
@@ -164,32 +140,21 @@
                 a.appendChild(span)
 
                 const li = document.createElement('li')
-                li.setAttribute('data-original-index', String($(window.opener.document).find('#id_missao').parent().find('ul')[0].children.length))
+                li.setAttribute('data-original-index', String($(window.opener.document).find('#id_fornecedor').parent().find('ul')[0].children.length))
                 li.appendChild(a)
 
-                $(window.opener.document).find('#id_missao').parent().find('ul')[0].appendChild(li)
+                $(window.opener.document).find('#id_fornecedor').parent().find('ul')[0].appendChild(li)
 
-                $(window.opener.document).find('#id_missao').parent().find('button').find('span')[0].innerText = '{{ nome }}'
+                $(window.opener.document).find('#id_fornecedor').parent().find('button').find('span')[0].innerText = '{{ nome }}'
 
-                $(window.opener.document).find('#id_missao').parent().find('div ul li').last().find('span').click(() => {
-                    $('#id_missao').parent().find('div ul li').last().addClass('selected')
+                $(window.opener.document).find('#id_fornecedor').parent().find('div ul li').last().find('span').click(() => {
+                    $('#id_fornecedor').parent().find('div ul li').last().addClass('selected')
                 })
-                
-                $(window.opener.document).find('#id_missao').parent().find('div ul li').last().find('span').click()
 
+                $(window.opener.document).find('#id_fornecedor').parent().find('div ul li').last().find('span').click()
+                
                 window.close()
             {% endif %}
         }
-    </script>
-
-    <script>
-        const adicionar = () => {
-            window.open("{% url 'congregacao' 'adicionar' %}?pop=on", '', 'popup')
-        }
-    </script>
-
-    <script>
-        document.querySelectorAll('b')[8].classList.add('oculto')
-        document.querySelectorAll('b')[11].classList.remove('oculto')
     </script>
 {% endblock %} 

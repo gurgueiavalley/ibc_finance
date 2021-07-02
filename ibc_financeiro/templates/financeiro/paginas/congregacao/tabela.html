@@ -4,7 +4,7 @@
 
 {% block title %}
     {% block titulo %}
-        Missões
+        Congregações
     {% endblock %}
 {% endblock %}
 
@@ -37,32 +37,16 @@
                                     <thead>
                                         <tr>
                                             <th>NOME</th>
-                                            <th>META</th>
-                                            <th>CONGREGAÇÃO</th>
-                                            <th>DATA INICIO</th>
-                                            <th>DATA FIM</th>
-                                            <th>ANDAMENTO</th> 
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for missao in missoes %}
+                                        {% for congregacao in congregacoes %}
                                             <tr>
                                                 <td>
-                                                    <a href= "{% url 'missao' 'alterar' %}?id={{missao.id}}">
-                                                        {{ missao.nome }}
+                                                    <a href= "{% url 'congregacao' 'alterar' %}?id={{congregacao.id}}">
+                                                        {{ congregacao.nome }}
                                                     </a>
                                                 </td> 
-                                                <td>{{missao.meta}}</td>
-                                                <td>{{missao.congregacao}}</td>
-                                                <td>{{missao.inicio}}</td>
-                                                <td>{{missao.fim}}</td>
-                                                <td id = "tabela">
-                                                    {% if missao.andamento %}
-                                                        <i class="material-icons" id="iconTrue">check_circle<i/>
-                                                    {% else %}
-                                                        <i class="material-icons" id="iconFalse">cancel<i/>
-                                                    {% endif %}    
-                                                </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -80,6 +64,6 @@
 {% block JS %}    
     <script src="{% static 'js/base/jquery.min.js' %}"></script>
     <script src="{% static 'js/paginas/jquery-datatable.js' %}"></script>
-    <script src="{% static 'js/paginas/missao/tabela_missao.js' %}"></script>
-    <script src="{% static 'js/paginas/missao/tabela_missao.bootstrap.js' %}"></script>
+    <script src="{% static 'js/paginas/congregacao/tabela_congregacao.js' %}"></script>
+    <script src="{% static 'js/paginas/congregacao/tabela_congregacao.bootstrap.js' %}"></script>
 {% endblock %}

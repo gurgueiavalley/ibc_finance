@@ -140,7 +140,7 @@
                                         </li>
                                         
                                         <li>
-                                            <a href= "{% url 'missao' 'listar' %}">
+                                            <a href= "{% url 'emissao' 'listar' %}">
                                                 <span> Ofertas de Missões </span>
                                             </a>
                                         </li>
@@ -185,6 +185,41 @@
                                 <li> <a href= "{% url 'relatorio' 'saída' %}"> Saída </a> </li>
                                 <li> <a href= "{% url 'relatorio' 'missão' %}"> Missão </a> </li>
                                 <li> <a href= "{% url 'relatorio' 'geral' %}"> Geral </a> </li>
+                            </ul>
+                        </li>
+
+                        <li>            <!-- Missões -->
+                            <a href= 'javascript:void(0)' class= 'menu-toggle'>
+                                <i class= 'material-icons'> feedback </i>
+                                <span> Missões </span>
+                            </a>
+
+                            <ul class= 'ml-menu'>
+                                <li> <a href= "{% url 'missao' 'adicionar' %}"> Adicionar </a> </li>
+                                <li> <a href= "{% url 'missao' 'listar' %}"> Listar </a> </li>
+                            </ul>
+                        </li>
+                        <li>            <!-- Congregações -->
+                            <a href= 'javascript:void(0)' class= 'menu-toggle'>
+                                <i class= 'material-icons'> location_city </i>
+                                <span> Congregações </span>
+                            </a>
+
+                            <ul class= 'ml-menu'>
+                                <li> <a href= "{% url 'congregacao' 'adicionar' %}"> Adicionar </a> </li>
+                                <li> <a href= "{% url 'congregacao' 'listar' %}"> Listar </a> </li>
+                            </ul>
+                        </li>
+
+                        <li>            <!-- Fornecedores -->
+                            <a href= 'javascript:void(0)' class= 'menu-toggle'>
+                                <i class= 'material-icons'> shopping_cart </i>
+                                <span> Fornecedores </span>
+                            </a>
+
+                            <ul class= 'ml-menu'>
+                                <li> <a href= "{% url 'empresa' 'adicionar' %}"> Adicionar </a> </li>
+                                <li> <a href= "{% url 'empresa' 'listar' %}"> Listar </a> </li>
                             </ul>
                         </li>
                     </ul>
