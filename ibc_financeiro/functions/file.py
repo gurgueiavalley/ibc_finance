@@ -93,7 +93,6 @@ class PDF():
         
         for image in images:
             pdf.add_page()
-            pdf.set_text_color(200)
 
             movement = image['movement']
             
