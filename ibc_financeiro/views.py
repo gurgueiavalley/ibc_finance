@@ -158,7 +158,6 @@ def congregacao(request, acao):
 
     return render(request, 'financeiro/paginas/congregacao/adicionar.html', {'formulario' : CongregacaoForm(),'pagina' : pagina})
 
-
 @login_required(login_url='/conta/login')
 def emissao(request, acao):
     if acao == 'listar':
