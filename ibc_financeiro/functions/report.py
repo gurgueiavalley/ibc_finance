@@ -3,13 +3,12 @@ from reportlab.lib.pagesizes                import A4
 from reportlab.graphics.charts.piecharts    import Pie
 from reportlab.graphics.shapes              import Drawing, String
 
-from PyPDF2                                 import PdfFileMerger
-
-import os
+from .file      import PDF, File
+from itertools  import chain
 
 class Chart():
     def pie(saidas):
-        archive = 'media/financeiro/report/chart.pdf'
+        archive = 'ibc_financeiro/static/chart.pdf'
 
         PDF = SimpleDocTemplate(archive, pagesize = A4)
 
@@ -96,22 +95,64 @@ class Chart():
         else:
             pdf.drawString(383, y - 38, 'Ultrapassado: R$ ' + '{:.2f}'.format(total - meta))
 
-class PDF():
-    def merge(self):
-        PDF = PdfFileMerger()
-        
-        report = 'ibc_financeiro/static/relatorio_geral.pdf'
-        chart = 'media/financeiro/report/chart.pdf'
+class Report():
+    def receipt(movements, old, new, name, options = {}):
+        line, lines = 1, {}
+        movements1, movements2 = [], []
 
-        PDF.append(report)
-        PDF.append(chart)
-        
-        PDF.write('ibc_financeiro/static/pdf/report/general.pdf')
-        
-        PDF.close()
+        for movement in movements:
+            index = '{}:{}'.format(movement.__class__.__name__, str(movement.id))
+            lines[index] = line
+            line += 1
 
-        self.delete(report)
-        self.delete(chart)
+            movements1.append(movement) if hasattr(movement, 'categoria') else movements2.append(movement)
 
-    def delete(directory):
-        os.remove(directory)
+        categories = []
+
+        for movement in movements1:
+            category = movement.categoria.nome
+            categories.append(category) if category not in categories else None
+
+        movements = []
+
+        for category in categories:
+            for movement in movements1:
+                movements.append(movement) if movement.categoria.nome == category else None
+
+        movements = list(chain(movements, movements2))
+
+        receipts, delete = [], [old]
+
+        for movement in movements:
+            documents = ['media/' + str(movement.comprovante)]
+            documents.append('media/' + str(movement.nf)) if hasattr(movement, 'nf') else None
+
+            for index in range(len(documents)):
+                if documents[index] != 'media/':
+                    images = []
+
+                    if documents[index][-4:] == '.pdf':
+                        images = PDF.toPNG(documents[index])
+                        delete += images
+
+                    else:
+                        images = [documents[index]]
+
+                    for image in images:
+                        receipts.append({
+                            'directory' : image,
+                            'line'      : lines['{}:{}'.format(movement.__class__.__name__, str(movement.id))],
+                            'type'      : 'Nota Fiscal' if index == 1 else 'Comprovante',
+                            'movement'  : movement
+                        })
+                    
+        receipt = ''
+
+        if receipts != []:
+            receipt = 'ibc_financeiro/static/receipt.pdf'
+            PDF.imageToPDF(receipts, receipt, options)
+            delete += [receipt]
+        
+        PDF.merge([old, receipt], new, name)
+        
+        File.delete(delete)
