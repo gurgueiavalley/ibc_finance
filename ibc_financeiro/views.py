@@ -150,6 +150,8 @@ def congregacao(request, acao):
 
             pagina = 1
 
+            messages.success(request, 'ADICIONADO COM SUCESSO!')
+
             return render(request, 'financeiro/paginas/congregacao/adicionar.html', {'formulario' : CongregacaoForm(), 'pagina' : pagina, 'id' : congregacao.id, 'nome' : request.POST['nome']})
     
 
@@ -257,6 +259,8 @@ def empresa(request, acao):
             fornecedor.save()
 
             pagina = 1
+
+            messages.success(request, 'ADICIONADO COM SUCESSO!')
             
             return render(request, 'financeiro/paginas/empresa/adicionar.html', {'formulario' : FornecedorForm(), 'pagina' : pagina, 'id' : fornecedor.id, 'nome' : fornecedor.nome})
     
