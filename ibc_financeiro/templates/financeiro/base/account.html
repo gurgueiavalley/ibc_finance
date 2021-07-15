@@ -1,0 +1,60 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang= 'pt-BR'>
+    <head>
+        <meta charset= 'utf-8'>
+        <meta content= 'width= device-width, initial-scale= 1, maximum-scale= 1, user-scalable= no' name= 'viewport'>
+        
+        <link rel= 'icon' href= "{% static 'imagens/logo.jpg' %}">
+        <title> {% block title %} {% endblock %} </title>
+
+        <link rel= 'stylesheet' href= 'https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext'>
+        <link rel= 'stylesheet' href= 'https://fonts.googleapis.com/icon?family=Material+Icons'>
+
+        <link rel= 'stylesheet' href= "{% static 'css/base/bootstrap.css' %}">
+        <link rel= 'stylesheet' href= "{% static 'css/base/waves.css' %}">
+        <link rel= 'stylesheet' href= "{% static 'css/base/animate.css' %}">
+        <link rel= 'stylesheet' href= "{% static 'css/base/style.css' %}">
+        
+        <link rel= 'stylesheet' href= "{% static 'css/paginas/account/style.css' %}">
+        <link rel= 'stylesheet' href= "{% static 'css/paginas/account/responsive.css' %}">
+    </head>
+
+    <body class= 'login-page'>
+        {% if messages %}
+            <div class= 'w-360 text-center bg-red alert margin-b-5'>
+                {% for message in messages %} {{ message }} {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if form.errors %}
+            <div class= 'w-360 text-justify bg-red alert margin-b-5'>
+                {{ form.password.errors }}
+                {{ form.new_password2.errors }}
+            </div>
+        {% endif %}
+
+        <div class= 'login-box'>
+            <div class= 'logo'>
+                <a href= 'javascript:void(0)'> <b> IBCorrente </b> | Financeiro </a>
+                <small> Gestão Financeira da Igreja Batista de Corrente e suas Congregações </small>
+            </div>
+            
+            <div class= 'card'>
+                <div class= 'body'>
+                    <div class= 'msg margin-b-25'> {% block header %} {% endblock %} </div>
+                    
+                    {% block body %} {% endblock %}
+                </div>
+            </div>
+        </div>
+
+        <script src= "{% static 'js/base/jquery.min.js' %}"> </script>
+        <script src= "{% static 'js/base/bootstrap.js' %}"> </script>
+        <script src= "{% static 'js/base/waves.js' %}"> </script>
+        <script src= "{% static 'js/base/admin.js' %}"> </script>
+
+        {% block js %} {% endblock %}
+    </body>
+</html>

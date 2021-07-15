@@ -1,0 +1,48 @@
+.margin-t-20{
+    margin-top: 20px;
+}
+
+.margin-b-5{
+    margin-bottom: 5px !important;
+}
+
+.margin-b-25{
+    margin-bottom: 25px !important;
+}
+
+.padding-l-7{
+    padding-left: 7px !important;
+}
+
+.w-360{
+    width: 360px;
+}
+
+.bg-red{
+    background-color: red !important;
+}
+
+.color-w{
+    color: white !important;
+}
+
+.logo a{
+    font-size: 35px !important;
+}
+
+.logo small{
+    font-size: 83%;
+}
+
+.login-page{
+    background: linear-gradient(rgba(0, 0, 0, .7),rgba(0, 0, 0, .7)), url(../../../imagens/background.jpg) center;
+    background-size: cover;
+}
+
+a.text-blue{
+    color: #2196F3 !important;
+}
+
+.errorlist{
+    padding-left: 15px !important;
+}

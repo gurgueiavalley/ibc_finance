@@ -3,7 +3,7 @@ from .models import *
 
 class CategoriaForm(forms.Form):
     nome = forms.CharField(label = 'Nome', help_text = 'category', max_length = 30)
-    nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome da categoria', 'autocomplete' : 'off', 'maxlength' : '30'}   
+    nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome da categoria', 'autocomplete' : 'off', 'maxlength' : '30'}
 
 class CongregacaoForm(forms.Form):
     nome = forms.CharField(label = 'Nome', help_text = 'location_city', max_length = 70)
@@ -90,7 +90,14 @@ class EntradaMissaoForm(forms.Form):
     comprovante.widget.attrs = {'accept' : '.jpg, .jpeg, .png, .pdf'}
 
     deletar = forms.BooleanField(label = 'Deletar o Atual', required = False)
-   
+
+class LoginForm(forms.Form):
+    username = forms.CharField(help_text = 'person', max_length = 150)
+    username.widget.attrs = {'class' : 'form-control padding-l-7', 'placeholder' : 'Seu nome de usuário', 'autocomplete' : 'off', 'maxlength' : '150', 'autofocus' : 'on'}
+
+    password = forms.CharField(help_text = 'lock', max_length = 128, widget = forms.PasswordInput)
+    password.widget.attrs = {'class' : 'form-control padding-l-7', 'placeholder' : 'Sua senha de acesso', 'maxlength' : '128'}
+
 class MembroForm(forms.Form):
     SEXOS = (
         (None, 'NENHUM SELECIONADO'),
