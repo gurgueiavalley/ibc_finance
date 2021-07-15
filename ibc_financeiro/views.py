@@ -1,4 +1,6 @@
-from django.shortcuts import redirect, render
+from django.contrib.auth    import authenticate, login, logout
+from django.contrib         import messages
+from django.shortcuts       import redirect, render
 
 from .models import *
 from .forms import *
@@ -15,7 +17,6 @@ from itertools import chain                     # Juntar duas listas de queryset
 from reportlab.platypus import Table
 
 from django.core.files.storage import default_storage
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
@@ -25,7 +26,30 @@ from .functions.file    import *
 
 from django.db.models import Sum
 from django.urls import reverse
-from django.contrib import messages
+
+def conta(request, acao):
+    if acao == 'login':
+        if request.method == 'POST':
+            user = authenticate(username = request.POST['username'], password = request.POST['password'])
+            
+            if user != None:
+                if user.is_active:
+                    login(request, user)
+                    
+                    return redirect('index')
+            
+            else:
+                messages.error(request, 'Dados incorretos ou conta desativada')
+        
+        return render(request, 'financeiro/paginas/conta/login.html', {'inputs' : LoginForm()})
+    
+    elif acao == 'logout':
+        logout(request)
+
+        return redirect('index')
+    
+    else:
+        return redirect('index')
 
 @login_required(login_url='/conta/login')
 def avulso(request, acao):
@@ -705,26 +729,6 @@ def saida(request, acao):
         tipo = 'saídas'
         return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioSaidaForm()})
     return render(request, 'financeiro/paginas/saida/adicionar.html', {'formulario' : SaidaForm()})
-
-def conta(request, acao):
-    if acao == 'login':
-        if request.method == 'POST':
-            user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return redirect('index')
-            else:
-                alert = 'USUARIO OU SENHA INCORRETOS!'
-                return render(request, 'financeiro/paginas/conta/login.html', {'alert': alert})  
-        return render(request, 'financeiro/paginas/conta/login.html')
-    if acao == 'logout':
-        logout(request)
-        return render(request, 'financeiro/paginas/conta/login.html')
-    if acao == 'recuperar':
-        if request.method == 'POST':
-            return  HttpResponse ('<div style="text-align: center; padding-top: 20%;"><h3>Em desenvolvimento, por favor aguarde! </h3></div>')
-        return render(request, 'financeiro/paginas/conta/recuperar.html')
 
 @login_required(login_url='/conta/login')
 def listar(request, tipo):

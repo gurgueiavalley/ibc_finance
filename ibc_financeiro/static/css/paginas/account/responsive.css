@@ -1,0 +1,19 @@
+@media only screen and (max-width: 425px){
+    .login-page{
+        background-size: 206%;
+    }
+
+    .logo a{
+        font-size: 30px !important;
+    }
+
+    .logo small{
+        font-size: 72%;
+    }
+}
+
+@media only screen and (max-width: 320px){
+    .alert.w-360{
+        width: 320px;
+    }
+}

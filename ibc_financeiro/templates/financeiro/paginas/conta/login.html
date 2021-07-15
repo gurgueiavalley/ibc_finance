@@ -1,83 +1,36 @@
+{% extends 'financeiro/base/account.html' %}
+
 {% load static %}
 
-<!DOCTYPE HTML>
-<html lang= 'pt-BR'>
-    <head>
-        <meta charset= 'utf-8'>
-        <meta content= 'width= device-width, initial-scale= 1, maximum-scale= 1, user-scalable= no' name= 'viewport'>
+{% block title %}
+    Login
+{% endblock %}
 
-        <link rel= 'icon' type= 'image/jpg' href= "{% static 'imagens/logo.jpg' %}">
-        <title> Bem Vindo | Login </title>
+{% block header %}
+    Entre na sua conta para acessar o sistema
+{% endblock %}
 
-        <!-- CSS -->
-        <link rel= 'stylesheet' href= 'https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext' type= 'text/css'>
-        <link rel= 'stylesheet' href= 'https://fonts.googleapis.com/icon?family=Material+Icons' type= 'text/css'>
+{% block body %}
+    <form action= "{% url 'conta' 'login' %}" method= 'POST'>
+        {% csrf_token %}
 
-        <link rel= 'stylesheet' href= "{% static 'css/base/bootstrap.css' %}">
-        <link rel= 'stylesheet' href= "{% static 'css/base/waves.css' %}">
-        <link rel= 'stylesheet' href= "{% static 'css/base/animate.css' %}">
-        <link rel= 'stylesheet' href= "{% static 'css/base/style.css' %}">
-    </head>
-    <body class="login-page">
-        <div class="login-box">
-            <div class="logo">
-                <a><b>IGREJA BATISTA DE CORRENTE</b></a>
-                <small>FINANCEIRO</small>
+        {% for input in inputs %}
+            <div class= 'input-group'>
+                <span class= 'input-group-addon'> <i class= 'material-icons'> {{ input.help_text }} </i> </span>
+                <div class= 'form-line'> {{ input }} </div>
             </div>
-            {% if alert %}
-                <br>
-                <div style="background-color: red;" id="alert" class="alert alert alert-dismissible" role="alert">
-                    <button type="button" onclick="fechar()" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    {{ alert }}
-                </div>
-            {% endif %}
-            <div class="card">
-                <div class="body">
-                    <form id="sign_in" action="{% url 'conta' 'login' %}" method="POST">
-                        {% csrf_token %}
-                        <div class="msg">ENTRE PARA INICIAR UMA SESSÃO!</div>
-                        <div class="input-group">
-                            <span class="input-group-addon">
-                                <i class="material-icons">person</i>
-                            </span>
-                            <div class="form-line">
-                                <input type="text" class="form-control" name="username" placeholder="USUARIO" required autofocus>
-                            </div>
-                        </div>
-                        <div class="input-group">
-                            <span class="input-group-addon">
-                                <i class="material-icons">lock</i>
-                            </span>
-                            <div class="form-line">
-                                <input type="password" class="form-control" name="password" placeholder="SENHA" required>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-8 p-t-5"></div>
-                            <div class="col-xs-4">
-                                <button class="btn btn-block bg-green waves-effect" type="submit">ENTRAR</button>
-                            </div>
-                        </div>
-                        <div class="row m-t-15 m-b--20">
-                            <div class="col-xs-6"></div>
-                            <div class="col-xs-6 align-right">
-                                <a href="{% url 'password_reset' %}">ESQUECEU A SENHA ?</a>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+        {% endfor %}
+
+        <div class= 'row'>
+            <div class= 'col-xs-12 margin-b-5'>
+                <button class= 'btn btn-block btn-lg btn-success waves-effect'> ENTRAR </button>
             </div>
         </div>
-    </body>
-    <script>
-        function fechar(){
-            document.getElementById('alert').style.display = "none";
-        }
-    </script>
-    <script src= "{% static 'js/base/bootstrap.js' %}"> </script>
-    <script src= "{% static 'js/base/waves.js' %}"> </script>
-    <script src= "{% static 'js/base/admin.js' %}"> </script>
-    <script src= "{% static 'js/base/demo.js' %}"> </script>
-</html>
+
+        <div class= 'row m-t-15 m-b--20'>
+            <div class= 'col-xs-12 align-center'>
+                <a class= 'text-blue' href= "{% url 'password_reset' %}"> Esqueci minha senha </a>
+            </div>
+        </div>
+    </form>
+{% endblock %}
