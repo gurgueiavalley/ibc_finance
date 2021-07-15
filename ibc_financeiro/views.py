@@ -513,7 +513,7 @@ def usuario(request, acao):
         return render(request, 'financeiro/paginas/usuario/adicionar.html', {'formulario': UsuarioForm()})
 
     elif acao == 'alterar':
-        usuario = User.objects.get(id = request.user.id)
+        usuario = User.objects.get(id = request.GET['id'])
         
         #Alterar situação do usuario (Ativar/ Desativar)
         if request.method == 'POST':
