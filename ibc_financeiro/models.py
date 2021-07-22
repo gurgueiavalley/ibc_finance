@@ -1,5 +1,7 @@
-from django.db import models                                                        # Atributos do banco de dados
-from django.core.validators import FileExtensionValidator, MinLengthValidator       # Validação de extensão de arquivo | validação de tamanho mínimo de caracteres
+from django.db              import models
+from django.core.validators import MinLengthValidator
+
+from django.core.validators import FileExtensionValidator       # Validação de extensão de arquivo | validação de tamanho mínimo de caracteres
 from django.contrib.auth.models import User                                         # Classe User padrão do Django
 import os                                                                           # Manipulações de arquivos
 
@@ -166,29 +168,22 @@ class Fornecedor(models.Model):             # Fornecedor
 
         super(Fornecedor, self).save(*args, **kwargs)
 
-class Membro(models.Model):                 # Membro
-    SEXOS = (       # Opções de sexo
-        ('MASCULINO', 'MASCULINO'),     # Masculino
-        ('FEMININO', 'FEMININO')        # Feminino
-    )
-    
-    CPF = models.CharField(max_length = 14, blank = True, null = True, unique = True, validators = [MinLengthValidator(14)])        # CPF (máximo de 14 caracteres | opcional | único | mínimo de 14 caracteres)
-    nome = models.CharField(max_length = 55)                                                                                        # Nome (máximo de 55 caracteres | obrigatório)
-    sexo = models.CharField(max_length = 9, blank = True, null = True, validators = [MinLengthValidator(8)], choices = SEXOS)       # Sexo (máximo de 9 caracteres | opcional | mínimo de 8 caracteres | escolhas estáticas)
-    nascimento = models.DateField(blank = True, null = True)                                                                        # Data de nascimento (opcional)
-    celular = models.CharField(max_length = 14, blank = True, null = True, unique = True, validators = [MinLengthValidator(14)])    # Telefone celular para contato (máximo de 14 caracteres | opcional | único | mínimo de 14 caracteres)
-    email = models.EmailField(max_length = 50, blank = True, null = True, unique = True)                                            # E-mail para contato (máximo de 50 caracteres | opcional | único)
+class Membro(models.Model):
+    SEXES = (('MASCULINO', 'MASCULINO'), ('FEMININO', 'FEMININO'))
 
-    def save(self, *args, **kwargs):
-        self.nome = self.nome.upper()
+    CPF = models.CharField(blank = True, null = True, validators = [MinLengthValidator(14)], max_length = 14, unique = True)
+    nome = models.CharField(max_length = 50)
+    sex = models.CharField(blank = True, null = True, choices = SEXES, validators = [MinLengthValidator(8)], max_length = 9)
+    birth = models.DateField(blank = True, null = True)
+    cell = models.CharField(blank = True, null = True, validators = [MinLengthValidator(14)], max_length = 14, unique = True)
+    email = models.EmailField(blank = True, null = True, max_length = 50, unique = True)
 
-        if self.email:
-            self.email = self.email.lower()
+    class Meta:
+        verbose_name = 'membro'
+        verbose_name_plural = 'membros'
 
-        super(Membro, self).save(*args, **kwargs)
-
-    def __str__(self):      # Nome do objeto
-        return self.nome    # Retorna o nome
+    def __str__(self):
+        return self.nome
 
 class Missao(models.Model):                 # Missão
     nome = models.CharField(max_length = 35)                                    # Nome (máximo de 35 caracteres | obrigatório)
