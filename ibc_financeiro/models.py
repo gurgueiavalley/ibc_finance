@@ -169,7 +169,7 @@ class Fornecedor(models.Model):             # Fornecedor
         super(Fornecedor, self).save(*args, **kwargs)
 
 class Membro(models.Model):
-    SEXES = (('MASCULINO', 'MASCULINO'), ('FEMININO', 'FEMININO'))
+    SEXES = (('Masculino', 'Masculino'), ('Feminino', 'Feminino'))
 
     CPF = models.CharField(blank = True, null = True, validators = [MinLengthValidator(14)], max_length = 14, unique = True)
     nome = models.CharField(max_length = 50)
@@ -180,6 +180,12 @@ class Membro(models.Model):
 
     def __str__(self):
         return self.nome
+
+    def save(self, *args, **kwargs):
+        self.nome = self.nome.title()
+        if self.email: self.email = self.email.lower()
+
+        super(Membro, self).save(*args, **kwargs)
 
 class Missao(models.Model):                 # Missão
     nome = models.CharField(max_length = 35)                                    # Nome (máximo de 35 caracteres | obrigatório)
