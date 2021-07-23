@@ -1,6 +1,18 @@
 from django.contrib import admin
+from .models        import Membro
+
 from django.contrib.auth.models import Group
 from .models import *
+
+class MemberAdministration(admin.ModelAdmin):
+    fields = ('nome', 'CPF'), ('cell', 'sex'), ('email', 'birth')
+
+    list_display = 'id', 'nome', 'CPF', 'cell', 'email'
+    list_display_links = 'nome',
+    ordering = 'nome', 'id'
+    search_fields = 'id', 'CPF', 'nome', 'cell', 'email'    
+
+admin.site.register(Membro, MemberAdministration)
 
 class CategoriaAdmin(admin.ModelAdmin):
     actions = None
@@ -49,15 +61,6 @@ class EntradaMissaoAdmin(admin.ModelAdmin):
 class ExcelAdmin(admin.ModelAdmin):
     actions = None
 
-class MembroAdmin(admin.ModelAdmin):
-    actions = None
-    list_display = 'CPF', 'nome', 'telefone', 'profissao'
-    list_display_links = 'CPF', 'nome'
-    ordering = 'nome',
-    search_fields = 'CPF', 'nome', 'telefone', 'profissao'
-
-    fields = ('CPF', 'nome'), ('telefone', 'profissao')
-
 class MissaoAdmin(admin.ModelAdmin):
     actions = None
     list_display = 'nome', 'meta', 'em_Andamento', 'inicio', 'fim'
@@ -99,7 +102,6 @@ admin.site.register(Entrada)
 admin.site.register(EntradaAvulsa)
 admin.site.register(EntradaMissao)
 admin.site.register(Fornecedor)
-admin.site.register(Membro)
 admin.site.register(Missao)
 admin.site.register(Saida)
 admin.site.register(Transacao)
