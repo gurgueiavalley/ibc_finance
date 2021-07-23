@@ -178,10 +178,6 @@ class Membro(models.Model):
     cell = models.CharField(blank = True, null = True, validators = [MinLengthValidator(14)], max_length = 14, unique = True)
     email = models.EmailField(blank = True, null = True, max_length = 50, unique = True)
 
-    class Meta:
-        verbose_name = 'membro'
-        verbose_name_plural = 'membros'
-
     def __str__(self):
         return self.nome
 
