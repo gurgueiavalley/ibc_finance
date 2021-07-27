@@ -1,6 +1,8 @@
+from django.shortcuts import render
+
 from django.contrib.auth    import authenticate, login, logout
 from django.contrib         import messages
-from django.shortcuts       import redirect, render
+from django.shortcuts       import redirect
 
 from .models import *
 from .forms import *
@@ -407,6 +409,16 @@ def index(request):
     }
 
     return render(request, 'financeiro/index.html', dados)
+
+@login_required(login_url = '/conta/login')
+def member(request, action):
+    if action == 'adicionar':
+        data = {
+            'title' : 'Adicionar um Membro',
+            'action' : action
+        }
+
+        return render(request, 'member/form.html', data)
 
 @login_required(login_url='/conta/login')
 def membro(request, acao):

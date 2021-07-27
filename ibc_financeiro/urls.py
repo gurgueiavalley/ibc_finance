@@ -1,8 +1,12 @@
-from django.urls import path
+from django.urls    import path
+from .views         import member
+
 from .views import *
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
+    path('membro/<action>', member, name = 'member'),
+
     path('', index, name = 'index'),
     path('relatorio/<tipo>', relatorio, name = 'relatorio'),                # Relatório
     path('saida/<acao>', saida, name = 'saida'),                            # Saída
@@ -13,7 +17,6 @@ urlpatterns = [
     path('entrada/<acao>', entrada, name = 'entrada'),                      # Entrada
     path('catentrada/<acao>', catEntrada, name = 'catentrada'),             # Categoria de Entrada
     path('listar/<tipo>', listar, name = 'listar'),                         #Listar *
-    path('membro/<acao>', membro, name = 'membro'),                         # Membro
     path('avulso/<acao>', avulso, name = 'avulso'),                         # Avulso
     path('emissao/<acao>', emissao, name = 'emissao'),                      # Entrada de Missão
     path('missao/<acao>', missao, name = 'missao'),                         # Missão
