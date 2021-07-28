@@ -1,4 +1,5 @@
 from django import forms
+
 from .models import *
 
 class CategoriaForm(forms.Form):
@@ -98,6 +99,16 @@ class LoginForm(forms.Form):
     password = forms.CharField(help_text = 'lock', max_length = 128, widget = forms.PasswordInput)
     password.widget.attrs = {'class' : 'form-control padding-l-7', 'placeholder' : 'Sua senha de acesso', 'maxlength' : '128'}
 
+class MemberForm(forms.Form):
+    name = forms.CharField(help_text = '6 record_voice_over', label = 'Nome <b> * </b>', max_length = 50)
+    name.widget.attrs = {
+        'autofocus'     : 'on',
+        'class'         : 'form-control text-capitalize',
+        'placeholder'   : 'Miguel Silva Santos Oliveira',
+        'autocomplete'  : 'off',
+        'maxlength'     : '50'
+    }
+
 class MembroForm(forms.Form):
     SEXOS = (
         (None, 'NENHUM SELECIONADO'),
@@ -107,9 +118,6 @@ class MembroForm(forms.Form):
 
     CPF = forms.CharField(label = 'CPF', help_text = 'fingerprint', max_length = 14, required = False)
     CPF.widget.attrs = {'class' : 'form-control', 'placeholder' : '000.000.000-00', 'autocomplete' : 'off', 'minlength' : '14', 'maxlength' : '14'}
-
-    nome = forms.CharField(label = 'Nome', help_text = 'perm_identity', max_length = 75)
-    nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome do membro', 'autocomplete' : 'off', 'maxlength' : '75'}
 
     sexo = forms.ChoiceField(label = 'Sexo', help_text = 'male', choices = SEXOS, required = False)
     sexo.widget.attrs = {'class' : 'form-control'}

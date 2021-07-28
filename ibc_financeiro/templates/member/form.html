@@ -1,6 +1,12 @@
 ﻿{% extends 'financeiro/base.html' %}
 
+{% load static %}
+
 {% block title %} {{ title }} {% endblock %}
+
+{% block CSS %}
+    <link rel= 'stylesheet' href= "{% static 'member/form.css' %}">
+{% endblock %}
 
 {% block dinamico %}
     <form action= "{% url 'member' action %}" method= 'post'>
@@ -15,53 +21,25 @@
 
                             <small>
                                 Informe os dados para <strong> {{ action }} </strong> o membro.
-                                Os que possuem <b class= 'color-red'> * </b> são <strong> obrigatórios </strong>
+                                Os que possuem <b> * </b> são <strong> obrigatórios </strong>
                             </small>
                         </h2>
                     </div>
                     
                     <div class= 'body'>
                         <div class= 'row clearfix'>
-                            <div class= 'col-md-6'>
-                                <strong> {{ formulario.CPF.label }} </strong>
-
-                                <div class= 'input-group'>
-                                    <span class= 'input-group-addon'>
-                                        <i class= 'material-icons'> {{ formulario.CPF.help_text }} </i>
-                                    </span>
-
-                                    <div class= 'form-line'>
-                                        {{ formulario.CPF }}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class= 'col-md-6'>
-                                <strong> {{ formulario.nome.label }} <b> * </b> </strong>
-
-                                <div class= 'input-group'>
-                                    <span class= 'input-group-addon'>
-                                        <i class= 'material-icons'> {{ formulario.nome.help_text }} </i>
-                                    </span>
-
-                                    <div class= 'form-line'>
-                                        {{ formulario.nome }}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {% for campo in formulario.visible_fields|slice:'2:6' %}
-                                <div class= 'col-md-6'>
-                                    <strong> {{ campo.label }} </strong>
+                            {% for input in form %}
+                                <div class= "col-md-{{ input.help_text |slice:':2' |cut:' ' }}">
+                                    <strong> {{ input.label |safe }} </strong>
 
                                     <div class= 'input-group'>
                                         <span class= 'input-group-addon'>
-                                            <i class= 'material-icons'> {{ campo.help_text }} </i>
+                                            <i class= 'material-icons'>
+                                                {{ input.help_text |slice:'2:' }}
+                                            </i>
                                         </span>
 
-                                        <div class= 'form-line'>
-                                            {{ campo }}
-                                        </div>
+                                        <div class= 'form-line'> {{ input }} </div>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -78,18 +56,22 @@
     </form>
 {% endblock %}
 
-{% comment %} <link rel= 'stylesheet' href= 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.min.css'> {% endcomment %}
-{% comment %} <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.css' %}"> {% endcomment %}
-{% comment %} <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-datepicker/bootstrap-datepicker.css' %}"> {% endcomment %}
-{% comment %} <link rel= 'stylesheet' href= "{% static 'css/plugins/waitme/waitMe.css' %}"> {% endcomment %}
-{% comment %} <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-select/bootstrap-select.css' %}"> {% endcomment %}
-{% comment %} <link rel= 'stylesheet' href= "{% static 'css/plugins/dropzone/dropzone.css' %}"> {% endcomment %}
+{% comment %}
+    <link rel= 'stylesheet' href= 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.min.css'>
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-datepicker/bootstrap-datepicker.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/waitme/waitMe.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-select/bootstrap-select.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'css/plugins/dropzone/dropzone.css' %}">
+{% endcomment %}
 
-{% comment %} <script src= "{% static 'js/plugins/autosize/autosize.js' %}"> </script> {% endcomment %}
-{% comment %} <script src= "{% static 'js/plugins/momentjs/moment.js' %}"> </script> {% endcomment %}
-{% comment %} <script src= "{% static 'js/plugins/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.js' %}"> </script> {% endcomment %}
-{% comment %} <script src= "{% static 'js/plugins/bootstrap-datepicker/bootstrap-datepicker.js' %}"> </script> {% endcomment %}
-{% comment %} <script src= 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/pt-br.min.js'> </script> {% endcomment %}
-{% comment %} <script src= 'https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js'> </script>     <!-- JQuery Mask --> {% endcomment %}
-{% comment %} $('#id_CPF').mask('000.000.000-00') {% endcomment %}
-{% comment %} $('#id_celular').mask('00 0 0000-0000') {% endcomment %}
+{% comment %}
+    <script src= "{% static 'js/plugins/autosize/autosize.js' %}"> </script>
+    <script src= "{% static 'js/plugins/momentjs/moment.js' %}"> </script>
+    <script src= "{% static 'js/plugins/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.js' %}"> </script>
+    <script src= "{% static 'js/plugins/bootstrap-datepicker/bootstrap-datepicker.js' %}"> </script>
+    <script src= 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/pt-br.min.js'> </script>
+    <script src= 'https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js'> </script>     <!-- JQuery Mask -->
+    $('#id_CPF').mask('000.000.000-00')
+    $('#id_celular').mask('00 0 0000-0000')
+{% endcomment %}

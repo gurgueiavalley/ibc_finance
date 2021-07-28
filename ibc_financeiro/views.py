@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts   import render
+from .forms             import MemberForm
 
 from django.contrib.auth    import authenticate, login, logout
 from django.contrib         import messages
@@ -415,7 +416,8 @@ def member(request, action):
     if action == 'adicionar':
         data = {
             'title' : 'Adicionar um Membro',
-            'action' : action
+            'action' : action,
+            'form' : MemberForm()
         }
 
         return render(request, 'member/form.html', data)
