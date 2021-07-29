@@ -1,4 +1,5 @@
-from django import forms
+from django     import forms
+from .models    import Membro
 
 from .models import *
 
@@ -109,27 +110,45 @@ class MemberForm(forms.Form):
         'maxlength'     : '50'
     }
 
-class MembroForm(forms.Form):
-    SEXOS = (
-        (None, 'NENHUM SELECIONADO'),
-        ('MASCULINO', 'MASCULINO'),
-        ('FEMININO', 'FEMININO')
-    )
+    email = forms.EmailField(help_text = '6 email', label = '<i> E-mail </i>', required = False, max_length = 50)
+    email.widget.attrs = {
+        'class'         : 'form-control text-lowercase',
+        'placeholder'   : 'miguel.oliveira@gmail.com',
+        'autocomplete'  : 'off',
+        'maxlength'     : '50'
+    }
 
-    CPF = forms.CharField(label = 'CPF', help_text = 'fingerprint', max_length = 14, required = False)
-    CPF.widget.attrs = {'class' : 'form-control', 'placeholder' : '000.000.000-00', 'autocomplete' : 'off', 'minlength' : '14', 'maxlength' : '14'}
+    sex = forms.ChoiceField(help_text = '3 wc', label = 'Sexo', required = False, choices = Membro.SEXES)
+    sex.widget.attrs = {
+        'title' : 'Nenhum selecionado'
+    }
 
-    sexo = forms.ChoiceField(label = 'Sexo', help_text = 'male', choices = SEXOS, required = False)
-    sexo.widget.attrs = {'class' : 'form-control'}
+    birth = forms.DateField(help_text = '3 event', label = 'Nascimento', required = False)
+    birth.widget.attrs = {
+        'class'         : 'form-control',
+        'placeholder'   : '01/01/2000',
+        'autocomplete'  : 'off',
+        'maxlength'     : '10',
+        'minlength'     : '10'
+    }
 
-    nascimento = forms.DateField(label = 'Data de Nascimento', help_text = 'event', required = False)
-    nascimento.widget.attrs = {'class' : 'form-control datepicker', 'placeholder' : '__/__/____'}
+    cell = forms.CharField(help_text = '3 smartphone', label = 'Celular', required = False, max_length = 14, min_length = 14)
+    cell.widget.attrs = {
+        'class'         : 'form-control',
+        'placeholder'   : '00 9 0000-0000',
+        'autocomplete'  : 'off',
+        'maxlength'     : '14',
+        'minlength'     : '14'
+    }
 
-    celular = forms.CharField(label = 'Celular', help_text = 'smartphone', max_length = 14, required = False)
-    celular.widget.attrs = {'class' : 'form-control', 'placeholder' : '00 0 0000-0000', 'autocomplete' : 'off', 'minlength' : '14' , 'maxlength' : '14'}
-
-    email = forms.EmailField(label = 'E-mail', help_text = 'mail', max_length = 45, required = False)
-    email.widget.attrs = {'class' : 'form-control', 'placeholder' : 'exemplo@exemplo.exemplo', 'autocomplete' : 'off', 'maxlength' : '50'}
+    cpf = forms.CharField(help_text = '3 badge', label = 'CPF', required = False, max_length = 14, min_length = 14)
+    cpf.widget.attrs = {
+        'class'         : 'form-control',
+        'placeholder'   : '000.000.000-00',
+        'autocomplete'  : 'off',
+        'maxlength'     : '14',
+        'minlength'     : '14'
+    }
 
 class MissaoForm(forms.Form):
     congregacao = forms.ModelChoiceField(label = 'Congregação', help_text = 'location_city', queryset = Congregacao.objects.all().order_by('nome'), empty_label = 'Nenhuma selecionada')

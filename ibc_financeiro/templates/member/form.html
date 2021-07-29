@@ -6,6 +6,7 @@
 
 {% block CSS %}
     <link rel= 'stylesheet' href= "{% static 'member/form.css' %}">
+    <link rel= 'stylesheet' href= 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css'>
 {% endblock %}
 
 {% block dinamico %}
@@ -26,7 +27,7 @@
                         </h2>
                     </div>
                     
-                    <div class= 'body'>
+                    <div class= 'body padding-bottom-0'>
                         <div class= 'row clearfix'>
                             {% for input in form %}
                                 <div class= "col-md-{{ input.help_text |slice:':2' |cut:' ' }}">
@@ -49,11 +50,16 @@
             </div>
         </div>
 
-        <button class= 'btn btn-success btn-lg waves-effect'>
+        <button class= 'btn btn-lg btn-success waves-effect'>
             <i class= 'material-icons'> add </i>
             <span> ADICIONAR </span>
         </button>
     </form>
+{% endblock %}
+
+{% block JS %}
+    <script src= 'https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js'> </script>
+    <script src= "{% static 'member/form.js' %}"> </script>
 {% endblock %}
 
 {% comment %}
@@ -61,7 +67,6 @@
     <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.css' %}">
     <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-datepicker/bootstrap-datepicker.css' %}">
     <link rel= 'stylesheet' href= "{% static 'css/plugins/waitme/waitMe.css' %}">
-    <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-select/bootstrap-select.css' %}">
     <link rel= 'stylesheet' href= "{% static 'css/plugins/dropzone/dropzone.css' %}">
 {% endcomment %}
 
@@ -71,7 +76,4 @@
     <script src= "{% static 'js/plugins/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.js' %}"> </script>
     <script src= "{% static 'js/plugins/bootstrap-datepicker/bootstrap-datepicker.js' %}"> </script>
     <script src= 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/pt-br.min.js'> </script>
-    <script src= 'https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js'> </script>     <!-- JQuery Mask -->
-    $('#id_CPF').mask('000.000.000-00')
-    $('#id_celular').mask('00 0 0000-0000')
 {% endcomment %}

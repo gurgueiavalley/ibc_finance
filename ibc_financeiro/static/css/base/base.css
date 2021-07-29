@@ -1,3 +1,6 @@
+b{color: red}
+.padding-bottom-0{padding-bottom: 0 !important}
+
 .datepicker table tr td.active{
 	background-image: none;
 	background-color: #1F91F3 !important;
