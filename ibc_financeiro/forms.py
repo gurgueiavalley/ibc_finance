@@ -3,6 +3,71 @@ from .models    import Membro
 
 from .models import *
 
+'''
+    The "help_text" parameter is being used to dynamically style the fields.
+    Two "parameters" are assigned, separated by space, used to define:
+        - 1st: field width (integer from 1 to 12);
+        - 2nd: field icon (name of the Material.io icon).
+    
+    Values are taken from the HTML using the |slice (to get each value) and
+    |cut (to remove empty spaces) tags.
+    
+    If you are going to use it this way or change it, correctly assign the
+    values to avoid visual bugs.
+'''
+
+class MemberForm(forms.Form):
+    name = forms.CharField(help_text = '6 record_voice_over', label = 'Nome <b> * </b>', max_length = 50)
+    name.widget.attrs = {
+        'autofocus'     : 'on',
+        'class'         : 'form-control text-capitalize',
+        'placeholder'   : 'Miguel Silva Santos',
+        'autocomplete'  : 'off',
+        'maxlength'     : '50'
+    }
+
+    email = forms.EmailField(help_text = '6 email', label = '<i> E-mail </i>', required = False, max_length = 50)
+    email.widget.attrs = {
+        'class'         : 'form-control text-lowercase',
+        'placeholder'   : 'miguel@gmail.com',
+        'autocomplete'  : 'off',
+        'maxlength'     : '50'
+    }
+
+    sex = forms.ChoiceField(help_text = '3 wc', label = 'Sexo', required = False, choices = Membro.SEXES)
+    sex.widget.attrs = {
+        'title' : 'Nenhum selecionado'
+    }
+
+    birth = forms.DateField(help_text = '3 event', label = 'Nascimento', required = False)
+    birth.widget.attrs = {
+        'class'         : 'form-control',
+        'placeholder'   : '01/01/2000',
+        'autocomplete'  : 'off',
+        'maxlength'     : '10',
+        'minlength'     : '10'
+    }
+
+    cell = forms.CharField(help_text = '3 smartphone', label = 'Celular', required = False, max_length = 14, min_length = 14)
+    cell.widget.attrs = {
+        'class'         : 'form-control',
+        'placeholder'   : '00 9 0000-0000',
+        'autocomplete'  : 'off',
+        'maxlength'     : '14',
+        'minlength'     : '14'
+    }
+
+    cpf = forms.CharField(help_text = '3 badge', label = 'CPF', required = False, max_length = 14, min_length = 14)
+    cpf.widget.attrs = {
+        'class'         : 'form-control',
+        'placeholder'   : '000.000.000-00',
+        'autocomplete'  : 'off',
+        'maxlength'     : '14',
+        'minlength'     : '14'
+    }
+
+
+
 class CategoriaForm(forms.Form):
     nome = forms.CharField(label = 'Nome', help_text = 'category', max_length = 30)
     nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome da categoria', 'autocomplete' : 'off', 'maxlength' : '30'}
@@ -99,56 +164,6 @@ class LoginForm(forms.Form):
 
     password = forms.CharField(help_text = 'lock', max_length = 128, widget = forms.PasswordInput)
     password.widget.attrs = {'class' : 'form-control padding-l-7', 'placeholder' : 'Sua senha de acesso', 'maxlength' : '128'}
-
-class MemberForm(forms.Form):
-    name = forms.CharField(help_text = '6 record_voice_over', label = 'Nome <b> * </b>', max_length = 50)
-    name.widget.attrs = {
-        'autofocus'     : 'on',
-        'class'         : 'form-control text-capitalize',
-        'placeholder'   : 'Miguel Silva Santos',
-        'autocomplete'  : 'off',
-        'maxlength'     : '50'
-    }
-
-    email = forms.EmailField(help_text = '6 email', label = '<i> E-mail </i>', required = False, max_length = 50)
-    email.widget.attrs = {
-        'class'         : 'form-control text-lowercase',
-        'placeholder'   : 'miguel@gmail.com',
-        'autocomplete'  : 'off',
-        'maxlength'     : '50'
-    }
-
-    sex = forms.ChoiceField(help_text = '3 wc', label = 'Sexo', required = False, choices = Membro.SEXES)
-    sex.widget.attrs = {
-        'title' : 'Nenhum selecionado'
-    }
-
-    birth = forms.DateField(help_text = '3 event', label = 'Nascimento', required = False)
-    birth.widget.attrs = {
-        'class'         : 'form-control',
-        'placeholder'   : '01/01/2000',
-        'autocomplete'  : 'off',
-        'maxlength'     : '10',
-        'minlength'     : '10'
-    }
-
-    cell = forms.CharField(help_text = '3 smartphone', label = 'Celular', required = False, max_length = 14, min_length = 14)
-    cell.widget.attrs = {
-        'class'         : 'form-control',
-        'placeholder'   : '00 9 0000-0000',
-        'autocomplete'  : 'off',
-        'maxlength'     : '14',
-        'minlength'     : '14'
-    }
-
-    cpf = forms.CharField(help_text = '3 badge', label = 'CPF', required = False, max_length = 14, min_length = 14)
-    cpf.widget.attrs = {
-        'class'         : 'form-control',
-        'placeholder'   : '000.000.000-00',
-        'autocomplete'  : 'off',
-        'maxlength'     : '14',
-        'minlength'     : '14'
-    }
 
 class MissaoForm(forms.Form):
     congregacao = forms.ModelChoiceField(label = 'Congregação', help_text = 'location_city', queryset = Congregacao.objects.all().order_by('nome'), empty_label = 'Nenhuma selecionada')
