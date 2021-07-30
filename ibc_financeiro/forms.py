@@ -105,7 +105,7 @@ class MemberForm(forms.Form):
     name.widget.attrs = {
         'autofocus'     : 'on',
         'class'         : 'form-control text-capitalize',
-        'placeholder'   : 'Miguel Silva Santos Oliveira',
+        'placeholder'   : 'Miguel Silva Santos',
         'autocomplete'  : 'off',
         'maxlength'     : '50'
     }
@@ -113,7 +113,7 @@ class MemberForm(forms.Form):
     email = forms.EmailField(help_text = '6 email', label = '<i> E-mail </i>', required = False, max_length = 50)
     email.widget.attrs = {
         'class'         : 'form-control text-lowercase',
-        'placeholder'   : 'miguel.oliveira@gmail.com',
+        'placeholder'   : 'miguel@gmail.com',
         'autocomplete'  : 'off',
         'maxlength'     : '50'
     }

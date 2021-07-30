@@ -5,12 +5,11 @@
 {% block title %} {{ title }} {% endblock %}
 
 {% block CSS %}
-    <link rel= 'stylesheet' href= "{% static 'member/form.css' %}">
-    <link rel= 'stylesheet' href= 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css'>
+    <link rel= 'stylesheet' href= "{% static 'member/css/form.css' %}">
 {% endblock %}
 
 {% block dinamico %}
-    <form action= "{% url 'member' action %}" method= 'post'>
+    <form action= "{% url 'member' form.action %}" method= 'post'>
         {% csrf_token %}
         
         <div class= 'row clearfix'>
@@ -20,8 +19,8 @@
                         <h2>
                             <strong> Dados </strong>
 
-                            <small>
-                                Informe os dados para <strong> {{ action }} </strong> o membro.
+                            <small class= 'text-justify'>
+                                Informe os dados para <strong> {{ form.action }} </strong> o membro.
                                 Os que possuem <b> * </b> são <strong> obrigatórios </strong>
                             </small>
                         </h2>
@@ -29,7 +28,7 @@
                     
                     <div class= 'body padding-bottom-0'>
                         <div class= 'row clearfix'>
-                            {% for input in form %}
+                            {% for input in form.inputs %}
                                 <div class= "col-md-{{ input.help_text |slice:':2' |cut:' ' }}">
                                     <strong> {{ input.label |safe }} </strong>
 
@@ -50,10 +49,12 @@
             </div>
         </div>
 
-        <button class= 'btn btn-lg btn-success waves-effect'>
-            <i class= 'material-icons'> add </i>
-            <span> ADICIONAR </span>
-        </button>
+        {% for name, values in form.buttons.items %}
+            <button name= "{{ name }}" class= "btn btn-lg margin-top--15 margin-bottom-20 {{ values.class }}">
+                <i class= 'material-icons'> {{ values.icon |lower }} </i>
+                <span> {{ name |upper }} </span>
+            </button>
+        {% endfor %}
     </form>
 {% endblock %}
 
@@ -61,19 +62,3 @@
     <script src= 'https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js'> </script>
     <script src= "{% static 'member/form.js' %}"> </script>
 {% endblock %}
-
-{% comment %}
-    <link rel= 'stylesheet' href= 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.min.css'>
-    <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.css' %}">
-    <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-datepicker/bootstrap-datepicker.css' %}">
-    <link rel= 'stylesheet' href= "{% static 'css/plugins/waitme/waitMe.css' %}">
-    <link rel= 'stylesheet' href= "{% static 'css/plugins/dropzone/dropzone.css' %}">
-{% endcomment %}
-
-{% comment %}
-    <script src= "{% static 'js/plugins/autosize/autosize.js' %}"> </script>
-    <script src= "{% static 'js/plugins/momentjs/moment.js' %}"> </script>
-    <script src= "{% static 'js/plugins/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.js' %}"> </script>
-    <script src= "{% static 'js/plugins/bootstrap-datepicker/bootstrap-datepicker.js' %}"> </script>
-    <script src= 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/pt-br.min.js'> </script>
-{% endcomment %}

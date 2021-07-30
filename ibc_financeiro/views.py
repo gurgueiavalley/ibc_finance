@@ -416,8 +416,16 @@ def member(request, action):
     if action == 'adicionar':
         data = {
             'title' : 'Adicionar um Membro',
-            'action' : action,
-            'form' : MemberForm()
+            'form'  : {
+                'action' : action,
+                'inputs' : MemberForm,
+                'buttons' : {
+                    'adicionar' : {
+                        'icon' : 'add',
+                        'class' : 'float-left btn-success'
+                    }
+                }
+            }
         }
 
         return render(request, 'member/form.html', data)

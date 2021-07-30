@@ -1,5 +1,12 @@
-b{color: red}
+.float-left{float: left}
+.float-right{float: right}
+
+.margin-top--15{margin-top: -15px}
+.margin-bottom-20{margin-bottom: 20px}
+
 .padding-bottom-0{padding-bottom: 0 !important}
+
+b{color: red}
 
 .datepicker table tr td.active{
 	background-image: none;
