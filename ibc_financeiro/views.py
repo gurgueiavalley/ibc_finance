@@ -418,7 +418,7 @@ def member(request, action):
             'title' : 'Adicionar um Membro',
             'form'  : {
                 'action' : action,
-                'inputs' : MemberForm,
+                'fields' : MemberForm,
                 'buttons' : {
                     'adicionar' : {
                         'icon' : 'add',

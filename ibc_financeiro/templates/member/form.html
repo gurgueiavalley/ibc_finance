@@ -28,18 +28,18 @@
                     
                     <div class= 'body padding-bottom-0'>
                         <div class= 'row clearfix'>
-                            {% for input in form.inputs %}
-                                <div class= "col-md-{{ input.help_text |slice:':2' |cut:' ' }}">
-                                    <strong> {{ input.label |safe }} </strong>
+                            {% for field in form.fields %}
+                                <div class= "col-md-{{ field.help_text |slice:':2' |cut:' ' }}">
+                                    <strong> {{ field.label |safe }} </strong>
 
                                     <div class= 'input-group'>
                                         <span class= 'input-group-addon'>
                                             <i class= 'material-icons'>
-                                                {{ input.help_text |slice:'2:' }}
+                                                {{ field.help_text |slice:'2:' }}
                                             </i>
                                         </span>
 
-                                        <div class= 'form-line'> {{ input }} </div>
+                                        <div class= 'form-line'> {{ field }} </div>
                                     </div>
                                 </div>
                             {% endfor %}
