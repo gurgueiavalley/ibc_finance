@@ -415,8 +415,10 @@ def index(request):
 def member(request, action):
     if action == 'adicionar':
         data = {
-            'title' : 'Adicionar um Membro',
-            'form'  : {
+            'page' : {
+                'title' : 'Adicionar um Membro'
+            },
+            'form' : {
                 'action' : action,
                 'fields' : MemberForm,
                 'buttons' : {

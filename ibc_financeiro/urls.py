@@ -5,7 +5,7 @@ from .views import *
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('membro/<action>', member, name = 'member'),
+    path('membros/<action>', member, name = 'member'),
 
     path('', index, name = 'index'),
     path('relatorio/<tipo>', relatorio, name = 'relatorio'),                # Relatório
