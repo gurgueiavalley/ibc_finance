@@ -50,7 +50,7 @@
         </div>
 
         {% for name, values in form.buttons.items %}
-            <button name= "{{ name }}" class= "btn btn-lg margin-top--15 margin-bottom-20 {{ values.class }}">
+            <button name= "{{ name }}" class= "btn btn-lg margin-top--15 margin-bottom-20 waves-effect {{ values.class }}">
                 <i class= 'material-icons'> {{ values.icon |lower }} </i>
                 <span> {{ name |upper }} </span>
             </button>

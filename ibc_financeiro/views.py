@@ -416,7 +416,16 @@ def member(request, action):
     if action == 'adicionar':
         data = {
             'page' : {
-                'title' : 'Adicionar um Membro'
+                'title' : 'Adicionar um Membro',
+                'paths' : {
+                    'membros' : {
+                        'icon' : 'people_alt',
+                        'routes' : ['membros']
+                    },
+                    'adicionar' : {
+                        'icon' : 'add'
+                    }
+                }
             },
             'form' : {
                 'action' : action,
