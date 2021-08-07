@@ -118,5 +118,31 @@
 
         <script src= "{% static 'js/base/admin.js' %}"> </script>
         <script src= "{% static 'js/base/demo.js' %}"> </script>
+
+        {% comment %}
+            {% if form.fields.errors %}
+                <script src= 'https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.3/bootstrap-notify.min.js'> </script>
+
+                <script>
+                    {% for field in form.fields %}
+                        {% if field.errors %}
+                            $.notify({
+                                title : '<strong> {{ field.label |cut:" <b> * </b>" |safe }} </strong>',
+                                message : '{{ field.errors }}'
+                            }, {
+                                type : 'danger',
+                                offset : 10,
+                                spacing : 5,
+                                delay : 0,
+                                animate : {
+                                    enter : 'animated zoomInRight',
+                                    exit : 'animated zoomOutRight'
+                                }
+                            })
+                        {% endif %}
+                    {% endfor %}
+                </script>
+            {% endif %}
+        {% endcomment %}
     </body>
 </html>
