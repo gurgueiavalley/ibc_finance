@@ -4,10 +4,10 @@ from .models    import Membro
 from .models import *
 
 '''
-    The "help_text" parameter is being used to dynamically style the fields.
-    Two "parameters" are assigned, separated by space, used to define:
+    The "help_text" attribute is being used to dynamically style the fields.
+    Two values are assigned, separated by space, used to define:
         - 1st: field width (integer from 1 to 12);
-        - 2nd: field icon (name of the Material.io icon).
+        - 2nd: field icon (name of the by Material.io icon).
     
     Values are taken from the HTML using the |slice (to get each value) and
     |cut (to remove empty spaces) tags.
