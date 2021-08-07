@@ -415,16 +415,14 @@ def index(request):
 def member(request, action):
     if action == 'adicionar':
         data = {
-            'page' : {
-                'title' : 'Adicionar um Membro',
-                'paths' : {
-                    'membros' : {
-                        'icon' : 'people_alt',
-                        'routes' : ['membros']
-                    },
-                    'adicionar' : {
-                        'icon' : 'add'
-                    }
+            'title' : 'Adicionar um Membro',
+            'paths' : {
+                'membros' : {
+                    'icon' : 'people_alt',
+                    'routes' : ['membros']
+                },
+                'adicionar' : {
+                    'icon' : 'add'
                 }
             },
             'form' : {
@@ -438,6 +436,12 @@ def member(request, action):
                 }
             }
         }
+
+        if request.method == 'POST':
+            form = MemberForm(request.POST)
+            
+            if form.is_valid(): ...
+            else: data['form']['fields'] = form
 
         return render(request, 'member/form.html', data)
 

@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %} {{ page.title }} {% endblock %}
+{% block title %} {{ title }} {% endblock %}
 
 {% block CSS %}
     <link rel= 'stylesheet' href= "{% static 'member/css/form.css' %}">
@@ -39,7 +39,9 @@
                                             </i>
                                         </span>
 
-                                        <div class= 'form-line'> {{ field }} </div>
+                                        <div class= "form-line border-bottom-after-unset{% if field.errors %} border-bottom-2-red{% endif %}">
+                                            {{ field }}
+                                        </div>
                                     </div>
                                 </div>
                             {% endfor %}

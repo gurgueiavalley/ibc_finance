@@ -6,6 +6,9 @@
 
 .padding-bottom-0{padding-bottom: 0 !important}
 
+.border-bottom-2-red{border-bottom: 2px solid red !important}
+.border-bottom-after-unset::after{border-bottom: unset !important}
+
 b{color: red}
 
 .datepicker table tr td.active{
