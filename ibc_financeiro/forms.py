@@ -19,9 +19,9 @@ from .models import *
 class MemberForm(forms.Form):
     name = forms.CharField(help_text = '6 record_voice_over', label = 'Nome <b> * </b>', max_length = 50)
     name.widget.attrs = {
-        'autofocus'     : 'on',
         'class'         : 'form-control text-capitalize',
         'placeholder'   : 'Miguel Silva Santos',
+        'autofocus'     : 'on',
         'autocomplete'  : 'off',
         'maxlength'     : '50'
     }
