@@ -428,6 +428,12 @@ def member(request, action):
             'form' : {
                 'action' : action,
                 'fields' : MemberForm,
+                'divisions' : {
+                    'dados' : {
+                        'description' : f'Informe os dados para <strong> { action } </strong> o <strong> membro </strong>. Os que possuem <b> * </b> são <strong> obrigatórios </strong>',
+                        'slice' : 'all'
+                    }
+                },
                 'buttons' : {
                     'adicionar' : {
                         'icon' : 'add',
@@ -443,7 +449,7 @@ def member(request, action):
             if form.is_valid(): ...
             else: data['form']['fields'] = form
 
-        return render(request, 'member/form.html', data)
+        return render(request, 'form.html', data)
 
 @login_required(login_url='/conta/login')
 def membro(request, acao):
