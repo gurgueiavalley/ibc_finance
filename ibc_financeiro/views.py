@@ -430,8 +430,8 @@ def member(request, action):
                 'fields' : MemberForm,
                 'divisions' : {
                     'dados' : {
-                        'description' : f'Informe os dados para <strong> { action } </strong> o <strong> membro </strong>. Os que possuem <b> * </b> são <strong> obrigatórios </strong>',
-                        'slice' : 'all'
+                        'description' : f'Informe os dados para <strong> { action } </strong> o <strong> membro</strong>. Os que possuem <b> * </b> são <strong> obrigatórios </strong>',
+                        'slice' : ':'
                     }
                 },
                 'buttons' : {
