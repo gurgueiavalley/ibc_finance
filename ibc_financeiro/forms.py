@@ -66,6 +66,20 @@ class MemberForm(forms.Form):
         'minlength'     : '14'
     }
 
+    def clean(self):
+        data = super().clean()
+
+        email = data.get('email') or ''
+        cell = data.get('cell') or ''
+        cpf = data.get('cpf') or ''
+
+        membros = Membro.objects
+        message = 'Outro membro já usa esse'
+
+        if membros.filter(email = email).exists(): self.add_error('email', f'{ message } e-mail')
+        if membros.filter(cell = cell).exists(): self.add_error('cell', f'{ message } celular')
+        if membros.filter(CPF = cpf).exists(): self.add_error('cpf', f'{ message } CPF')
+
 
 
 class CategoriaForm(forms.Form):
