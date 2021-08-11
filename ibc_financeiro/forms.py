@@ -1,19 +1,25 @@
-from django     import forms
-from .models    import Membro
+from django         import forms
+from django.contrib import messages
+
+from .models import Membro
 
 from .models import *
 
 '''
-    The "help_text" attribute is being used to dynamically style the fields.
+    > HELP_TEXT
+    The { help_text } attribute is being used to dynamically style the fields.
     Two values are assigned, separated by space, used to define:
         - 1st: field width (integer from 1 to 12);
         - 2nd: field icon (name of the by Material.io icon).
     
-    Values are taken from the HTML using the |slice (to get each value) (to
-    remove empty spaces) tags.
+    Values are taken from the HTML using the { |slice } (to get each value) tag.
     
     If you are going to use it this way or change it, correctly assign the
     values to avoid visual bugs.
+
+    > EXTRA_TAGS
+    The { extra_tags } attribute of the { messages } method is being used to
+    streamline the insertion of the title into the alert.
 '''
 
 class MemberForm(forms.Form):
@@ -79,6 +85,23 @@ class MemberForm(forms.Form):
         if membros.filter(email = email).exists(): self.add_error('email', f'{ message } e-mail')
         if membros.filter(cell = cell).exists(): self.add_error('cell', f'{ message } celular')
         if membros.filter(CPF = cpf).exists(): self.add_error('cpf', f'{ message } CPF')
+
+    def save(self, request):
+        data = super().clean()
+
+        member = Membro.objects.create(
+            nome = data.get('name'),
+            birth = data.get('birth'),
+            CPF = data.get('cpf') or None,
+            sex = data.get('sex') or None,
+            cell = data.get('cell') or None,
+            email = data.get('email') or None
+        )
+
+        messages.success(request,
+            f'O membro <strong> { member.nome } </strong> foi adicionado',
+            extra_tags = '<strong> Membro Inserido </strong> <br>'
+        )
 
 
 
