@@ -1,10 +1,11 @@
 @import 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css';
 @import 'responsive.css';
 
+b{color: red}
 [class ^= 'col-md-']{margin-bottom: 0 !important}
 .bootstrap-select button{padding-left: 0}
 
-.btn-group.bootstrap-select{
+div.bootstrap-select{
     width : 100% !important;
     padding-top : 5px;
     border-bottom : none !important;

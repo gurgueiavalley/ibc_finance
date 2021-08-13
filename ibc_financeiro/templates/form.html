@@ -5,7 +5,7 @@
 {% block title %} {{ title }} {% endblock %}
 
 {% block CSS %}
-    <link rel= 'stylesheet' href= "{% static 'member/css/form.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'form/css/style.css' %}">
 {% endblock %}
 
 {% block dinamico %}
@@ -36,7 +36,7 @@
                                                 </i>
                                             </span>
 
-                                            <div class= "form-line border-bottom-after-unset{% if field.errors %} border-bottom-2-red{% endif %}">
+                                            <div class= "form-line after-border-bottom-unset{% if field.errors %} border-bottom-2-red{% endif %}">
                                                 {{ field }}
                                             </div>
                                         </div>
@@ -60,5 +60,5 @@
 
 {% block JS %}
     <script src= 'https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js'> </script>
-    <script src= "{% static 'member/form.js' %}"> </script>
+    <script src= "{% static 'form/mask.js' %}"> </script>
 {% endblock %}
