@@ -6,6 +6,10 @@
 
 {% block CSS %}
     <link rel= 'stylesheet' href= "{% static 'form/css/style.css' %}">
+
+    {% if request.GET.popup == 'on' %}
+        <link rel= 'stylesheet' href= "{% static 'form/css/popup.css' %}">
+    {% endif %}
 {% endblock %}
 
 {% block dinamico %}
