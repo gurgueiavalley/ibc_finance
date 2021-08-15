@@ -110,6 +110,29 @@ def avulso(request, acao):
 
 @login_required(login_url='/conta/login')
 def categoria(request, acao):
+    if acao == "listar":
+        categorias = Categoria.objects.filter(tipo = 'SAÍDA')
+        return render(request, 'financeiro/paginas/categoria/tabela.html', {'categorias': categorias})
+
+    if acao == "alterar":
+        categoria = Categoria.objects.get(id = request.GET.get('id'))
+        if request.method == 'POST':
+            categoria.nome = request.POST['nome']
+            categoria.save()
+            messages.success(request, 'ALTERADO COM SUCESSO!')
+            return redirect('/categoria/listar')
+        return render(request, 'financeiro/paginas/categoria/alterar.html', {'formulario': CategoriaForm(), 'categoria': categoria})
+
+    if acao == "deletar":
+        categoria = Categoria.objects.get(id = request.GET.get('id'))
+        if request.method == 'POST':
+            categoria.delete()
+            messages.success(request, "DELETADO COM SUCESSO!")
+            return redirect('/categoria/listar')
+        
+        saidas = Saida.objects.filter(categoria__id=categoria.id)
+        return render(request, 'financeiro/paginas/categoria/deletar.html', {'categoria': categoria,'saidas': saidas})
+
     pagina = 0
 
     if request.method == 'POST':
@@ -121,15 +144,40 @@ def categoria(request, acao):
             categoria.tipo = 'SAÍDA'
             
             categoria.save()
-
+            messages.success(request, 'ADICIONADO COM SUCESSO!')
             pagina = 1
             
         return render(request, 'financeiro/paginas/categoria/adicionar.html', {'formulario' : CategoriaForm(), 'pagina' : pagina, 'id' : categoria.id, 'nome' : categoria.nome})
-
+    if 'pop' in request.GET:
+        return render(request, 'financeiro/paginas/categoria/adicionar.html', {'formulario' : CategoriaForm(),'pagina' : pagina, 'pop' : 'yes'})
     return render(request, 'financeiro/paginas/categoria/adicionar.html', {'formulario' : CategoriaForm(), 'pagina' : pagina})
 
 @login_required(login_url='/conta/login')
 def catEntrada(request, acao):
+    
+    if acao == "listar":
+        categorias = Categoria.objects.filter(tipo = 'ENTRADA')
+        return render(request, 'financeiro/paginas/catentrada/tabela.html', {'categorias': categorias})
+    
+    if acao == "alterar":
+        categoria = Categoria.objects.get(id = request.GET.get('id'))
+        if request.method == "POST":
+            categoria.nome = request.POST['nome']
+            categoria.save()
+            messages.success(request, 'ALTERADO COM SUCESSO!')
+            return redirect('/catentrada/listar')
+        return render(request, 'financeiro/paginas/catentrada/alterar.html', {'formulario': CategoriaForm(), 'categoria': categoria})
+
+    if acao == "deletar":
+        categoria = Categoria.objects.get(id = request.GET.get('id'))
+        if request.method == 'POST':
+            categoria.delete()
+            messages.success(request, "DELETADO COM SUCESSO!")
+            return redirect('/catentrada/listar')
+        
+        entradas = Entrada.objects.filter(categoria__id=categoria.id)
+        return render(request, 'financeiro/paginas/catentrada/deletar.html', {'categoria': categoria,'entradas': entradas})
+
     pagina = 0
 
     if request.method == 'POST':
@@ -145,6 +193,9 @@ def catEntrada(request, acao):
             pagina = 1
             
         return render(request, 'financeiro/paginas/catentrada/adicionar.html', {'formulario' : CategoriaForm(), 'pagina' : pagina, 'id' : categoria.id, 'nome' : categoria.nome})
+
+    if 'pop' in request.GET:
+        return render(request, 'financeiro/paginas/catentrada/adicionar.html', {'formulario' : CategoriaForm(), 'pagina' : pagina, 'pop' : 'yes'})
 
     return render(request, 'financeiro/paginas/catentrada/adicionar.html', {'formulario' : CategoriaForm(), 'pagina' : pagina})
 
@@ -551,7 +602,7 @@ def membro(request, acao):
 def usuario(request, acao):
     if acao == 'listar':
         #Listando todos os usuarios
-        usuarios = User.objects.filter(is_superuser=False)
+        usuarios = User.objects.filter(is_superuser=False).exclude(username=request.user.username)
         return render(request, 'financeiro/paginas/usuario/tabela.html', {'usuarios': usuarios})
     if acao == 'adicionar':
         #Adiciondo uma conta de usuario
@@ -692,6 +743,32 @@ def missao(request, acao):
 
 @login_required(login_url='/conta/login')
 def pagamento(request, acao):
+    if acao == "listar":
+        pagamentos = Transacao.objects.all()
+        return render(request, 'financeiro/paginas/pagamento/tabela.html', {'pagamentos': pagamentos})
+    
+    if acao == "alterar":
+        pagamento = Transacao.objects.get(id = request.GET.get('id'))
+        if request.method == "POST":
+            pagamento.nome = request.POST['nome']
+            pagamento.save()
+            messages.success(request, 'ALTERADO COM SUCESSO!')
+            return redirect('/pagamento/listar')
+        return render(request, 'financeiro/paginas/pagamento/alterar.html', {'formulario': TransacaoForm(), 'pagamento': pagamento})
+
+    if acao == "deletar":
+        pagamento = Transacao.objects.get(id = request.GET.get('id'))
+        if request.method == 'POST':
+            pagamento.delete()
+            messages.success(request, "DELETADO COM SUCESSO!")
+            return redirect('/pagamento/listar')
+        
+        entradas = Entrada.objects.filter(transacao__id=pagamento.id)
+        eavulsas = EntradaAvulsa.objects.filter(transacao__id=pagamento.id)
+        emissoes = EntradaMissao.objects.filter(transacao__id=pagamento.id)
+        saidas = Saida.objects.filter(transacao__id=pagamento.id)
+        return render(request, 'financeiro/paginas/pagamento/deletar.html', {'pagamento': pagamento,'entradas': entradas, 'eavulsas': eavulsas, 'emissoes': emissoes, 'saidas': saidas}) 
+    
     pagina = 0
 
     if request.method == 'POST':
@@ -705,6 +782,9 @@ def pagamento(request, acao):
             pagina = 1
             
         return render(request, 'financeiro/paginas/pagamento/adicionar.html', {'formulario' : TransacaoForm(), 'pagina' : pagina, 'id' : transacao.id, 'nome' : transacao.nome})
+
+    if 'pop' in request.GET:
+        return render(request, 'financeiro/paginas/pagamento/adicionar.html', {'formulario' : TransacaoForm(), 'pagina' : pagina, 'pop' : 'yes'})
 
     return render(request, 'financeiro/paginas/pagamento/adicionar.html', {'formulario' : TransacaoForm(), 'pagina' : pagina})
 

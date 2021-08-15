@@ -1,10 +1,10 @@
-﻿{% extends 'financeiro/base.html' %}
+{% extends 'financeiro/base.html' %}
 
 {% load static %}
 
 {% block title %}
     {% block titulo %}
-        Adicionar uma Categoria
+        Alterar uma Forma de Pagamento
     {% endblock %}
 {% endblock %}
 
@@ -33,18 +33,7 @@
 {% endblock %}
 
 {% block dinamico %}
-    {% if messages %}
-        {% for success in messages %}
-            <br>
-            <div style="background-color: green;" id="alert" class="alert alert alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-                {{ success }}
-            </div>
-        {% endfor %}
-    {% endif %}
-    <form method= 'POST' action= "{% url 'categoria' 'adicionar' %}" id= 'formulario'>
+    <form method= 'POST' action= "{% url 'pagamento' 'alterar' %}?id={{pagamento.id}}" id= 'formulario'>
         {% csrf_token %}
         
         <div class= 'row clearfix'>
@@ -53,7 +42,7 @@
                     <div class= 'header'>
                         <h2>
                             Dados
-                            <small> Insira os dados para adicionar uma nova categoria. Os dados com <b> * </b> são obrigatórios </small>
+                            <small> Insira os dados para alterar uma forma de pagamento. Os dados com <b> * </b> são obrigatórios </small>
                         </h2>
                     </div>
                     
@@ -78,11 +67,21 @@
             </div>
         </div>
 
-        <button class= 'btn btn-success btn-lg waves-effect'>
-            <i class= 'material-icons'> add </i>
-            <span> ADICIONAR </span>
-        </button>
+        <div style= 'width: 50%; float: left'>
+            <button class= 'btn btn-lg btn-success waves-effect'>
+                <i class= 'material-icons'> update </i>
+                <span> ALTERAR </span>
+            </button>
+        </div>
     </form>
+    <div style= 'width: 50%; float: right; text-align: right;'>
+        <a href="{% url 'pagamento' 'deletar' %}?id={{pagamento.id}}"> 
+            <button class= 'btn btn-lg btn-danger waves-effect'>
+                <i class= 'material-icons'> delete </i>
+                <span> DELETAR </span>
+            </button>
+        </a>
+    </div>
 {% endblock %}
 
 {% block JS %}
@@ -94,7 +93,9 @@
     <script src= 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/pt-br.min.js'> </script>
 
     {% comment %} <script src= "{% static 'js/paginas/saida/saida.js' %}"> </script> {% endcomment %}
-
+    <script>
+        $('#id_nome').val('{{pagamento.nome}}')
+    </script>
     <script>
         if({{ pagina }} == 1){
             {% if id %}

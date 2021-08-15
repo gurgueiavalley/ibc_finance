@@ -1,0 +1,69 @@
+{% extends 'financeiro/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    {% block titulo %}
+        Categorias de Saída
+    {% endblock %}
+{% endblock %}
+
+{% block CSS %}    
+    <link rel="stylesheet" href="{% static 'css/paginas/tabela.css' %}">
+{% endblock %}
+
+{% block dinamico %}
+    <div class= 'row clearfix'>
+        <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>
+            <div class="container-fluid">
+            <!-- Basic Examples -->
+            {% if messages %}
+                {% for success in messages %}
+                    <br>
+                    <div style="background-color: green;" id="alert" class="alert alert alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        {{ success }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>NOME</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for categoria in categorias %}
+                                            <tr>
+                                                <td>
+                                                    <a href= "{% url 'categoria' 'alterar' %}?id={{categoria.id}}">
+                                                        {{ categoria.nome }}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- #END# Basic Examples -->
+        </div>
+    </div>
+{% endblock %}
+
+{% block JS %}    
+    <script src="{% static 'js/base/jquery.min.js' %}"></script>
+    <script src="{% static 'js/paginas/jquery-datatable.js' %}"></script>
+    <script src="{% static 'js/paginas/categoria/tabela_categoria.js' %}"></script>
+    <script src="{% static 'js/paginas/categoria/tabela_categoria.bootstrap.js' %}"></script>
+{% endblock %}

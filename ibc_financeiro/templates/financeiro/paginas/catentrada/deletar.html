@@ -1,0 +1,49 @@
+{% extends 'financeiro/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    {% block titulo %}
+        {% if entradas %}
+            Não é possível excluir a categoria!
+        {% else %}
+            Tem certeza?
+        {% endif %}
+    {% endblock %}
+{% endblock %}
+
+{% block dinamico %}
+    {% if entradas %}
+        <p style="font-size: 15px;">A  categoria <b>' {{categoria.nome}} '</b>  possui os seguintes objetos relacionados:
+        {% for entrada in entradas %}
+            <ul>
+                <li>Entrada: <a href="{% url 'entrada' 'alterar' %}?id={{entrada.id}}">R$ {{entrada.valor}}</a></li>
+            </ul>
+        {% endfor %}
+        </p>
+    {% else %}
+        <p style="font-size: 15px;">Você tem certeza que quer deletar a categoria <b>' {{categoria.nome}} '</b> ? Todos os seguintes itens relacionados serão removidos:
+            <ul>
+                <li>Categoria: <a href="{% url 'catentrada' 'alterar' %}?id={{categoria.id}}">{{categoria.nome}}</a></li>
+            </ul>
+        </p>
+        <form method= 'POST' action= "{% url 'catentrada' 'deletar' %}?id={{categoria.id}}">
+            {% csrf_token %}
+            <br>
+            <div style= 'width: 50%; float: left'>
+                <button class= 'btn btn-lg btn-danger waves-effect'>
+                    <i class= 'material-icons'> delete </i>
+                    <span> SIM, DELETAR </span>
+                </button>
+            </div>
+        </form>
+        <div style= 'width: 50%; float: right; text-align: right;'>
+            <a href="{% url 'catentrada' 'alterar' %}?id={{categoria.id}}"> 
+                <button class= 'btn btn-lg bg-blue-grey waves-effect'>
+                    <i class= 'material-icons'> replay </i>
+                    <span> NÃO, VOLTAR A PAGINA ANTERIOR </span>
+                </button>
+            </a>
+        </div>
+    {% endif %}
+{% endblock %}

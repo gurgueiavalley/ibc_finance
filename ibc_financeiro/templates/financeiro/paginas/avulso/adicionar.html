@@ -201,7 +201,7 @@
                 window.open("{% url 'catentrada' 'adicionar' %}", '', 'popup')
 
             else if(classe == 'Forma de Entrada')
-                window.open("{% url 'pagamento' 'adicionar' %}", '', 'popup')
+                window.open("{% url 'pagamento' 'adicionar' %}?pop=on", '', 'popup')
             
             else if(classe == 'Membro')
                 window.open("{% url 'membro' 'adicionar' %}", '', 'popup')

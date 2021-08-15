@@ -90,6 +90,55 @@
         </li>
 
         <li class= 'header'> INFORMAÇÕES </li>
+        
+        <li>
+            <a class= 'menu-toggle'>
+                <i class= 'material-icons'> category </i>
+                <span> Categorias </span>
+            </a>
+
+            <ul class= 'ml-menu'>
+                <li>
+                    <a class= 'menu-toggle'>
+                        <span> Entradas </span>
+                    </a>
+
+                    <ul class= 'ml-menu'>
+                        <li>
+                            <a href= "{% url 'catentrada' 'adicionar' %}">
+                                <span> Adicionar </span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href= "{% url 'catentrada' 'listar' %}">
+                                <span> Listar </span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li>
+                    <a class= 'menu-toggle'>
+                        <span> Saidas </span>
+                    </a>
+
+                    <ul class= 'ml-menu'>
+                        <li>
+                            <a href= "{% url 'categoria' 'adicionar' %}">
+                                <span> Adicionar </span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href= "{% url 'categoria' 'listar' %}">
+                                <span> Listar </span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
 
         <li>
             <a class= 'menu-toggle'>
@@ -135,6 +184,18 @@
             <ul class= 'ml-menu'>
                 <li> <a href= "{% url 'missao' 'adicionar' %}"> Adicionar </a> </li>
                 <li> <a href= "{% url 'missao' 'listar' %}"> Listar </a> </li>
+            </ul>
+        </li>
+
+        <li>
+            <a class= 'menu-toggle'>
+                <i class= 'material-icons'> credit_card </i>
+                <span> Formas de Pagamento </span>
+            </a>
+
+            <ul class= 'ml-menu'>
+                <li> <a href= "{% url 'pagamento' 'adicionar' %}"> Adicionar </a> </li>
+                <li> <a href= "{% url 'pagamento' 'listar' %}"> Listar </a> </li>
             </ul>
         </li>
     </ul>

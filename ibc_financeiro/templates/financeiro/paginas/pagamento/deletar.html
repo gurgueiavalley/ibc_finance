@@ -1,0 +1,64 @@
+{% extends 'financeiro/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    {% block titulo %}
+        {% if entradas or eavulsas or emissoes or saidas %}
+            Não é possível excluir a forma de pagamento!
+        {% else %}
+            Tem certeza?
+        {% endif %}
+    {% endblock %}
+{% endblock %}
+
+{% block dinamico %}
+    {% if saidas %}
+        <p style="font-size: 15px;">A  forma de pagamento <b>' {{pagamento.nome}} '</b>  possui os seguintes objetos relacionados:
+        {% for entrada in entradas %}
+            <ul>
+                <li>Entrada: <a href="{% url 'entrada' 'alterar' %}?id={{entrada.id}}">R$ {{entrada.valor}}</a></li>
+            </ul>
+        {% endfor %}
+        {% for eavulsa in eavulsas %}
+            <ul>
+                <li>Entrada Avulsa: <a href="{% url 'avulso' 'alterar' %}?id={{eavulsa.id}}">R$ {{eavulsa.valor}}</a></li>
+            </ul>
+        {% endfor %}
+        {% for emissao in emissoes %}
+            <ul>
+                <li>Entrada de Missões: <a href="{% url 'emissao' 'alterar' %}?id={{emissao.id}}">R$ {{emissao.valor}}</a></li>
+            </ul>
+        {% endfor %}
+        {% for saida in saidas %}
+            <ul>
+                <li>Saída: <a href="{% url 'saida' 'alterar' %}?id={{saida.id}}">R$ {{saida.valor}}</a></li>
+            </ul>
+        {% endfor %}
+        </p>
+    {% else %}
+        <p style="font-size: 15px;">Você tem certeza que quer deletar a forma de pagamento <b>' {{pagamento.nome}} '</b> ? Todos os seguintes itens relacionados serão removidos:
+            <ul>
+                <li>Forma de Pagamento: <a href="{% url 'pagamento' 'alterar' %}?id={{pagamento.id}}">{{pagamento.nome}}</a></li>
+            </ul>
+        </p>
+        <form method= 'POST' action= "{% url 'pagamento' 'deletar' %}?id={{pagamento.id}}">
+            {% csrf_token %}
+            <br>
+            <div style= 'width: 50%; float: left'>
+                <button class= 'btn btn-lg btn-danger waves-effect'>
+                    <i class= 'material-icons'> delete </i>
+                    <span> SIM, DELETAR </span>
+                </button>
+            </div>
+        </form>
+        <div style= 'width: 50%; float: right; text-align: right;'>
+            <a href="{% url 'pagamento' 'alterar' %}?id={{pagamento.id}}"> 
+                <button class= 'btn btn-lg bg-blue-grey waves-effect'>
+                    <i class= 'material-icons'> replay </i>
+                    <span> NÃO, VOLTAR A PAGINA ANTERIOR </span>
+                </button>
+            </a>
+        </div>
+    {% endif %}
+{% endblock %}

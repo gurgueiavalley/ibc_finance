@@ -34,15 +34,15 @@
 
 {% block dinamico %}
     {% if messages %}
-            {% for success in messages %}
-                <br>
-                <div style="background-color: green;" id="alert" class="alert alert alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    {{ success }}
-                </div>
-            {% endfor %}
+        {% for success in messages %}
+            <br>
+            <div style="background-color: green;" id="alert" class="alert alert alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                {{ success }}
+            </div>
+        {% endfor %}
     {% endif %}
     <form method= 'POST' action= "{% url 'emissao' 'adicionar' %}" enctype= 'multipart/form-data' id= 'formulario'>
         {% csrf_token %}
@@ -184,7 +184,7 @@
                 window.open("{% url 'missao' 'adicionar' %}?pop=on", '', 'popup')
 
             else if(classe == 'Forma de Entrada')
-                window.open("{% url 'pagamento' 'adicionar' %}", '', 'popup')
+                window.open("{% url 'pagamento' 'adicionar' %}?pop=on", '', 'popup')
         }
     </script>
 {% endblock %}

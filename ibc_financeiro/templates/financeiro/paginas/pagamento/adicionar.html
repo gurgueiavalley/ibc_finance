@@ -19,15 +19,17 @@
 
     <link rel= 'stylesheet' href= "{% static 'css/paginas/saida/saida.css' %}">
 
-    <style>
-        .navbar, #leftsidebar{
-            display: none;
-        }
+    {% if pop %}
+        <style>
+            .navbar, #leftsidebar{
+                display: none;
+            }
 
-        .content{
-            margin: 20px !important;
-        }
-    </style>
+            .content{
+                margin: 20px !important;
+            }
+        </style>
+    {% endif %}
 {% endblock %}
 
 {% block dinamico %}
