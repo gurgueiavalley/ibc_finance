@@ -162,10 +162,10 @@
                 window.open("{% url 'congregacao' 'adicionar' %}?pop=on", '', 'popup')
             
             else if(classe == 'Categoria')
-                window.open("{% url 'catentrada' 'adicionar' %}", '', 'popup')
+                window.open("{% url 'catentrada' 'adicionar' %}?pop=on", '', 'popup')
 
             else if(classe == 'Forma de Entrada')
-                window.open("{% url 'pagamento' 'adicionar' %}", '', 'popup')
+                window.open("{% url 'pagamento' 'adicionar' %}?pop=on", '', 'popup')
             
             else if(classe == 'Membro')
                 window.open("{% url 'membro' 'adicionar' %}?pop=on", '', 'popup')

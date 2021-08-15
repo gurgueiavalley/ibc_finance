@@ -144,10 +144,10 @@
                 window.open("{% url 'congregacao' 'adicionar' %}?pop=on", '', 'popup')
             
             else if(classe == 'Categoria')
-                window.open("{% url 'categoria' 'adicionar' %}", '', 'popup')
+                window.open("{% url 'categoria' 'adicionar' %}?pop=on", '', 'popup')
 
             else if(classe == 'Forma de Pagamento')
-                window.open("{% url 'pagamento' 'adicionar' %}", '', 'popup')
+                window.open("{% url 'pagamento' 'adicionar' %}?pop=on", '', 'popup')
             
             else if(classe == 'Fornecedor')
                 window.open("{% url 'empresa' 'adicionar' %}?pop=on", '', 'popup')
