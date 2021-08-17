@@ -1,2 +1,2 @@
 /* Mobile L and minors */
-@media (max-width: 425px){button{width: 100%}}
+@media (max-width: 425px){button.btn{width: 100%}}
