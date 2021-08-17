@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block dinamico %}
-    <form action= "{% url 'member' form.action %}" method= 'post'>
+    <form action= "{% url 'member' form.action %}{% if request.GET.popup == 'on' %}?popup=on{% endif %}" method= 'post'>
         {% csrf_token %}
         
         {% for title, data in form.divisions.items %}
