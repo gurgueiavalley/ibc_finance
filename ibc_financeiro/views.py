@@ -446,7 +446,7 @@ def member(request, action):
         if request.method == 'POST':
             form = MemberForm(request.POST)
             
-            if form.is_valid(): form.save(request)
+            if form.is_valid(): form.save(request, data)
             else: data['form']['fields'] = form
 
         return render(request, 'form.html', data)

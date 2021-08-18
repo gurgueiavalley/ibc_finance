@@ -86,7 +86,7 @@ class MemberForm(forms.Form):
         if membros.filter(cell = cell).exists(): self.add_error('cell', f'{ message } celular')
         if membros.filter(CPF = cpf).exists(): self.add_error('cpf', f'{ message } CPF')
 
-    def save(self, request):
+    def save(self, request, dice):
         data = super().clean()
 
         member = Membro.objects.create(
@@ -102,6 +102,11 @@ class MemberForm(forms.Form):
             f'O membro <strong> { member.nome } </strong> foi adicionado',
             extra_tags = '<strong> Membro Inserido </strong> <br>'
         )
+
+        if request.GET['popup'] == 'on': dice['object'] = {
+            'value' : member.id,
+            'text' : member.nome
+        }
 
 
 
