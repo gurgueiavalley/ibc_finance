@@ -1,7 +1,7 @@
 from django         import forms
 from django.contrib import messages
 
-from .models import Membro
+from ibc_financeiro.models import Membro
 
 from .models import *
 
