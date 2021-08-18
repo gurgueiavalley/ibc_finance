@@ -103,11 +103,7 @@ class MemberForm(forms.Form):
             extra_tags = '<strong> Membro Inserido </strong> <br>'
         )
 
-        if request.GET['popup'] == 'on': dice['object'] = {
-            'class' : 'Membro',
-            'value' : member.id,
-            'text' : member.nome
-        }
+        if request.GET['popup'] == 'on': dice['object'] = member
 
 
 
