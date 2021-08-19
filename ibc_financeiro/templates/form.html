@@ -7,13 +7,13 @@
 {% block CSS %}
     <link rel= 'stylesheet' href= "{% static 'form/css/style.css' %}">
 
-    {% if request.GET.popup == 'on' %}
+    {% if request.GET.mode == 'popup' %}
         <link rel= 'stylesheet' href= "{% static 'form/css/popup.css' %}">
     {% endif %}
 {% endblock %}
 
 {% block dinamico %}
-    <form action= "{% url 'member' form.action %}{% if request.GET.popup == 'on' %}?popup=on{% endif %}" method= 'post'>
+    <form action= "{% url 'member' form.action %}{% if request.GET.mode == 'popup' %}?mode=popup{% endif %}" method= 'post'>
         {% csrf_token %}
         
         {% for title, data in form.divisions.items %}
