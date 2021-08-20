@@ -1,6 +1,7 @@
 ﻿{% extends 'financeiro/base.html' %}
 
 {% load static %}
+{% load tags %}
 
 {% block title %} {{ title }} {% endblock %}
 
@@ -65,4 +66,12 @@
 {% block JS %}
     <script src= 'https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js'> </script>
     <script src= "{% static 'form/js/mask.js' %}"> </script>
+    
+    {% if object %}
+        <script src= "{% static 'form/js/option.js' %}"> </script>
+
+        <script>
+            Option.create('{{ object |class }}', '{{ object }}', '{{ object.id }}')
+        </script>
+    {% endif %}
 {% endblock %}
