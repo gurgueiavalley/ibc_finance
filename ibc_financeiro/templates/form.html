@@ -71,7 +71,7 @@
         <script src= "{% static 'form/js/option.js' %}"> </script>
 
         <script>
-            Option.create('{{ object |class }}', '{{ object }}', '{{ object.id }}')
+            Option.insert('{{ object |class }}', '{{ object }}', '{{ object.id }}')
         </script>
     {% endif %}
 {% endblock %}
