@@ -3,6 +3,14 @@ const Option = {
     text : null,
     value : null,
 
+    addToList : function(){
+        this.div.find('li:nth-child(1)').after($('<li>', {
+            attr : {
+                'data-original-index' : this.div.find('li').length
+            }
+        }).append($('<a>').append($(`<span> ${this.text} </span>`))))
+    },
+
     addToSelect : function(){
         this.div.find('select').append($('<option>', {
             value : this.value,
@@ -16,5 +24,6 @@ const Option = {
         this.value = id
 
         this.addToSelect()
+        this.addToList()
     }
 }
