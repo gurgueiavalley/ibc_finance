@@ -25,5 +25,10 @@ const Option = {
 
         this.addToSelect()
         this.addToList()
+        this.select()
+    },
+
+    select : function(){
+        this.div.find('li:nth-child(2) a').click()
     }
 }
