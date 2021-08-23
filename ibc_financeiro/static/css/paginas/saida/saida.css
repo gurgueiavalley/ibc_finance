@@ -82,3 +82,5 @@ section .form-control .btn:not(.btn-link):not(.btn-circle){
         max-width: unset;
     }
 }
+
+.select a{background-color: #eee}

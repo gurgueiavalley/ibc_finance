@@ -4,6 +4,7 @@
 b{color: red}
 [class ^= 'col-md-']{margin-bottom: 0 !important}
 .bootstrap-select button{padding-left: 0}
+.select a{background-color: #eee}
 
 div.bootstrap-select{
     width : 100% !important;
