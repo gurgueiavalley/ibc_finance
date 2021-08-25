@@ -3,10 +3,6 @@ const Option = {
     text : null,
     value : null,
 
-    addClass : function(){
-        this.div.find('li:nth-child(2)').addClass('select')
-    },
-
     addToList : function(){
         this.div.find('li:nth-child(1)').after($('<li>', {
             attr : {
@@ -33,6 +29,11 @@ const Option = {
     },
 
     select : function(){
-        this.div.find('li:nth-child(2) a').click(this.addClass()).click()
+        this.div.find('li:nth-child(2) a').click(function(){
+            const li = this.parentElement
+
+            li.parentElement.querySelectorAll('.select').forEach(element => element.classList.remove('select'))
+            li.classList.add('select')
+        }).click()
     }
 }
