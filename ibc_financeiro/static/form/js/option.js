@@ -25,15 +25,20 @@ const Option = {
 
         this.addToSelect()
         this.addToList()
+        this.unselect()
         this.select()
     },
 
     select : function(){
-        this.div.find('li:nth-child(2) a').click(function(){
-            const li = this.parentElement
+        this.div.find('li:nth-child(2) a').click()
+    },
 
-            li.parentElement.querySelectorAll('.select').forEach(element => element.classList.remove('select'))
-            li.classList.add('select')
-        }).click()
+    unselect : function(){
+        this.div.find('a').each((index) => {
+            this.div.find(`li:nth-child(${++index}) a`).click(function(){
+                this.parentElement.parentElement.querySelectorAll('.select').forEach((li) => li.classList.remove('select'))
+                this.parentElement.classList.add('select')
+            })
+        })
     }
 }
