@@ -27,6 +27,25 @@ const Option = {
         this.addToList()
         this.unselect()
         this.select()
+        this.notify(className)
+    },
+
+    notify : function(className){
+        const sex = className == 'Fornecedor' || className == 'Membro' ? 'o' : 'a'
+        
+        window.opener.$.notify({
+            title : `<strong> ${className} Inserid${sex} </strong> <br>`,
+            message : `${sex.toUpperCase()} ${className.toLowerCase()} <strong> ${this.text} </strong> foi adicionad${sex} e selecionad${sex}`
+        }, {
+            type : 'success',
+            offset : 10,
+            spacing : 5,
+            delay : 0,
+            animate : {
+                enter : 'animated zoomInRight',
+                exit : 'animated zoomOutRight'
+            }
+        })
     },
 
     select : function(){
