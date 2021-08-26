@@ -28,6 +28,8 @@ const Option = {
         this.unselect()
         this.select()
         this.notify(className)
+
+        window.close()
     },
 
     notify : function(className){
