@@ -68,10 +68,10 @@
     <script src= "{% static 'form/js/mask.js' %}"> </script>
     
     {% if object %}
-        <script src= "{% static 'form/js/option.js' %}"> </script>
+        <script src= "{% static 'form/js/popup.js' %}"> </script>
 
         <script>
-            Option.insert('{{ object |class }}', '{{ object }}', '{{ object.id }}')
+            Option.add('{{ object |class }}', '{{ object }}', '{{ object.id }}')
         </script>
     {% endif %}
 {% endblock %}
