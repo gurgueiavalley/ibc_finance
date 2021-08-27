@@ -215,8 +215,7 @@
             else if(classe == 'Forma de Entrada')
                 window.open("{% url 'pagamento' 'adicionar' %}", '', 'popup')
             
-            else if(classe == 'Membro')
-                window.open("{% url 'membro' 'adicionar' %}?pop=on", '', 'popup')
+            else if(classe == 'Membro') window.open("{% url 'member' 'adicionar' %}?mode=popup", '', 'width = 425, height = 999')
         }
     </script>
 
