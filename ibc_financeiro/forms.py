@@ -12,7 +12,7 @@ from .models import *
         - 1st: field width (integer from 1 to 12);
         - 2nd: field icon (name of the by Material.io icon).
     
-    Values are taken from the HTML using the { |slice } (to get each value) tag.
+    Values are insert of the HTML using the { |column } and { |icon} tag.
     
     If you are going to use it this way or change it, correctly assign the
     values to avoid visual bugs.

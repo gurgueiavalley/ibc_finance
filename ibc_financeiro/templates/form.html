@@ -31,13 +31,13 @@
                         <div class= 'body padding-bottom-0'>
                             <div class= 'row clearfix'>
                                 {% for field in form.fields.visible_fields|slice:data.slice %}
-                                    <div class= "col-md-{{ field.help_text |slice:':2' }}">
+                                    <div class= "col-md-{{ field.help_text |column }}">
                                         <strong> {{ field.label |safe }} </strong>
 
                                         <div class= 'input-group'>
                                             <span class= 'input-group-addon'>
                                                 <i class= 'material-icons'>
-                                                    {{ field.help_text |slice:'2:' |lower }}
+                                                    {{ field.help_text |icon }}
                                                 </i>
                                             </span>
 
