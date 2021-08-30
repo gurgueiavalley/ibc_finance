@@ -788,15 +788,27 @@ def pagamento(request, acao):
         if request.method == "POST":
             pagamento.nome = request.POST['nome']
             pagamento.save()
-            messages.success(request, 'ALTERADO COM SUCESSO!')
+            
+            messages.success(request,
+                f'A forma de pagamento <strong> { pagamento.nome } </strong> foi atualizada',
+                extra_tags = '<strong> Pagamento Atualizado </strong> <br>'
+            )
+
             return redirect('/pagamento/listar')
         return render(request, 'financeiro/paginas/pagamento/alterar.html', {'formulario': TransacaoForm(), 'pagamento': pagamento})
 
     if acao == "deletar":
         pagamento = Transacao.objects.get(id = request.GET.get('id'))
         if request.method == 'POST':
+            name = pagamento.nome
+
             pagamento.delete()
-            messages.success(request, "DELETADO COM SUCESSO!")
+            
+            messages.success(request,
+                f'A forma de pagamento <strong> { name } </strong> foi excluída',
+                extra_tags = '<strong> Pagamento Deletado </strong> <br>'
+            )
+
             return redirect('/pagamento/listar')
         
         entradas = Entrada.objects.filter(transacao__id=pagamento.id)
