@@ -638,7 +638,8 @@ def membro(request, acao):
 def usuario(request, acao):
     if acao == 'listar':
         #Listando todos os usuarios
-        usuarios = User.objects.filter(is_superuser=False).exclude(username=request.user.username)
+        usuarios = User.objects.filter(is_superuser=False, is_staff = False).exclude(username=request.user.username)
+
         return render(request, 'financeiro/paginas/usuario/tabela.html', {'usuarios': usuarios})
     if acao == 'adicionar':
         #Adiciondo uma conta de usuario
