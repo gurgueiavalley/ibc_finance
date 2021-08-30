@@ -1307,18 +1307,23 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     
     pdf.save()
 
-    Chart.pie(saidas)
+    report = directory
 
-    directories = [
-        directory,
-        'ibc_financeiro/static/chart.pdf'
-    ]
+    if saidas:
+        Chart.pie(saidas)
 
-    PDF.merge(directories, 'ibc_financeiro/static/general2.pdf')
+        directories = [
+            directory,
+            'ibc_financeiro/static/chart.pdf'
+        ]
 
-    File.delete(directories)
+        PDF.merge(directories, 'ibc_financeiro/static/general2.pdf')
 
-    Report.receipt(saidas, 'ibc_financeiro/static/general2.pdf', 'ibc_financeiro/static/pdf/report/general.pdf', 'Relatório Geral', {'page' : ''})
+        File.delete(directories)
+
+        report = 'ibc_financeiro/static/general2.pdf'
+
+    Report.receipt(saidas, report, 'ibc_financeiro/static/pdf/report/general.pdf', 'Relatório Geral', {'page' : ''})
 
 @login_required(login_url = '/conta/login')
 def relatorio(request, tipo):
@@ -1348,9 +1353,9 @@ def relatorio(request, tipo):
 
     elif tipo == 'geral':
         if request.method == 'POST':
-            gerarRelatorioGeral(request, listaEntrada(request), listaSaida(request), listaMissao(request))
+            path = gerarRelatorioGeral(request, listaEntrada(request), listaSaida(request), listaMissao(request)) or 'pdf/report/general.pdf'
             
-            return render(request, 'financeiro/paginas/relatorio.html', {'nome': 'pdf/report/general.pdf', 'title' : tipo})
+            return render(request, 'financeiro/paginas/relatorio.html', {'nome': path, 'title' : tipo})
         
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioGeralForm()})
 
