@@ -119,15 +119,27 @@ def categoria(request, acao):
         if request.method == 'POST':
             categoria.nome = request.POST['nome']
             categoria.save()
-            messages.success(request, 'ALTERADO COM SUCESSO!')
+            
+            messages.success(request,
+                f'A categoria de saída <strong> { categoria.nome } </strong> foi alterada',
+                extra_tags = '<strong> Categoria Atualizada </strong> <br>'
+            )
+
             return redirect('/categoria/listar')
         return render(request, 'financeiro/paginas/categoria/alterar.html', {'formulario': CategoriaForm(), 'categoria': categoria})
 
     if acao == "deletar":
         categoria = Categoria.objects.get(id = request.GET.get('id'))
         if request.method == 'POST':
+            name = categoria.nome
+
             categoria.delete()
-            messages.success(request, "DELETADO COM SUCESSO!")
+            
+            messages.success(request,
+                f'A categoria de saída <strong> { name } </strong> foi excluída',
+                extra_tags = '<strong> Categoria Deletada </strong> <br>'
+            )
+
             return redirect('/categoria/listar')
         
         saidas = Saida.objects.filter(categoria__id=categoria.id)
@@ -164,15 +176,27 @@ def catEntrada(request, acao):
         if request.method == "POST":
             categoria.nome = request.POST['nome']
             categoria.save()
-            messages.success(request, 'ALTERADO COM SUCESSO!')
+            
+            messages.success(request,
+                f'Categoria de entrada <strong> { categoria.nome } </strong> foi alterada',
+                extra_tags = '<strong> Categoria Atualizada </strong> <br>'
+            )
+
             return redirect('/catentrada/listar')
         return render(request, 'financeiro/paginas/catentrada/alterar.html', {'formulario': CategoriaForm(), 'categoria': categoria})
 
     if acao == "deletar":
         categoria = Categoria.objects.get(id = request.GET.get('id'))
         if request.method == 'POST':
+            name = categoria.nome
+
             categoria.delete()
-            messages.success(request, "DELETADO COM SUCESSO!")
+            
+            messages.success(request,
+                f'A categoria <strong> { name } </strong> foi excluída',
+                extra_tags = '<strong> Categoria Deletada </strong> <br>'
+            )
+
             return redirect('/catentrada/listar')
         
         entradas = Entrada.objects.filter(categoria__id=categoria.id)
