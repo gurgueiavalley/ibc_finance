@@ -539,8 +539,14 @@ def membro(request, acao):
     if acao == 'deletar':
         membro = Membro.objects.get(id=request.GET['id'])
         if request.method == 'POST':
+            name = membro.nome
+
             membro.delete()
-            messages.success(request, "DELETADO COM SUCESSO!")
+            
+            messages.success(request,
+                f'O membro <strong> { name } </strong> foi excluído',
+                extra_tags = '<strong> Membro Deletado </strong> <br>'
+            )
             return redirect('/listar/membros')
         else:
             entradas = Entrada.objects.filter(membro_id=membro.id)
@@ -550,21 +556,27 @@ def membro(request, acao):
         membro = Membro.objects.get(id = request.GET.get('id'))
 
         if request.method == 'POST':
-            formulario = MembroForm(request.POST)
+            formulario = MemberForm(request.POST)
+
             if formulario.is_valid():
-                membro.CPF = request.POST['CPF']
-                membro.nome = request.POST['nome']
-                membro.celular = request.POST['celular']
+                membro.CPF = request.POST['cpf']
+                membro.nome = request.POST['name']
+                membro.cell = request.POST['cell']
                 membro.email = request.POST['email']
-                membro.sexo = request.POST['sexo']
-                membro.nascimento = convertDate(request.POST['nascimento'])
+                membro.sex = request.POST['sex']
+                membro.birth = convertDate(request.POST['birth']) if request.POST['birth'] != '' else None
 
                 membro.save()
-            messages.success(request, "ALTERADO COM SUCESSO!")
+                
+            messages.success(request,
+                f'Os dados do membro <strong> { membro.nome } </strong> foram alterados',
+                extra_tags = '<strong> Membro Atualizado </strong> <br>'
+            )
+
             return redirect('/listar/membros')
         
         else:
-            return render(request, 'financeiro/paginas/membro/alterar.html', {'formulario': MembroForm(), 'membro': membro})
+            return render(request, 'financeiro/paginas/membro/alterar.html', {'formulario': MemberForm(), 'membro': membro})
     
     pagina = 0
     if request.method == 'POST':

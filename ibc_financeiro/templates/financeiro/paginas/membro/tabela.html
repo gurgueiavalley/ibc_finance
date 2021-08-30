@@ -19,17 +19,7 @@
         <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>
             <div class="container-fluid">
             <!-- Basic Examples -->
-            {% if messages %}
-                {% for success in messages %}
-                    <br>
-                    <div style="background-color: green;" id="alert" class="alert alert alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                        {{ success }}
-                    </div>
-                {% endfor %}
-            {% endif %}
+            
             <div class="row clearfix">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
@@ -49,11 +39,11 @@
                                             <tr>
                                                 <td> <a href= "{% url 'membro' 'alterar' %}?id={{membro.pk}}"> {{ membro.nome }} </a> </td>
                                                 <td>{% if membro.CPF %} {{membro.CPF}} {% endif %}</a></td>
-                                                <td>{% if membro.celular %} {{membro.celular}} {% endif %}</td>
+                                                <td>{% if membro.cell %} {{membro.cell}} {% endif %}</td>
                                                 
                                                 <td id = 'tabela'>
-                                                    {% if membro.celular %}
-                                                        <a style= 'font-size: 17px' href= 'https://api.whatsapp.com/send?phone=+55{{ membro.celular|cut:" "|cut:"-" }}' target= '_blank'>
+                                                    {% if membro.cell %}
+                                                        <a style= 'font-size: 17px' href= 'https://api.whatsapp.com/send?phone=+55{{ membro.cell|cut:" "|cut:"-" }}' target= '_blank'>
                                                             <i class= 'fa fa-whatsapp'> </i>
                                                         </a>
                                                     {% endif %}

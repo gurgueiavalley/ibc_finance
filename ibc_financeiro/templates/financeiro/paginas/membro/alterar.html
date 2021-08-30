@@ -1,6 +1,7 @@
 {% extends 'financeiro/base.html' %}
 
 {% load static %}
+{% load tags %}
 
 {% block title %}
     {% block titulo %}
@@ -43,41 +44,13 @@
                     
                     <div class= 'body'>
                         <div class= 'row clearfix'>
-                            <div class= 'col-md-6'>
-                                <strong> {{ formulario.CPF.label }} </strong>
-
-                                <div class= 'input-group'>
-                                    <span class= 'input-group-addon'>
-                                        <i class= 'material-icons'> {{ formulario.CPF.help_text }} </i>
-                                    </span>
-
-                                    <div class= 'form-line'>
-                                        {{ formulario.CPF }}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class= 'col-md-6'>
-                                <strong> {{ formulario.nome.label }} <b> * </b> </strong>
-
-                                <div class= 'input-group'>
-                                    <span class= 'input-group-addon'>
-                                        <i class= 'material-icons'> {{ formulario.nome.help_text }} </i>
-                                    </span>
-
-                                    <div class= 'form-line'>
-                                        {{ formulario.nome }}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {% for campo in formulario.visible_fields|slice:'2:6' %}
-                                <div class= 'col-md-6'>
-                                    <strong> {{ campo.label }} </strong>
+                            {% for campo in formulario %}
+                                <div class= "col-md-{{ campo.help_text |column }}">
+                                    <strong> {{ campo.label |safe }} </strong>
 
                                     <div class= 'input-group'>
                                         <span class= 'input-group-addon'>
-                                            <i class= 'material-icons'> {{ campo.help_text }} </i>
+                                            <i class= 'material-icons'> {{ campo.help_text |icon }} </i>
                                         </span>
 
                                         <div class= 'form-line'>
@@ -128,23 +101,23 @@
     {% comment %} Preenchendo os campos do formulario {% endcomment %}
     <script>
         {% if membro.CPF %}
-            document.getElementById("id_CPF").value = '{{membro.CPF}}';
+            document.getElementById("id_cpf").value = '{{membro.CPF}}';
         {% endif %}
         
-        document.getElementById("id_nome").value = '{{membro.nome}}';
+        document.getElementById("id_name").value = '{{membro.nome}}';
         
-        {% if membro.celular %}
-            document.getElementById("id_celular").value = '{{membro.celular}}';
+        {% if membro.cell %}
+            document.getElementById("id_cell").value = '{{membro.cell}}';
         {% endif %}
         
         {% if membro.email %}
             document.getElementById("id_email").value = '{{membro.email}}';
         {% endif %}
         
-        $('#id_sexo').val('{{ membro.sexo }}')
+        $('#id_sex').val('{{ membro.sex }}')
 
-        {% if membro.nascimento %}
-            $('#id_nascimento').val('{{membro.nascimento.day}}/{{membro.nascimento.month}}/{{membro.nascimento.year}}')
+        {% if membro.birth %}
+            $('#id_birth').val('{{membro.birth.day}}/{{membro.birth.month}}/{{membro.birth.year}}')
         {% endif %}
     </script>
 {% endblock %}

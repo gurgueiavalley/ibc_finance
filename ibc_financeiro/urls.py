@@ -8,6 +8,7 @@ urlpatterns = [
     path('membros/<action>', member, name = 'member'),
 
     path('', index, name = 'index'),
+    path('membro/<acao>', membro, name = 'membro'),                         # Membro
     path('relatorio/<tipo>', relatorio, name = 'relatorio'),                # Relatório
     path('saida/<acao>', saida, name = 'saida'),                            # Saída
     path('congregacao/<acao>', congregacao, name = 'congregacao'),          # Congregação
