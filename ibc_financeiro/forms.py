@@ -86,7 +86,7 @@ class MemberForm(forms.Form):
         if membros.filter(cell = cell).exists(): self.add_error('cell', f'{ message } celular')
         if membros.filter(CPF = cpf).exists(): self.add_error('cpf', f'{ message } CPF')
 
-    def save(self, request, dice):
+    def create(self, request, dice):
         data = super().clean()
 
         member = Membro.objects.create(
