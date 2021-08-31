@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import socket
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '^r=ow$1kg%2r3gf)5(*3m8pkc_nd2!lnkw7j63b#@+$_2e#4mr'
@@ -19,6 +20,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django_session_timeout.middleware.SessionTimeoutMiddleware' , 
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -97,3 +99,17 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'senhas@financeiro.ibcorrente.com.br'
 SERVER_EMAIL = 'senhas@financeiro.ibcorrente.com.br'
+
+#Configurando SSL
+reisPcName = 'DESKTOP-KBGVH3K'                  #Nome do PC
+ribeiroPcName = 'CAIQUE'
+
+if socket.gethostname() == reisPcName or socket.gethostname() == ribeiroPcName:
+    SECURE_SSL_REDIRECT = False   
+else:
+    SECURE_SSL_REDIRECT = True
+
+#Configurando Timpo Sessão
+SESSION_EXPIRE_SECONDS  =  1800   # 1800 segundos = 30 minutos
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY  = True    #Expirar sessão apos a ultima interação
+SESSION_TIMEOUT_REDIRECT  =  '/conta/login'
