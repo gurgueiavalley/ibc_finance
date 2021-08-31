@@ -109,7 +109,7 @@ localMachines = [
 if socket.gethostname() not in localMachines:
     SECURE_SSL_REDIRECT = True
 
-#Configurando Timpo Sessão
-SESSION_EXPIRE_SECONDS  =  1800   # 1800 segundos = 30 minutos
-SESSION_EXPIRE_AFTER_LAST_ACTIVITY  = True    #Expirar sessão apos a ultima interação
-SESSION_TIMEOUT_REDIRECT  =  '/conta/login'
+# Session Time
+SESSION_EXPIRE_SECONDS = 60 * (30)              # 30 minutes
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+SESSION_TIMEOUT_REDIRECT = '/conta/login'
