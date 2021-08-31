@@ -1363,7 +1363,7 @@ def listaEntrada(request):
     datas = [convertDate(request.POST['inicio']), convertDate(request.POST['fim'])]
     congregacoes = request.POST.getlist('congregacao')
     categorias = request.POST.getlist('categoria_entrada')
-    formas = request.POST.getlist('transacao')
+    formas = request.POST.getlist('forma')
     membros = request.POST.getlist('membro')
 
     entradas = Entrada.objects.filter(data__range = datas).order_by('data')
