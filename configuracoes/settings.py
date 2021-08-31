@@ -100,13 +100,13 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'senhas@financeiro.ibcorrente.com.br'
 SERVER_EMAIL = 'senhas@financeiro.ibcorrente.com.br'
 
-#Configurando SSL
-reisPcName = 'DESKTOP-KBGVH3K'                  #Nome do PC
-ribeiroPcName = 'CAIQUE'
+# SSL
+localMachines = [
+    'DESKTOP-KBGVH3K',      # Caike S Reis
+    'Caique'                # Caique S Ribeiro
+]
 
-if socket.gethostname() == reisPcName or socket.gethostname() == ribeiroPcName:
-    SECURE_SSL_REDIRECT = False   
-else:
+if socket.gethostname() not in localMachines:
     SECURE_SSL_REDIRECT = True
 
 #Configurando Timpo Sessão
