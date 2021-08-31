@@ -1,7 +1,8 @@
 from django         import forms
 from django.contrib import messages
 
-from ibc_financeiro.models import Membro
+from ibc_financeiro.models              import Membro
+from ibc_financeiro.functions.fields    import CPF
 
 from .models import *
 
@@ -79,14 +80,19 @@ class MemberForm(forms.Form):
         cell = data.get('cell') or ''
         cpf = data.get('cpf') or ''
 
+        error = self.add_error
+
+        if cpf != '':
+            if not CPF(cpf).is_valid: error('cpf', 'Este CPF não é válido')
+
         membros = Membro.objects
         message = 'Outro membro já usa esse'
 
-        if membros.filter(email = email).exists(): self.add_error('email', f'{ message } e-mail')
-        if membros.filter(cell = cell).exists(): self.add_error('cell', f'{ message } celular')
-        if membros.filter(CPF = cpf).exists(): self.add_error('cpf', f'{ message } CPF')
+        if membros.filter(email = email).exists(): error('email', f'{ message } e-mail')
+        if membros.filter(cell = cell).exists(): error('cell', f'{ message } celular')
+        if membros.filter(CPF = cpf).exists(): error('cpf', f'{ message } CPF')
 
-    def save(self, request, dice):
+    def create(self, request, dice):
         data = super().clean()
 
         member = Membro.objects.create(
