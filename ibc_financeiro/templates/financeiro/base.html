@@ -145,9 +145,9 @@
 
         {% if messages %}
             <script>
-                {% for message in messages %}
+                {% for message in messages %}                    
                     $.notify({
-                        title : '{{ message.extra_tags |safe }}',
+                        title : {% if message.extra_tags %} '{{ message.extra_tags |safe }}' {% else %} '' {% endif %},
                         message : '{{ message |safe }}'
                     }, {
                         type : 'success',
