@@ -933,18 +933,30 @@ def listar(request, tipo):
         return render(request, 'financeiro/paginas/avulso/tabela.html', {'avulso' : avulso})
 
 def cabecalhoRelatorio(pdf, data):
-    pdf.drawImage('ibc_financeiro/static/imagens/logo.jpg', 10, 758, 60, 60)
+    pdf.drawImage('ibc_financeiro/static/imagens/logo.jpg', 45, 740, 80, 80)    # Logo
 
-    pdf.setFont('Times-Bold', 12)
+    # Título
+    pdf.setFont('Times-Bold', 16)
+    pdf.drawString(205, 800, 'Igreja Batista de Corrente')
     
-    pdf.drawString(200, 800, 'IGREJA BATISTA DE CORRENTE')
-    pdf.drawString(182, 785, 'Departamento de Administração e Finanças')
-    pdf.drawString(240, 770, 'Relatório Financeiro')
+    # Subtítulos
+    pdf.setFont('Times-Bold', 13)
+    
+    pdf.drawString(177, 785, 'Departamento de Administração e Finanças')
+    pdf.drawString(data['subtitle']['x'], 770, f'Relatório Financeiro {data["subtitle"]["text"]}')
+    
+    pdf.drawString(200, 753, 'De:')
+    pdf.drawString(309, 753, 'Até:')
 
-    pdf.drawString(data['x2'] if 'x2' in data else 278, 755, data['title'])
-    pdf.line(data['x3'] if 'x3' in data else 275, 752, data['x'], 752)
+    pdf.drawString(480, 785, 'Gerado Em')
 
-    pdf.drawString(430, 740, 'Data: ' + str(date.today().strftime('%d/%m/%Y')))
+    # Datas
+    pdf.setFont('Times-Roman', 12)
+    
+    pdf.drawString(224, 753, data['dates']['init'])
+    pdf.drawString(336, 753, data['dates']['end'])
+
+    pdf.drawString(485, 771, f'{date.today().strftime("%d-%m-%Y")}')
 
 def convertDate(date):
     return datetime.strptime(date, '%d/%m/%Y').date()
@@ -957,9 +969,17 @@ def gerarRelatorio(request, dados, tipo):
         pdf = canvas.Canvas(directory)
 
         cabecalhoRelatorio(pdf, {
-            'title' : 'Entradas',
-            'x' : 330
+            'subtitle' : {
+                'x' : 200,
+                'text' : 'das Entradas',
+            },
+            'dates' : {
+                'init' : f'{request.POST["inicio"]}',
+                'end' : f'{request.POST["fim"]}'
+            }
         })
+
+        pdf.setFont('Times-Bold', 13)
 
         pdf.drawString(20, 700, 'Data')
         pdf.drawString(100, 700, 'Congregação')
@@ -999,9 +1019,17 @@ def gerarRelatorio(request, dados, tipo):
         pdf = canvas.Canvas(directory)
         
         cabecalhoRelatorio(pdf, {
-            'title' : 'Saídas',
-            'x' : 315
+            'subtitle' : {
+                'x' : 205,
+                'text' : 'das Saídas',
+            },
+            'dates' : {
+                'init' : f'{request.POST["inicio"]}',
+                'end' : f'{request.POST["fim"]}'
+            }
         })
+
+        pdf.setFont('Times-Bold', 13)
 
         pdf.drawString(20, 700, 'Data')
         pdf.drawString(100, 700, 'Congregação')
@@ -1047,9 +1075,17 @@ def gerarRelatorio(request, dados, tipo):
         pdf = canvas.Canvas(directory)
 
         cabecalhoRelatorio(pdf, {
-            'title' : 'Missões',
-            'x' : 317
+            'subtitle' : {
+                'x' : 205,
+                'text' : 'de Missões',
+            },
+            'dates' : {
+                'init' : f'{request.POST["inicio"]}',
+                'end' : f'{request.POST["fim"]}'
+            }
         })
+
+        pdf.setFont('Times-Bold', 13)
         
         page = False
 
@@ -1132,10 +1168,14 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     pdf = canvas.Canvas(directory)
 
     cabecalhoRelatorio(pdf, {
-        'title' : 'Recebimentos',
-        'x'     : 335,
-        'x2'    : 260,
-        'x3'    : 257
+        'subtitle' : {
+            'x' : 218,
+            'text' : 'Geral',
+        },
+        'dates' : {
+            'init' : f'{request.POST["inicio"]}',
+            'end' : f'{request.POST["fim"]}'
+        }
     })
     
     categories, single = [], 0
