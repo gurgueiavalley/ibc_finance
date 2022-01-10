@@ -342,7 +342,7 @@ class SaidaForm(forms.Form):
     fornecedor.widget.attrs = {'class' : 'form-control'}
 
     nome = forms.CharField(label = 'Nome', help_text = 'shopping_bag', max_length = 35)
-    nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome do produto ou serviço'}
+    nome.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Nome do produto ou serviço', 'autocomplete' : 'on'}
     
     descricao = forms.CharField(label = 'Descrição', help_text = 'short_text', required = False, max_length = 100)
     descricao.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Descrição breve do produto ou serviço', 'autocomplete' : 'off'}
