@@ -5,6 +5,8 @@ from django.contrib.auth    import authenticate, login, logout
 from django.contrib         import messages
 from django.shortcuts       import redirect
 
+from .functions.fields import Money
+
 from .models import *
 from .forms import *
 from django.contrib.auth.models import User
@@ -942,7 +944,7 @@ def cabecalhoRelatorio(pdf, data):
     # Subtítulos
     pdf.setFont('Times-Bold', 13)
     
-    pdf.drawString(177, 785, 'Departamento de Administração e Finanças')
+    pdf.drawString(175, 785, 'Departamento de Administração e Finanças')
     pdf.drawString(data['subtitle']['x'], 770, f'Relatório Financeiro {data["subtitle"]["text"]}')
     
     pdf.drawString(200, 753, 'De:')
@@ -1227,75 +1229,80 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     pdf.drawString(320, 642 - y, 'Total:')
     pdf.line(363, 640 - y, 550, 640 - y)
 
-    pdf.drawString(260, 600 - y, 'Pagamentos')
-    pdf.line(257, 598 - y, 325, 598 - y)
-
     pdf.setFont('Helvetica', 10)
     pdf.drawString(365, 642 - y, 'R$ ' + str(entrys))
 
-    exits, page = 0, False
+    # Exits
+    pdf.setFont('Times-Bold', 13)
 
-    for index in range(1, len(saidas) + 1): 
-        y += 30
-        exits += saidas[index - 1].valor
+    pdf.drawString(160, 610 - y, f'{" Saídas ":-^58}')  # Title
 
-        if page == False and y > 450:
+    # Columns
+    pdf.drawString(50, 583 - y, 'Nº')
+    pdf.drawString(90, 583 - y, 'Nome')
+    pdf.drawString(300, 583 - y, 'Data')
+    pdf.drawString(385, 583 - y, 'Valor')
+
+    total, page = 0, False
+
+    # Walking through the exits
+    for index in range(1, len(saidas) + 1):
+        y += 17     # Space between lines
+
+        # Second Page
+        if page == False and y > 540:       # Limit of first page
+            pdf.showPage()
             y, page = 0, True
 
-            pdf.showPage()
+        positionY = 750     # Beginning of other pages
 
-        positionY = 750
-
+        # Other Pages
         if page == True:
-            if y > 600:
+            if y > 700:
+                pdf.showPage()
                 y = 0
 
-                pdf.showPage()
+        else:   # First Page
+            positionY = 580     # Beginning of first exit
 
-        else:
-            positionY = 580
+        pdf.setFont('Helvetica', 11)
+        i = index - 1
 
-        pdf.setFont('Helvetica', 10)
+        pdf.drawString(50, positionY - y, f'{index}º')                                  # Line number
+        pdf.drawString(90, positionY - y, f'{saidas[i]}'.title())                       # Name
+        pdf.drawString(300, positionY - y, f'{saidas[i].data.strftime("%d/%m/%Y")}')    # Date
+        pdf.drawString(385, positionY - y, Money().mask(f'{saidas[i].valor}'))          # Money
 
-        pdf.drawString(40, positionY - y, str(index) + 'º')
-
-        pdf.drawString(68, positionY - y, str(saidas[index - 1]))
-        pdf.line(68, (positionY - 2) - y, 343, (positionY - 2) - y)
-        
-        pdf.drawString(350, positionY - y, 'R$ ' + str(saidas[index - 1].valor))
-        pdf.line(350, (positionY - 2) - y, 500, (positionY - 2) - y)
+        total += saidas[index - 1].valor        # Somatory of Exits
 
     positionY = 720
 
-    if page == True:
-        if y > 600:
+    if page == True:    # Other Pages
+        if y > 615:
+            pdf.showPage()
             y = 0
 
-            pdf.showPage()
+    else:               # First page
+        positionY = 540
 
-    else:
-        positionY = 555
+    # Total
+    pdf.setFont('Times-Bold', 13)
+    pdf.drawString(385, positionY - y, 'Total')
 
-    pdf.setFont('Times-Bold', 12)
-    pdf.drawString(303, positionY - y, 'Total:')
-
-    pdf.setFont('Helvetica', 10)
-    pdf.drawString(350, positionY - y, 'R$ ' + str(exits))
-    pdf.line(350, (positionY - 2) - y, 500, (positionY - 2) - y)
-
-    positionY -= 25
-    pdf.setFont('Times-Bold', 12)
-    pdf.drawString(280, positionY - y, 'Depositar:')
-    pdf.line(350, positionY - y, 500, positionY - y)
+    pdf.setFont('Helvetica', 11)
+    pdf.drawString(385, positionY - (y + 15), Money().mask(f'{ total }'))
     
-    positionY = 50
+    # Signature
+    positionY = 25
 
+    pdf.setFont('Times-Bold', 13)
     pdf.drawString(20, positionY + 50, 'Conferido por')
     
     pdf.line(20,  positionY, 200, positionY)
     pdf.line(210, positionY, 400, positionY)
     pdf.line(410, positionY, 575, positionY)
 
+    # Dízimos
     pdf.showPage()
 
     pdf.setFont('Times-Bold', 14)

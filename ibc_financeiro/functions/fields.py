@@ -33,3 +33,17 @@ class CPF:
             if digit != 11 - rest: return False
 
         return True
+
+class Money:
+    def mask(self, value):
+        money, counter = '', 0
+
+        for number in value[:-3][::-1]:
+            if counter == 3:
+                money += '.'
+                counter = 0
+
+            money += number
+            counter += 1
+
+        return f'R$ { money[::-1] },{ value[-2:] }'
