@@ -41,10 +41,9 @@
                                 <br>
 
                                 <div class= 'row clearfix'>
-                                    {% if title != 'missão' %}
+                                    {% if title != 'missao' %}
                                         {% for campo in formulario.visible_fields|slice:'2:6'%}
                                             <div  {% if title == 'missão' %} class= 'col-sm-4' {% else %} class= 'col-sm-3' {% endif %}>
-
                                                 <div class= 'form-group'>
                                                     <div class= 'form-line'>
                                                         <h3 class= 'card-inside-title'> {{ campo.label }} </h3>
@@ -70,15 +69,14 @@
                                     {% if formulario.andamento %}
                                         <div class= 'col-sm-4'>
                                             <div class= 'form-group'>
-                                                    <h3 class= 'card-inside-title'> {{ formulario.andamento.label }} </h3>
-                                                    
-                                                    <div class="demo-switch">
-                                                        <div class="switch">
-                                                            <label> NÃO {{ formulario.andamento }} <span class="lever switch-col-blue"> </span> SIM </label>
-                                                        </div>
+                                                <h3 class= 'card-inside-title'> {{ formulario.andamento.label }} </h3>
+                                                
+                                                <div class="demo-switch">
+                                                    <div class="switch">
+                                                        <label> NÃO {{ formulario.andamento }} <span class="lever switch-col-blue"> </span> SIM </label>
                                                     </div>
-
                                                 </div>
+                                            </div>
                                         </div>
                                     {% endif %}
                                 </div>
@@ -127,12 +125,43 @@
                         </div>
                     </div>
 
+                    <div class= 'card datas'>
+                        <div class= 'body'>
+                            <div class= 'header'>
+                                <h2>
+                                    Adicionais
+                                    <small> Todos são inseridos por padrão. Remova alguns caso esteja lento ou resultando em erro </small>
+                                </h2>
+                            </div>
+                            
+                            <br>
+                            
+                            <div class= 'col-xs-12'>
+                                <div class= 'input-daterange input-group' id= 'bs_datepicker_range_container'>
+                                    {% if formulario.dizimo %}
+                                        <span class= 'input-group-addon'> {{ formulario.dizimo.label }} </span>
+                                        <div> {{ formulario.dizimo }} </div>
+                                    {% endif %}
+
+                                    {% if formulario.chart %}
+                                        <span class= 'input-group-addon'> {{ formulario.chart.label }} </span>
+                                        <div> {{ formulario.chart }} </div>
+                                    {% endif %}
+
+                                    {% if formulario.attachment %}
+                                        <span class= 'input-group-addon'> {{ formulario.attachment.label }} </span>
+                                        <div> {{ formulario.attachment }} </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <button class= 'btn btn-primary btn-lg waves-effect'>
                         <i class= 'material-icons'> text_snippet </i>
                         <span> GERAR RELATÓRIO </span>
                     </button>
                 </form>
-
             {% endif %}
         </div>
     </div>

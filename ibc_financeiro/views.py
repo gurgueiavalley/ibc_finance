@@ -1014,7 +1014,11 @@ def gerarRelatorio(request, dados, tipo):
 
         pdf.save()
 
-        Report.receipt(dados, directory, 'ibc_financeiro/static/pdf/report/entry.pdf', 'Relatório de Entradas')
+        if 'attachment' in request.POST:
+            Report.receipt(dados, directory, 'ibc_financeiro/static/pdf/report/entry.pdf', 'Relatório de Entradas')
+
+        else:
+            return 'entrada.pdf'
 
     if tipo == 'saida':
         directory = 'ibc_financeiro/static/saida.pdf'
@@ -1064,8 +1068,12 @@ def gerarRelatorio(request, dados, tipo):
         
         pdf.save()
 
-        Report.receipt(dados, directory, 'ibc_financeiro/static/pdf/report/exit.pdf', 'Relatório de Saídas')
+        if 'attachment' in request.POST:
+            Report.receipt(dados, directory, 'ibc_financeiro/static/pdf/report/exit.pdf', 'Relatório de Saídas')
     
+        else:
+            return 'saida.pdf'
+
     if tipo == 'missao':
         missions = []
 
@@ -1163,7 +1171,11 @@ def gerarRelatorio(request, dados, tipo):
 
         pdf.save()
 
-        Report.receipt(dados, directory, 'ibc_financeiro/static/pdf/report/missions.pdf', 'Relatório de Missões', {'pageLine' : ''})
+        if 'attachment' in request.POST:
+            Report.receipt(dados, directory, 'ibc_financeiro/static/pdf/report/missions.pdf', 'Relatório de Missões', {'pageLine' : ''})
+
+        else:
+            return 'missoes.pdf'
 
 def gerarRelatorioGeral(request, entradas, saidas, missoes):
     directory = 'ibc_financeiro/static/general.pdf'
@@ -1303,98 +1315,104 @@ def gerarRelatorioGeral(request, entradas, saidas, missoes):
     pdf.line(410, positionY, 575, positionY)
 
     # Dízimos
-    pdf.showPage()
+    if 'dizimo' in request.POST:
+        pdf.showPage()
 
-    pdf.setFont('Times-Bold', 14)
-    pdf.drawString(180, 750, 'IGREJA BATISTA DE CORRENTE')
-    pdf.rect(20, 745, 553, 20)
+        pdf.setFont('Times-Bold', 14)
+        pdf.drawString(180, 750, 'IGREJA BATISTA DE CORRENTE')
+        pdf.rect(20, 745, 553, 20)
 
-    pdf.setFont('Helvetica', 10)
-    pdf.drawString(230, 720, 'CONTROLE DE DÍZIMOS')
-    pdf.drawString(219, 705, 'De: {} Até: {}'.format(request.POST['inicio'], request.POST['fim']))
+        pdf.setFont('Helvetica', 10)
+        pdf.drawString(230, 720, 'CONTROLE DE DÍZIMOS')
+        pdf.drawString(219, 705, 'De: {} Até: {}'.format(request.POST['inicio'], request.POST['fim']))
 
-    pdf.setFont('Helvetica-Bold', 10)
+        pdf.setFont('Helvetica-Bold', 10)
 
-    pdf.drawString(180, 650, 'RELAÇÃO NOMINAL')
-    pdf.rect(20, 645, 400, 20)
-    
-    pdf.drawString(435, 650, 'VALOR')
-    pdf.rect(420, 645, 152, 20)
+        pdf.drawString(180, 650, 'RELAÇÃO NOMINAL')
+        pdf.rect(20, 645, 400, 20)
+        
+        pdf.drawString(435, 650, 'VALOR')
+        pdf.rect(420, 645, 152, 20)
 
-    y, entrance = 0, 0
-    
-    for entry in entradas:
-        if hasattr(entry, 'categoria'):
-            if entry.categoria.nome == 'DÍZIMO':
-                if y > 500:
-                    y = 0
+        y, entrance = 0, 0
+        
+        for entry in entradas:
+            if hasattr(entry, 'categoria'):
+                if entry.categoria.nome == 'DÍZIMO':
+                    if y > 500:
+                        y = 0
+                        
+                        pdf.showPage()
+
+                    y += 20
+                    entrance += entry.valor
+
+                    pdf.setFont('Helvetica', 10)
+
+                    pdf.drawString(35, 650 - y, str(entry.membro.nome))
+                    pdf.rect(20, 645 - y, 400, 20)
                     
-                    pdf.showPage()
+                    pdf.drawString(435, 650 - y, 'R$ ' + str(entry.valor))
+                    pdf.rect(420, 645 - y, 152, 20)
+        
+        y += 20
 
-                y += 20
-                entrance += entry.valor
+        pdf.setFont('Helvetica-Bold', 10)
+        pdf.drawString(370, 650 - y, 'TOTAL')
+        pdf.rect(20, 645 - y, 400, 20)
 
-                pdf.setFont('Helvetica', 10)
-
-                pdf.drawString(35, 650 - y, str(entry.membro.nome))
-                pdf.rect(20, 645 - y, 400, 20)
-                
-                pdf.drawString(435, 650 - y, 'R$ ' + str(entry.valor))
-                pdf.rect(420, 645 - y, 152, 20)
-    
-    y += 20
-
-    pdf.setFont('Helvetica-Bold', 10)
-    pdf.drawString(370, 650 - y, 'TOTAL')
-    pdf.rect(20, 645 - y, 400, 20)
-
-    pdf.setFont('Helvetica', 10)
-    pdf.drawString(435, 650 - y, 'R$ ' + str(entrance))
-    pdf.rect(420, 645 - y, 152, 20)
+        pdf.setFont('Helvetica', 10)
+        pdf.drawString(435, 650 - y, 'R$ ' + str(entrance))
+        pdf.rect(420, 645 - y, 152, 20)
     
     pdf.save()
 
     report = directory
 
-    if saidas:
-        Chart.pie(saidas)
+    if 'chart' in request.POST:
+        if saidas:
+            Chart.pie(saidas)
 
-        directories = [
-            directory,
-            'ibc_financeiro/static/chart.pdf'
-        ]
+            directories = [
+                directory,
+                'ibc_financeiro/static/chart.pdf'
+            ]
 
-        PDF.merge(directories, 'ibc_financeiro/static/general2.pdf')
+            PDF.merge(directories, 'ibc_financeiro/static/general2.pdf')
 
-        File.delete(directories)
+            File.delete(directories)
 
-        report = 'ibc_financeiro/static/general2.pdf'
+            report = 'ibc_financeiro/static/general2.pdf'
 
-    Report.receipt(saidas, report, 'ibc_financeiro/static/pdf/report/general.pdf', 'Relatório Geral', {'page' : ''})
+    if 'attachment' in request.POST:
+        Report.receipt(saidas, report, 'ibc_financeiro/static/pdf/report/general.pdf', 'Relatório Geral', {'page' : ''})
+
+    else:
+        return 'general2.pdf' if 'chart' in request.POST else 'general.pdf'
 
 @login_required(login_url = '/conta/login')
 def relatorio(request, tipo):
     if tipo == 'entrada':
         if request.method == 'POST':
-            gerarRelatorio(request, listaEntrada(request), tipo)
+            path = gerarRelatorio(request, listaEntrada(request), tipo) or 'pdf/report/entry.pdf'
 
-            return render(request, 'financeiro/paginas/relatorio.html', {'nome': 'pdf/report/entry.pdf', 'title' : 'de ' + tipo})
+            return render(request, 'financeiro/paginas/relatorio.html', {'nome': path, 'title' : 'de ' + tipo})
 
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioEntradaForm()})
 
     elif tipo == 'saida':
         if request.method == 'POST':
-            gerarRelatorio(request, listaSaida(request), tipo)
+            path = gerarRelatorio(request, listaSaida(request), tipo) or 'pdf/report/exit.pdf'
 
-            return render(request, 'financeiro/paginas/relatorio.html', {'nome': 'pdf/report/exit.pdf', 'title' : 'de ' + tipo})
+            return render(request, 'financeiro/paginas/relatorio.html', {'nome': path, 'title' : 'de ' + tipo})
 
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioSaidaForm()})
 
     elif tipo == 'missao':
         if request.method == 'POST':
-            gerarRelatorio(request, listaMissao(request), tipo)
+            path = gerarRelatorio(request, listaMissao(request), tipo) or 'pdf/report/missions.pdf'
             
-            return render(request, 'financeiro/paginas/relatorio.html', {'nome': 'pdf/report/missions.pdf', 'title' : 'de ' + tipo})
+            return render(request, 'financeiro/paginas/relatorio.html', {'nome': path, 'title' : 'de ' + tipo})
         
         return render(request, 'financeiro/paginas/relatorio.html', {'title' : tipo, 'formulario' : RelatorioMissaoForm()})
 

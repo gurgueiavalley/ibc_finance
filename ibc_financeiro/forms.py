@@ -253,6 +253,9 @@ class RelatorioEntradaForm(forms.Form):
     membro = forms.ModelMultipleChoiceField(label = 'Membros', required = False, queryset = Membro.objects.all().order_by('nome'), to_field_name = 'nome')
     membro.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhum selecionado'}
 
+    attachment = forms.BooleanField(label = 'Anexos:', required = False, initial = True)
+    attachment.widget.attrs = {'style' : 'position: unset; opacity: unset; margin-top: 6px'}
+
 class RelatorioMissaoForm(forms.Form):
     inicio = forms.DateField(label = 'De:')
     inicio.widget.attrs = {'class' : 'form-control', 'placeholder' : 'Selecione a data', 'autocomplete' : 'off'}
@@ -265,6 +268,9 @@ class RelatorioMissaoForm(forms.Form):
 
     missao = forms.ModelMultipleChoiceField(label = 'Missões', required = False, queryset = Missao.objects.all().order_by('nome'), to_field_name = 'nome')
     missao.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhuma selecionada'}
+
+    attachment = forms.BooleanField(label = 'Anexos:', required = False, initial = True)
+    attachment.widget.attrs = {'style' : 'position: unset; opacity: unset; margin-top: 6px'}
 
 class RelatorioSaidaForm(forms.Form):
     inicio = forms.DateField(label = 'De:')
@@ -284,6 +290,9 @@ class RelatorioSaidaForm(forms.Form):
 
     empresa = forms.ModelMultipleChoiceField(label = 'Empresas', required = False, queryset = Fornecedor.objects.all().order_by('nome'), to_field_name = 'nome')
     empresa.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhuma selecionada'}
+
+    attachment = forms.BooleanField(label = 'Anexos:', required = False, initial = True)
+    attachment.widget.attrs = {'style' : 'position: unset; opacity: unset; margin-top: 6px'}
 
 class RelatorioGeralForm(forms.Form):
     inicio = forms.DateField(label = 'De:')
@@ -309,6 +318,15 @@ class RelatorioGeralForm(forms.Form):
 
     membro = forms.ModelMultipleChoiceField(label = 'Membros', required = False, queryset = Membro.objects.all().order_by('nome'), to_field_name = 'nome')
     membro.widget.attrs = {'class' : 'form-control', 'title' : 'Nenhum selecionado'}
+
+    dizimo = forms.BooleanField(label = 'Dízimos:', required = False, initial = True)
+    dizimo.widget.attrs = {'style' : 'position: unset; opacity: unset; margin-top: 6px'}
+
+    chart = forms.BooleanField(label = 'Gráfico:', required = False, initial = True)
+    chart.widget.attrs = {'style' : 'position: unset; opacity: unset; margin-top: 6px'}
+
+    attachment = forms.BooleanField(label = 'Anexos:', required = False, initial = True)
+    attachment.widget.attrs = {'style' : 'position: unset; opacity: unset; margin-top: 6px'}
 
 class SaidaForm(forms.Form):
     congregacao = forms.ModelChoiceField(label = 'Congregação', help_text = 'location_city', queryset = Congregacao.objects.all().order_by('nome'), empty_label = 'Nenhuma selecionada')
