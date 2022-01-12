@@ -108,4 +108,5 @@ SESSION_TIMEOUT_REDIRECT = '/conta/login'
 
 # HTTPS
 if socket.gethostname() == 'web36f91.kinghost.net':
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
