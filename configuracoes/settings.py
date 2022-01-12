@@ -1,6 +1,7 @@
+import socket       # Get name of machine
+
 from pathlib import Path
 import os
-import socket
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '^r=ow$1kg%2r3gf)5(*3m8pkc_nd2!lnkw7j63b#@+$_2e#4mr'
@@ -100,16 +101,11 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'senhas@financeiro.ibcorrente.com.br'
 SERVER_EMAIL = 'senhas@financeiro.ibcorrente.com.br'
 
-# SSL
-localMachines = [
-    'DESKTOP-KBGVH3K',      # Caike S Reis
-    'Caique'                # Caique S Ribeiro
-]
-
-if socket.gethostname() not in localMachines:
-    SECURE_SSL_REDIRECT = True
-
 # Session Time
 SESSION_EXPIRE_SECONDS = 60 * (30)              # 30 minutes
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
 SESSION_TIMEOUT_REDIRECT = '/conta/login'
+
+# HTTPS
+if socket.gethostname() == 'web36f91.kinghost.net':
+    SECURE_SSL_REDIRECT = True
