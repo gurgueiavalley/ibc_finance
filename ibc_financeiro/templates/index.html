@@ -217,4 +217,9 @@
             })
             
     </script>
+
+    <script src= "{% static 'index.js' %}"> </script>   <!-- Métodos feitos manualmente -->
+
+    <!-- Se ocorrer erro -->
+    {% if error %} <script> error() </script> {% endif %}   <!-- Mostra alerta de erro -->
 {% endblock  %}
