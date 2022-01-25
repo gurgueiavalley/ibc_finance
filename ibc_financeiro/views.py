@@ -32,6 +32,66 @@ from .functions.file    import *
 from django.db.models import Sum
 from django.urls import reverse
 
+def errors(request, exception):                 # Erros no sistema
+    return index(request, error = True)         # Redireciona para página inicial e mostra erro
+
+@login_required(login_url = '/conta/login')
+def index(request, error = False):
+    ofertasMembros, ofertasAvulsas, ofertasMissoes = [], [], []
+    hoje, antes = date.today(), date.today() - timedelta(days = 7)
+
+    eMembro = Entrada.objects.filter(data__range = [antes, hoje]).order_by('data')
+    eAvulsa = EntradaAvulsa.objects.filter(data__range = [antes, hoje]).order_by('data')
+    eMissao = EntradaMissao.objects.filter(data__range = [antes, hoje]).order_by('data')
+
+    for dia in range(0, 8):
+        total = 0
+        
+        for entrada in eMembro:    
+            if entrada.data == (hoje - timedelta(days = dia)):
+                total += int(entrada.valor)
+
+        ofertasMembros.append(total)
+
+    for dia in range(0, 8):
+        total = 0
+        
+        for entrada in eAvulsa:    
+            if entrada.data == (hoje - timedelta(days = dia)):
+                total += int(entrada.valor)
+
+        ofertasAvulsas.append(total)
+
+    for dia in range(0, 8):
+        total = 0
+        
+        for entrada in eMissao:    
+            if entrada.data == (hoje - timedelta(days = dia)):
+                total += int(entrada.valor)
+
+        ofertasMissoes.append(total)
+
+    totalEntradas = int(Entrada.objects.filter(data__range = [antes, hoje]).aggregate(Sum('valor'))['valor__sum'] or 0)
+    totalEntradas += int(EntradaAvulsa.objects.filter(data__range = [antes, hoje]).aggregate(Sum('valor'))['valor__sum'] or 0)
+    totalEntradas += int(EntradaMissao.objects.filter(data__range = [antes, hoje]).aggregate(Sum('valor'))['valor__sum'] or 0)
+
+    totalSaidas = int(Saida.objects.filter(data__range= [antes, hoje]).aggregate(Sum('valor'))['valor__sum'] or 0)
+
+    saidas = Saida.objects.all().order_by('-data')[:5]
+
+    return render(request, 'index.html', {
+        'membros' : len(Membro.objects.all()),
+        'congregacoes' : len(Congregacao.objects.all()),
+        'missoes' : len(Missao.objects.filter(andamento = True)),
+        'ofertasMembros' : ofertasMembros[::-1],
+        'ofertasAvulsas' : ofertasAvulsas[::-1],
+        'ofertasMissoes' : ofertasMissoes[::-1],
+        'totalEntradas': totalEntradas,
+        'totalSaidas' : totalSaidas,
+        'saidas' : saidas,
+        'error' : error
+    })
+
 def conta(request, acao):
     if acao == 'login':
         if request.method == 'POST':
@@ -429,64 +489,6 @@ def entrada(request, acao):
         tipo = 'entradas'
         return render(request, 'financeiro/paginas/form_listar.html', {'title': tipo,'formulario' : RelatorioEntradaForm()})
     return render(request, 'financeiro/paginas/entrada/adicionar.html', {'formulario' : EntradaForm()})
-
-@login_required(login_url = '/conta/login')
-def index(request):
-    ofertasMembros, ofertasAvulsas, ofertasMissoes = [], [], []
-    hoje, antes = date.today(), date.today() - timedelta(days = 7)
-
-    eMembro = Entrada.objects.filter(data__range = [antes, hoje]).order_by('data')
-    eAvulsa = EntradaAvulsa.objects.filter(data__range = [antes, hoje]).order_by('data')
-    eMissao = EntradaMissao.objects.filter(data__range = [antes, hoje]).order_by('data')
-
-    for dia in range(0, 8):
-        total = 0
-        
-        for entrada in eMembro:    
-            if entrada.data == (hoje - timedelta(days = dia)):
-                total += int(entrada.valor)
-
-        ofertasMembros.append(total)
-
-    for dia in range(0, 8):
-        total = 0
-        
-        for entrada in eAvulsa:    
-            if entrada.data == (hoje - timedelta(days = dia)):
-                total += int(entrada.valor)
-
-        ofertasAvulsas.append(total)
-
-    for dia in range(0, 8):
-        total = 0
-        
-        for entrada in eMissao:    
-            if entrada.data == (hoje - timedelta(days = dia)):
-                total += int(entrada.valor)
-
-        ofertasMissoes.append(total)
-
-    totalEntradas = int(Entrada.objects.filter(data__range = [antes, hoje]).aggregate(Sum('valor'))['valor__sum'] or 0)
-    totalEntradas += int(EntradaAvulsa.objects.filter(data__range = [antes, hoje]).aggregate(Sum('valor'))['valor__sum'] or 0)
-    totalEntradas += int(EntradaMissao.objects.filter(data__range = [antes, hoje]).aggregate(Sum('valor'))['valor__sum'] or 0)
-
-    totalSaidas = int(Saida.objects.filter(data__range= [antes, hoje]).aggregate(Sum('valor'))['valor__sum'] or 0)
-
-    saidas = Saida.objects.all().order_by('-data')[:5]
-
-    dados = {
-        'membros' : len(Membro.objects.all()),
-        'congregacoes' : len(Congregacao.objects.all()),
-        'missoes' : len(Missao.objects.filter(andamento = True)),
-        'ofertasMembros' : ofertasMembros[::-1],
-        'ofertasAvulsas' : ofertasAvulsas[::-1],
-        'ofertasMissoes' : ofertasMissoes[::-1],
-        'totalEntradas': totalEntradas,
-        'totalSaidas' : totalSaidas,
-        'saidas' : saidas
-    }
-
-    return render(request, 'financeiro/index.html', dados)
 
 @login_required(login_url = '/conta/login')
 def member(request, action):
