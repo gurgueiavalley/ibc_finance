@@ -23,6 +23,8 @@
         <link rel= 'stylesheet' href= "{% static 'css/base/style.css' %}">
         <link rel= 'stylesheet' href= "{% static 'css/base/all-themes.css' %}">
         <link rel= 'stylesheet' href= "{% static 'css/base/base.css' %}">
+        
+        <link rel= 'stylesheet' href= "{% static 'base/style.css' %}">     <!-- Estilo feito manualmente -->
     </head>
 
     <body class= 'theme-blue'>
@@ -84,15 +86,15 @@
                 </div>
 
                 {% include './base/partes/menu.html' %}
-
-                <div class= 'legal'>
-                    <div class="copyright">
-                        &copy; 2020 - <script>document.write(new Date().getFullYear());</script> <a href="https://github.com/gurgueiavalley">Gurgueia Valley</a>.
+                
+                <!-- Copyright e Versão -->
+                <div class= 'legal p-10 t-a-c'>
+                    <div class= 'copyright'>                    <!-- Copyright -->
+                        &copy; 2020 – <script> document.write(new Date().getFullYear()) </script> |
+                        <a href= 'https://gurgueiavalley.github.io' target= '_blank'> Gurguéia Valley </a>
                     </div>
-
-                    <div class= 'version'>
-                        <strong> Versão: </strong> 1.1.4
-                    </div>
+                    
+                    <div class= 'version m-t-0 c-p'> </div>     <!-- Versão -->
                 </div>
             </aside>
         </section>
@@ -163,5 +165,7 @@
                 {% endfor %}
             </script>
         {% endif %}
+
+        <script src= "{% static 'base/method.js' %}"> </script>     <!-- Métodos feitos manualmente -->
     </body>
 </html>
