@@ -106,7 +106,10 @@ SESSION_EXPIRE_SECONDS = 60 * (30)              # 30 minutes
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
 SESSION_TIMEOUT_REDIRECT = '/conta/login'
 
-# HTTPS
+# Atribuições apenas para o servidor
 if socket.gethostname() == 'web36f91.kinghost.net':
+    DEBUG = False   # Desabilita o debug quando houver erros
+
+    # Força o uso do HTTPS
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True

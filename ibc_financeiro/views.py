@@ -32,6 +32,11 @@ from .functions.file    import *
 from django.db.models import Sum
 from django.urls import reverse
 
+def handler404(request, exception, template_name = 'financeiro/index.html'):
+    response = render(template_name)
+    response.status_code = 404
+    return response
+
 def conta(request, acao):
     if acao == 'login':
         if request.method == 'POST':
