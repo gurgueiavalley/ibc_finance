@@ -29,5 +29,3 @@ urlpatterns = [
     path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name = 'financeiro/paginas/conta/password_reset_confirm.html'), name = 'password_reset_confirm'),                                         # Formulário para alterar a senha
     path('password-reset-complete', auth_views.PasswordResetCompleteView.as_view(template_name= 'financeiro/paginas/conta/password_reset_complete.html'), name= 'password_reset_complete'),                                                         # Confirmação de senha alterada
 ]
-
-handler404 = 'ibc_financeiro.views.handler404'
