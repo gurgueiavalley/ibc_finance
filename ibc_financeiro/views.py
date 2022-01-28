@@ -937,7 +937,7 @@ def listar(request, tipo):
         return render(request, 'financeiro/paginas/avulso/tabela.html', {'avulso' : avulso})
 
 def cabecalhoRelatorio(pdf, data):
-    pdf.drawImage('ibc_financeiro/static/imagens/logo.jpg', 45, 740, 80, 80)    # Logo
+    pdf.drawImage('ibc_financeiro/static/image/logo.jpg', 45, 740, 80, 80)    # Logo
 
     # Título
     pdf.setFont('Times-Bold', 16)
