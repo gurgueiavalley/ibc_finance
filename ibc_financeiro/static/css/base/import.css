@@ -1,0 +1,23 @@
+/* ----- APIs ----- */
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext');    /* Fonte Roboto */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');                             /* Material Icons */
+
+
+
+/* ----- Bibliotecas ----- */
+@import 'libraries/animate.min.css';        /* Animate 3.5.0 */
+@import 'libraries/bootstrap.min.css';      /* Bootstrap 3.3.6 */
+@import 'libraries/font-awesome.min.css';   /* Font-Awesome 4.6.3 */
+@import 'libraries/waves.min.css';          /* Waves 0.7.5 */
+
+
+
+/* ----- Template ----- */
+@import 'template/style.min.css';           /* Base */
+@import 'template/theme-blue.min.css';      /* Tema Azul */
+
+
+
+/* ----- Manualmente ----- */
+@import 'manual/general.css';       /* Estilos Reutilizáveis */
+@import 'manual/popover.css';       /* Popover */
