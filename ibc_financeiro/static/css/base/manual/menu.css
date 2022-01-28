@@ -1,0 +1,6 @@
+/* Fundo do Perfil */
+.user-info{
+    background: rgba(0, 0, 0, .35) url('../../../image/background/wide.jpg') bottom !important;
+    background-blend-mode: darken;
+    background-size: cover !important;
+}
