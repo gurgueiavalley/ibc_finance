@@ -3,16 +3,14 @@
 {% load static %}
 
 {% block title %}
-    {% block titulo %}
-        {% if entradas or eavulsas or emissoes or saidas %}
-            Não é possível excluir a forma de pagamento!
-        {% else %}
-            Tem certeza?
-        {% endif %}
-    {% endblock %}
+    {% if entradas or eavulsas or emissoes or saidas %}
+        Não é possível excluir a forma de pagamento!
+    {% else %}
+        Tem certeza?
+    {% endif %}
 {% endblock %}
 
-{% block dinamico %}
+{% block page %}
     {% if saidas %}
         <p style="font-size: 15px;">A  forma de pagamento <b>' {{pagamento.nome}} '</b>  possui os seguintes objetos relacionados:
         {% for entrada in entradas %}

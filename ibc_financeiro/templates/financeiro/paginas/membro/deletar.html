@@ -3,16 +3,14 @@
 {% load static %}
 
 {% block title %}
-    {% block titulo %}
-        {% if entradas %}
-            Não é possível excluir membro!
-        {% else %}
-            Tem certeza?
-        {% endif %}
-    {% endblock %}
+    {% if entradas %}
+        Não é possível excluir membro!
+    {% else %}
+        Tem certeza?
+    {% endif %}
 {% endblock %}
 
-{% block dinamico %}
+{% block page %}
     {% if entradas %}
         <p style="font-size: 15px;">O membro <b>' {{membro.nome}} '</b>  possui os seguintes objetos relacionados:
         {% for entrada in entradas %}

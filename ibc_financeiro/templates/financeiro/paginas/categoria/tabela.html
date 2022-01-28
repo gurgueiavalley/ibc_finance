@@ -2,17 +2,13 @@
 
 {% load static %}
 
-{% block title %}
-    {% block titulo %}
-        Categorias de Saída
-    {% endblock %}
-{% endblock %}
+{% block title %} Categorias de Saída {% endblock %}
 
-{% block CSS %}    
+{% block css %}    
     <link rel="stylesheet" href="{% static 'css/paginas/tabela.css' %}">
 {% endblock %}
 
-{% block dinamico %}
+{% block page %}
     <div class= 'row clearfix'>
         <div class= 'col-lg-12 col-md-12 col-sm-12 col-xs-12'>
             <div class="container-fluid">
@@ -51,7 +47,7 @@
     </div>
 {% endblock %}
 
-{% block JS %}    
+{% block js %}    
     <script src="{% static 'js/base/jquery.min.js' %}"></script>
     <script src="{% static 'js/paginas/jquery-datatable.js' %}"></script>
     <script src="{% static 'js/paginas/categoria/tabela_categoria.js' %}"></script>

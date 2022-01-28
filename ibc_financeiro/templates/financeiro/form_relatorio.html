@@ -1,17 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block titulo %}
-    DASHBOARD
-{% endblock %}
 
-{% block CSS %}
+{% block css %}
     <link rel= 'stylesheet' href= "{% static 'plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css' %}">
     <link rel= 'stylesheet' href= "{% static 'plugins/bootstrap-datepicker/css/bootstrap-datepicker.css' %}">
     <link rel= 'stylesheet' href= "{% static 'plugins/waitme/waitMe.css' %}">
     <link rel= 'stylesheet' href= "{% static 'plugins/bootstrap-select/css/bootstrap-select.css' %}">
 {% endblock %}
 
-{% block dinamico %}
+{% block page %}
     <form action="{% url 'relatorio' %}" method="POST" form="form-group">
         {% csrf_token %}
         <label class="text">Congregação</label> 
@@ -33,7 +30,7 @@
         <button class="btn btn-primary">Gerar Relatorio</button>
     </form>    
 {% endblock %}
-{% block JS %}
+{% block js %}
     <script src= "{% static 'plugins/autosize/autosize.js' %}"> </script>
     <script src= "{% static 'plugins/momentjs/moment.js' %}"> </script>
     <script src= "{% static 'plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js' %}"> </script>

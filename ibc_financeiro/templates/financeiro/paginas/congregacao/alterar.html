@@ -2,13 +2,9 @@
 
 {% load static %}
 
-{% block title %}
-    {% block titulo %}
-        Adicionar uma Congregação
-    {% endblock %}
-{% endblock %}
+{% block title %} Adicionar uma Congregação {% endblock %}
 
-{% block CSS %}
+{% block css %}
     <link rel= 'stylesheet' href= 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.min.css'>
     
     <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.css' %}">
@@ -32,7 +28,7 @@
     {% endif %}
 {% endblock %}
 
-{% block dinamico %}
+{% block page %}
     <form method= 'POST' action= "{% url 'congregacao' 'alterar' %}?id={{congregacao.id}}" id= 'formulario'>
         {% csrf_token %}
         
@@ -76,7 +72,7 @@
     </form>
 {% endblock %}
 
-{% block JS %}
+{% block js %}
     <script src= "{% static 'js/plugins/autosize/autosize.js' %}"> </script>
     <script src= "{% static 'js/plugins/momentjs/moment.js' %}"> </script>
     <script src= "{% static 'js/plugins/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.js' %}"> </script>

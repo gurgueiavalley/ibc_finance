@@ -1,49 +1,39 @@
 {% load static %}
 
 <!DOCTYPE HTML>
-<html lang= 'pt-BR'>
+<html lang= 'pt-br'>
     <head>
         <meta charset= 'utf-8'>
         <meta content= 'width= device-width, initial-scale= 1, maximum-scale= 1, user-scalable= no' name= 'viewport'>
 
-        <link rel= 'icon' type= 'image/jpg' href= "{% static 'imagens/logo.jpg' %}">
-        <title> {% block title %} {% endblock %} </title>
+        <!-- Aba -->
+        <link rel= 'icon' href= "{% static 'image/logo.jpg' %}">    <!-- Ícone -->
+        <title> {% block title %} {% endblock %} </title>           <!-- Título variável -->
 
         <!-- CSS -->
-        <link rel= 'stylesheet' href= 'https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext' type= 'text/css'>
-        <link rel= 'stylesheet' href= 'https://fonts.googleapis.com/icon?family=Material+Icons' type= 'text/css'>
-
-        <link rel= 'stylesheet' href= "{% static 'css/base/bootstrap.css' %}">
-        <link rel= 'stylesheet' href= "{% static 'css/base/waves.css' %}">
-        <link rel= 'stylesheet' href= "{% static 'css/base/animate.css' %}">
-        <link rel= 'stylesheet' href= "{% static 'css/base/font-awesome.min.css' %}">
-        
-        {% block CSS %} {% endblock %}
-        
-        <link rel= 'stylesheet' href= "{% static 'css/base/style.css' %}">
-        <link rel= 'stylesheet' href= "{% static 'css/base/all-themes.css' %}">
-        <link rel= 'stylesheet' href= "{% static 'css/base/base.css' %}">
-        
-        <link rel= 'stylesheet' href= "{% static 'base/style.css' %}">     <!-- Estilo feito manualmente -->
+        <link rel= 'stylesheet' href= "{% static 'css/base/import.css' %}">     <!-- Toda a base -->
+        {% block css %} {% endblock %}  <!-- Estilos adicionais de cada página -->
     </head>
 
     <body class= 'theme-blue'>
-        {% include 'div/loading.html' %}    <!-- Tela de Carregamento -->
+        <!-- Tela de Carregamento -->
+        {% include 'div/loading.html' %}
 
-        <nav class= 'navbar'>                       <!-- Cabeçalho -->
+        <!-- Cabeçalho -->
+        <nav class= 'navbar'>
             <div class= 'container-fluid'>
                 <div class= 'navbar-header'>
-                    <a href= 'javascript:void(0);' class= 'bars'> </a>
-                    <a class= 'navbar-brand' href= "{% url 'index' %}">  IGREJA BATISTA - CORRENTE  </a>
+                    <a class= 'navbar-brand' href= "{% url 'index' %}"> IGREJA BATISTA DE CORRENTE </a>
                 </div>
             </div>
         </nav>
 
-        <section>                                   <!-- Coluna Esquerda -->    
+        <!-- Esquerda -->
+        <section>
             <aside id= 'leftsidebar' class= 'sidebar'>
                 <div class= 'user-info'>
                     <div class= 'image'>
-                        <img src= "{% static 'imagens/logo.jpg' %}" width= '48' height= '48' alt= 'User'>
+                        <img src= "{% static 'image/logo.jpg' %}" width= '48' height= '48' alt= 'User'>
                     </div>
 
                     <div class= 'info-container'>
@@ -85,116 +75,23 @@
                     </div>
                 </div>
 
-                {% include 'div/menu.html' %}   <!-- Menu -->
-                
-                <!-- Copyright e Versão -->
-                <div class= 'legal p-10 t-a-c'>
-                    <div class= 'copyright'>                    <!-- Copyright -->
-                        &copy; 2020 – <script> document.write(new Date().getFullYear()) </script> |
-                        <a href= 'https://gurgueiavalley.github.io' target= '_blank'> Gurguéia Valley </a>
-                    </div>
-                    
-                    <div class= 'version m-t-0 c-p'> </div>     <!-- Versão -->
-                </div>
+                <!-- Menu -->
+                {% include 'div/menu.html' %}
+
+                <!-- Direito Autoral e Versão -->
+                {% include 'div/copyright.html' %}
             </aside>
         </section>
 
-        <section class= 'content'>                  <!-- Corpo -->
+        <!-- Página Variável -->
+        <section class= 'content'>
             <div class= 'container-fluid'>
-                <div class= 'block-header'>
-                    <h2> {% block titulo %} {% endblock %} </h2>
-                </div>
-
-                {% block dinamico %} {% endblock %}
+                {% block page %} {% endblock %}
             </div>
         </section>
         
         <!-- JS -->
-        <script src= "{% static 'js/base/jquery.min.js' %}"> </script>
-        <script src= "{% static 'js/base/bootstrap.js' %}"> </script>
-        <script src= "{% static 'js/base/bootstrap-select.js' %}"> </script>
-        <script src= "https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"> </script>
-        <script src= "{% static 'js/base/waves.js' %}"> </script>
-        
-        <script>
-            $(() => {
-                try{
-                    $.getJSON('https://api.github.com/repos/gurgueiavalley/ibc_finance/tags', (dados) => {
-                        const   json = dados[0],
-                                div = $('.version')
-                        
-                        div.click(() => window.open(`https://github.com/gurgueiavalley/ibc_finance/commit/${json['commit']['sha']}?diff=split`, '_blank'))
-            
-                        $.getJSON(json['commit']['url'], (data) => {
-                            const date = new Date(data['commit']['committer']['date']).toLocaleString()
-                            
-                            div.attr({
-                                'data-original-title' : `Novidades (${date})`,
-                                'data-content' : data['commit']['message']
-                            })
-                        })
-            
-                        div.html(`<b> Versão: </b> ${json['name']}`)
-                        
-                        div.popover({
-                            container : 'body',
-                            placement : 'top',
-                            trigger : 'hover'
-                        })
-                    })
-                }
-                catch(e){}
-            })
-        </script>
-
-        <script src= "{% static 'js/base/admin.js' %}"> </script>
-        <script src= "{% static 'js/base/demo.js' %}"> </script>
-        
-        <script src= 'https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.3/bootstrap-notify.min.js'> </script>
-        
-        {% block JS %} {% endblock %}
-        
-        {% if form.fields.errors %}
-            <script>
-                {% for field in form.fields %}
-                    {% if field.errors %}
-                        $.notify({
-                            title : '<strong> {{ field.label |cut:" <b> * </b>" |safe }} </strong>',
-                            message : '{{ field.errors }}'
-                        }, {
-                            type : 'danger',
-                            offset : 10,
-                            spacing : 5,
-                            delay : 0,
-                            animate : {
-                                enter : 'animated zoomInRight',
-                                exit : 'animated zoomOutRight'
-                            }
-                        })
-                    {% endif %}
-                {% endfor %}
-            </script>
-        {% endif %}
-
-        {% if messages %}
-            <script>
-                {% for message in messages %}                    
-                    $.notify({
-                        title : {% if message.extra_tags %} '{{ message.extra_tags |safe }}' {% else %} '' {% endif %},
-                        message : '{{ message |safe }}'
-                    }, {
-                        type : 'success',
-                        placement : {
-                            align: 'center'
-                        },
-                        delay : 0,
-                        animate : {
-                            enter : 'animated fadeInDown',
-                            exit : 'animated fadeOutUp'
-                        }
-                    })
-                {% endfor %}
-            </script>
-        {% endif %}
+        {% include 'div/js.html' %}     <!-- Todos da base -->
+        {% block js %} {% endblock %}   <!-- Métodos adicionais de cada página -->
     </body>
 </html>

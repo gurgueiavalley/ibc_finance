@@ -3,16 +3,14 @@
 {% load static %}
 
 {% block title %}
-    {% block titulo %}
-        {% if saidas %}
-            Não é possível excluir a categoria!
-        {% else %}
-            Tem certeza?
-        {% endif %}
-    {% endblock %}
+    {% if saidas %}
+        Não é possível excluir a categoria!
+    {% else %}
+        Tem certeza?
+    {% endif %}
 {% endblock %}
 
-{% block dinamico %}
+{% block page %}
     {% if saidas %}
         <p style="font-size: 15px;">A  categoria <b>' {{categoria.nome}} '</b>  possui os seguintes objetos relacionados:
         {% for saida in saidas %}

@@ -2,13 +2,9 @@
 
 {% load static %}
 
-{% block title %}
-    {% block titulo %}
-        Adicionar uma Saída
-    {% endblock %}
-{% endblock %}
+{% block title %} Adicionar uma Saída {% endblock %}
 
-{% block CSS %}
+{% block css %}
     <link rel= 'stylesheet' href= 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.min.css'>
     
     <link rel= 'stylesheet' href= "{% static 'css/plugins/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.css' %}">
@@ -20,7 +16,7 @@
     <link rel= 'stylesheet' href= "{% static 'css/paginas/saida/saida.css' %}">
 {% endblock %}
 
-{% block dinamico %}
+{% block page %}
     {% if messages %}
         {% for success in messages %}
             <br>
@@ -128,7 +124,7 @@
     </form>
 {% endblock %}
 
-{% block JS %}
+{% block js %}
     <script src= "{% static 'js/plugins/autosize/autosize.js' %}"> </script>
     <script src= "{% static 'js/plugins/momentjs/moment.js' %}"> </script>
     <script src= "{% static 'js/plugins/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.js' %}"> </script>

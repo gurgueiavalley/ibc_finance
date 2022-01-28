@@ -2,19 +2,15 @@
 
 {% load static %}
 
-{% block title %}
-    {% block titulo %}
-        Página Inicial
-    {% endblock %}
-{% endblock %}
+{% block title %} Página Inicial {% endblock %}
 
-{% block CSS %}
+{% block css %}
     <link rel= 'stylesheet' href= "{% static 'css/paginas/index/morris.css' %}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.css">
 {% endblock %}
 
-{% block dinamico %}
+{% block page %}
     <div class= 'row clearfix'>
         <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <div class="info-box bg-orange hover-expand-effect">
@@ -134,7 +130,7 @@
     </div>
 {% endblock %}
 
-{% block JS %}
+{% block js %}
     <script src= "{% static 'js/paginas/index/jquery.countTo.js' %}"> </script>
     <script src= "{% static 'js/paginas/index/raphael.min.js' %}"> </script>
     <script src= "{% static 'js/paginas/index/morris.js' %}"> </script>

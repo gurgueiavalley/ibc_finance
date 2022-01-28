@@ -4,7 +4,7 @@
     DASHBOARD
 {% endblock %}
 
-{% block dinamico %}
+{% block page %}
     <form action="{% url 'membro' 'importar' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <label class="text">Arquivo Excel</label>

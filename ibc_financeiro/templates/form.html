@@ -5,15 +5,16 @@
 
 {% block title %} {{ title }} {% endblock %}
 
-{% block CSS %}
+{% block css %}
     <link rel= 'stylesheet' href= "{% static 'form/css/style.css' %}">
+    <link rel= 'stylesheet' href= "{% static 'css/member/base.css' %}">
 
     {% if request.GET.mode == 'popup' %}
         <link rel= 'stylesheet' href= "{% static 'form/css/popup.css' %}">
     {% endif %}
 {% endblock %}
 
-{% block dinamico %}
+{% block page %}
     <form action= "{% url 'member' form.action %}{% if request.GET.mode == 'popup' %}?mode=popup{% endif %}" method= 'post'>
         {% csrf_token %}
         
@@ -63,7 +64,7 @@
     </form>
 {% endblock %}
 
-{% block JS %}
+{% block js %}
     <script src= 'https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js'> </script>
     <script src= "{% static 'form/js/mask.js' %}"> </script>
     
