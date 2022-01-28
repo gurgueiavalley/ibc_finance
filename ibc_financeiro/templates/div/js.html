@@ -1,0 +1,62 @@
+{% load static %}
+
+<!-- Bibliotecas -->
+<script src= "{% static 'js/base/libraries/bootstrap.min.js' %}"> </script>             <!-- Bootstrap 3.3.6 -->
+<script src= "{% static 'js/base/libraries/bootstrap-select.min.js' %}"> </script>      <!-- Bootstrap Select 1.10.0 -->
+<script src= "{% static 'js/base/libraries/jquery.min.js' %}"> </script>                <!-- JQuery 1.12.4 -->
+<script src= "{% static 'js/base/libraries/waves.min.js' %}"> </script>                 <!-- Waves 0.7.5 -->
+
+<!-- CDN -->
+<script src= 'https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.3/bootstrap-notify.min.js'> </script>   <!-- Bootstrap Notify -->
+<script src= 'https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js'> </script>           <!-- JQuery Slim Scroll 1.3.8 -->
+
+<!-- Template -->
+<script src= "{% static 'js/base/template/admin.js' %}"> </script>
+<script src= "{% static 'js/base/template/demo.js' %}"> </script>
+
+<!-- Manualmente -->
+<script src= "{% static 'js/base/manual/version.js' %}"> </script>      <!-- Insere a Versão -->
+
+<!-- Organizar -->
+{% if form.fields.errors %}
+    <script>
+        {% for field in form.fields %}
+            {% if field.errors %}
+                $.notify({
+                    title : '<strong> {{ field.label |cut:" <b> * </b>" |safe }} </strong>',
+                    message : '{{ field.errors }}'
+                }, {
+                    type : 'danger',
+                    offset : 10,
+                    spacing : 5,
+                    delay : 0,
+                    animate : {
+                        enter : 'animated zoomInRight',
+                        exit : 'animated zoomOutRight'
+                    }
+                })
+            {% endif %}
+        {% endfor %}
+    </script>
+{% endif %}
+
+{% if messages %}
+    <script>
+        {% for message in messages %}                    
+            $.notify({
+                title : {% if message.extra_tags %} '{{ message.extra_tags |safe }}' {% else %} '' {% endif %},
+                message : '{{ message |safe }}'
+            }, {
+                type : 'success',
+                placement : {
+                    align: 'center'
+                },
+                delay : 0,
+                animate : {
+                    enter : 'animated fadeInDown',
+                    exit : 'animated fadeOutUp'
+                }
+            })
+        {% endfor %}
+    </script>
+{% endif %}
